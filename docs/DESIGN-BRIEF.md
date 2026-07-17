@@ -218,6 +218,26 @@ Live URL will be **https://aselkridge.github.io/aarons-portfolio/**. (Or point i
   accepted risk decision — flagged and acknowledged.
 - Engine lives in `docs/orbit/orbit.js`; test hook `window.__orbit` for headless QA.
 
+**2026-07-17 late session — Orbit v4 (phases shipped in order, each its own commit):**
+1. Aim-at-cursor firing fix, smaller asteroids, brand mark (docs/assets/brand/,
+   favicon+og, name corrected to Aaron Selkridge everywhere).
+2. Minimizable themed panels (CRT zap / holo fold), functional chips, compact
+   mobile, TOUCH FLIGHT (ship follows finger + FIRE button).
+3. IDENTITY commit (revert to undo): sun=clean+clickable=THE MISSION (hero-over-
+   city env), AARONAUTICS wordmark header, location line, station nav strip.
+4. Environments v2: theme-aware (cel vs real), left-dock section HUD (bottom
+   sheet mobile), cameos: coupe drift-by (city), spirit+kid bus stop (forest),
+   sloop (ocean), cypher w/ masked MC vs W-crew (lot), swordsman (hidden dunes).
+5. Achievements (localStorage, themed toasts), gold asteroids every ~₩2,500,
+   alien saucer flyby (shootable, drops facts from data/facts.js — AARON:
+   replace placeholders), hidden 6th planet RONIN unlocks at ₩20,000, eggs:
+   type 'tank!' (Swordfish) / press R barrel roll (Rocinante).
+6. Hangar ship-exchange animation on theme switch (desktop).
+7. PREPPED: docs/orbit/worker/alien-worker.js — Cloudflare Worker for the real-
+   LLM alien chat (Aaron chose option B). Aaron must: create Anthropic API key
+   (with spend limit!), create free CF worker, paste file, set secret, send URL.
+   Then build the alien hull chat UI. 8. Galaga cabinet: still queued.
+
 **Still to do (next):**
 3. Aaron's real content into Orbit stations (AlphaForge builds, Life picks, poems).
 4. The mission-control desk vision (see §11 notes from 2026-07-17 session) stays the
