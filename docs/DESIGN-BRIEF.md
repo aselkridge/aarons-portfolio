@@ -4,6 +4,11 @@
 > Claude session (or a new person) picking this up, **read this top to bottom first.**
 > It captures who Aaron is, what we're building, every decision made so far, the
 > hard constraints we hit, and exactly what to do next.
+>
+> **Working on Orbit specifically (`docs/orbit/`)?** Read
+> [`docs/orbit/HANDOFF.md`](orbit/HANDOFF.md) too — it's the always-current,
+> rewritten-every-shipment doc with the live known-issues list and a map of
+> which file owns which visible piece of Orbit. This file stays high-level.
 
 Last updated: 2026-07-17
 
