@@ -1,0 +1,17 @@
+{
+  "name": "aaronautics",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Aaronautics — Aaron's spaceflight/mission-control portfolio. Real WebGL objects, diegetic controls.",
+  "type": "module",
+  "scripts": {
+    "dev": "cd site && python3 -m http.server 8099",
+    "build:3d": "esbuild site/assets/js/walkman.js --bundle --format=esm --minify --outfile=site/assets/js/walkman.bundle.js",
+    "opt:model": "gltf-transform optimize INPUT.glb site/assets/models/walkman.glb --compress draco --texture-compress webp --texture-size 2048 --simplify true"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.4.1",
+    "esbuild": "^0.24.0",
+    "three": "0.169.0"
+  }
+}

@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aaronautics — Walkman WM-F2078 · Flight Systems</title>
+<meta name="description" content="A real WebGL preview of the Sony Walkman WM-F2078 — orbit it, press the transport, play the tape. Aaronautics flight systems.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%230a0908'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23efece6'%3E%E2%97%88%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+:root{
+  --ink:#efece6; --paper:#0a0908; --dim:#8f8a82; --line:rgba(239,236,230,.16);
+  --amber:#ffb44a; --holo:#74d0ff; --led:#7cff9b;
+  --anton:'Anton',Impact,sans-serif;
+  --os:'Oswald','Arial Narrow',sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(120% 90% at 50% 8%, #16171c 0%, #0c0c0f 45%, var(--paper) 100%);
+  color:var(--ink); font-family:var(--os); overflow:hidden;
+  filter:contrast(1.05) brightness(1.02);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── 3D stage ─────────────────────────────────────────── */
+#stage{position:fixed;inset:0;z-index:1;touch-action:none;cursor:grab;
+  opacity:0;transition:opacity 1.1s ease}
+#stage.ready{opacity:1}
+#stage:active{cursor:grabbing}
+#stage canvas{display:block}
+
+/* ── cinematic overlays ───────────────────────────────── */
+.grain,.vig,.scan{position:fixed;inset:0;pointer-events:none}
+.grain{inset:-50%;z-index:40;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .6s steps(3) infinite}
+@keyframes grain{0%{transform:translate(0,0)}33%{transform:translate(-6%,4%)}66%{transform:translate(4%,-5%)}100%{transform:translate(0,0)}}
+.vig{z-index:41;background:radial-gradient(135% 100% at 50% 42%,transparent 44%,rgba(0,0,0,.72) 100%)}
+.scan{z-index:42;opacity:.35;mix-blend-mode:multiply;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
+
+/* ── HUD frame ─────────────────────────────────────────── */
+.hud{position:fixed;inset:0;z-index:20;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:clamp(16px,3.4vw,40px)}
+.hud a,.hud button{pointer-events:auto}
+
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sys{font-weight:500;font-size:clamp(10px,1.25vw,13px);letter-spacing:.32em;text-transform:uppercase;line-height:1.7}
+.sys b{font-weight:700}
+.sys .sub{color:var(--dim);font-size:.82em;letter-spacing:.28em}
+.timer{font-family:var(--mono);font-weight:700;font-size:clamp(11px,1.35vw,14px);
+  letter-spacing:.08em;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.timer .lbl{display:block;color:var(--dim);font-weight:400;font-size:.74em;letter-spacing:.24em;margin-bottom:.35em}
+
+/* object title, lower-left */
+.plate{max-width:min(46ch,60vw)}
+.plate .kicker{font-family:var(--mono);font-size:clamp(9px,1.1vw,11px);letter-spacing:.3em;
+  color:var(--dim);text-transform:uppercase;margin-bottom:.7em}
+.plate h1{font-family:var(--anton);font-weight:400;text-transform:uppercase;line-height:.84;
+  font-size:clamp(2.3rem,7vw,5.4rem);letter-spacing:.005em;text-shadow:0 6px 40px rgba(0,0,0,.6)}
+.plate h1 em{font-style:normal;color:var(--amber)}
+.plate .spec{margin-top:.9em;display:flex;flex-wrap:wrap;gap:.4em 1.4em;
+  font-family:var(--mono);font-size:clamp(9px,1.05vw,11px);letter-spacing:.12em;
+  color:var(--dim);text-transform:uppercase}
+.plate .spec b{color:var(--ink);font-weight:400}
+.hint{margin-top:1em;font-size:clamp(11px,1.3vw,13px);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim)}
+.hint span{color:var(--ink)}
+
+.bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+
+/* ── the deck (music player) ───────────────────────────── */
+.deck{pointer-events:auto;width:min(360px,86vw);
+  background:linear-gradient(180deg,rgba(24,22,20,.92),rgba(12,11,10,.94));
+  border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(9px);overflow:hidden}
+.deck-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 15px 9px;border-bottom:1px solid var(--line)}
+.deck-hd .name{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.deck-hd .name b{color:var(--ink);font-weight:700}
+.pwr{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.dot{width:7px;height:7px;border-radius:50%;background:#3a3a3a;transition:.25s}
+.dot.on{background:var(--led);box-shadow:0 0 10px var(--led)}
+
+/* tape window / now playing */
+.tape{padding:13px 15px 4px}
+.now{display:flex;align-items:center;gap:10px;min-height:34px}
+.eq{display:flex;align-items:flex-end;gap:2px;height:20px;width:22px;flex:none}
+.eq i{width:3px;background:var(--amber);height:20%;border-radius:1px;opacity:.85}
+.playing .eq i{animation:eq .9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
+@keyframes eq{0%,100%{height:18%}50%{height:100%}}
+.meta{min-width:0}
+.meta .t{font-family:var(--os);font-weight:600;font-size:14px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .a{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.counter{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;flex:none}
+
+/* transport keys */
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 15px 14px}
+.key{pointer-events:auto;position:relative;border:0;cursor:pointer;
+  height:46px;border-radius:9px;color:var(--ink);
+  background:linear-gradient(180deg,#2c2a27,#1a1917);
+  box-shadow:0 3px 0 #0c0b0a, 0 5px 10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .05s ease, box-shadow .05s ease;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.key:hover{background:linear-gradient(180deg,#332f2b,#1d1b19)}
+.key:active,.key.press{transform:translateY(3px);box-shadow:0 0 0 #0c0b0a, 0 2px 5px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05)}
+.key .glyph{filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))}
+.key.play{background:linear-gradient(180deg,#3a2f1c,#241c10)}
+.key.play.active{background:linear-gradient(180deg,#5a4114,#3a2a0d);color:var(--amber)}
+.key:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
+
+/* embedded spotify (audio engine + album art) */
+.embed{padding:0 12px 12px}
+.embed iframe{border-radius:11px;display:block;width:100%}
+.embed .src{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim);
+  text-transform:uppercase;padding:8px 3px 2px;display:flex;justify-content:space-between}
+
+/* credit / signoff */
+.credit{font-family:var(--mono);font-size:clamp(8px,.95vw,10px);letter-spacing:.14em;
+  color:var(--dim);text-transform:uppercase;line-height:1.9;text-align:right;max-width:40ch}
+.credit a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.credit a:hover{border-color:var(--ink)}
+.signoff{font-family:var(--anton);text-transform:uppercase;text-align:right;line-height:.86;
+  font-size:clamp(1rem,2.6vw,1.9rem);letter-spacing:.01em;margin-top:.5em}
+.signoff small{display:block;font-family:var(--mono);font-size:.32em;letter-spacing:.3em;color:var(--dim);margin-top:.9em}
+
+/* ── loader ───────────────────────────────────────────── */
+#load{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;background:var(--paper);
+  transition:opacity .9s ease .1s, visibility .9s;}
+#load.done{opacity:0;visibility:hidden;pointer-events:none}
+#load .big{font-family:var(--anton);font-size:clamp(3rem,12vw,7rem);line-height:.8;
+  color:transparent;-webkit-text-stroke:1.5px rgba(239,236,230,.5)}
+#load .row{font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--dim);
+  text-transform:uppercase;display:flex;gap:12px;align-items:baseline}
+#load .row b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.bar{width:min(280px,70vw);height:2px;background:rgba(239,236,230,.14);overflow:hidden}
+.bar i{display:block;height:100%;width:40%;background:var(--amber);
+  animation:sweep 1.2s ease-in-out infinite}
+@keyframes sweep{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+
+@media (max-width:640px){
+  .plate{max-width:78vw}
+  .bottom{flex-direction:column;align-items:stretch}
+  .credit,.signoff{text-align:left}
+  .deck{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .grain,.eq i,.bar i{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+
+<div class="grain"></div><div class="vig"></div><div class="scan"></div>
+
+<!-- HUD -->
+<div class="hud">
+  <div class="top">
+    <div class="sys">◈ <b>AARONAUTICS</b> — FLIGHT SYSTEMS<span class="sub"><br>OBJECT 001 · AUDIO / TAPE TRANSPORT</span></div>
+    <div class="timer"><span class="lbl">MISSION TIME</span><span id="clock">T+ 00:00:00</span></div>
+  </div>
+
+  <div class="bottom">
+    <div class="plate">
+      <div class="kicker">Recovered hardware · circa 1983</div>
+      <h1>Sony <em>Walkman</em><br>WM-F2078</h1>
+      <div class="spec">
+        <span>MODE <b>PBR / WEBGL</b></span>
+        <span>MESH <b>DRACO</b></span>
+        <span>TEX <b>2K WEBP</b></span>
+        <span>PAYLOAD <b>4.7 MB</b></span>
+      </div>
+      <div class="hint">◐ <span>Drag to orbit</span> · scroll to zoom · click the deck to play</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px">
+      <!-- MUSIC DECK -->
+      <div class="deck" id="deck">
+        <div class="deck-hd">
+          <div class="name"><b>TDK</b> · TAPE DECK</div>
+          <div class="pwr"><span class="dot" id="pwr"></span> PWR</div>
+        </div>
+        <div class="tape">
+          <div class="now" id="now">
+            <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="meta">
+              <div class="t" id="trk-title">Insert tape — press ►</div>
+              <div class="a" id="trk-artist">Aaronautics · sample reel</div>
+            </div>
+            <div class="counter" id="counter">01/06</div>
+          </div>
+        </div>
+        <div class="keys">
+          <button class="key" id="prev" title="Previous track" aria-label="Previous track"><span class="glyph">◄◄</span></button>
+          <button class="key play" id="play" title="Play / pause" aria-label="Play or pause"><span class="glyph">►</span></button>
+          <button class="key" id="stop" title="Stop" aria-label="Stop"><span class="glyph">■</span></button>
+          <button class="key" id="next" title="Next track" aria-label="Next track"><span class="glyph">►►</span></button>
+        </div>
+        <div class="embed">
+          <div id="spotify"></div>
+          <div class="src"><span>SOURCE · SPOTIFY</span><span>SAMPLE REEL — SWAP FOR AARON'S</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="credit">
+          Model: <a href="https://sketchfab.com/3d-models/sony-walkman-wm-f2078" target="_blank" rel="noopener">Sony Walkman WM-F2078</a>
+          by <b>Dolgov12</b> · CC&nbsp;BY&nbsp;4.0
+        </div>
+        <div class="signoff">See you,<br>space cowboy…<small>object 001 · walkman</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div id="load">
+  <div class="big">001</div>
+  <div class="bar"><i></i></div>
+  <div class="row"><span id="load-msg">ACQUIRING SIGNAL</span> · <b><span id="load-pct">0</span>%</b></div>
+</div>
+
+<!-- three.js r169 — bundled & self-hosted (no CDN). Rebuild: npm run build:3d -->
+<script type="module" src="assets/js/walkman.bundle.js"></script>
+
+<!-- mission clock -->
+<script>
+(function(){
+  var el=document.getElementById('clock'), t0=Date.now();
+  function pad(n){return String(n).padStart(2,'0')}
+  setInterval(function(){
+    var s=Math.floor((Date.now()-t0)/1000);
+    el.textContent='T+ '+pad(Math.floor(s/3600))+':'+pad(Math.floor(s/60)%60)+':'+pad(s%60);
+  },1000);
+})();
+</script>
+
+<!-- music deck ↔ Spotify iFrame API -->
+<script>
+window.AAudio = (function(){
+  // Sample reel — verified Spotify track URIs. Swap these for Aaron's real
+  // currently-listening (Bronx hip-hop + Bebop jazz). Each entry: uri/title/artist.
+  var TRACKS = [
+    {uri:'spotify:track:514joG57v4yKTsfQmz7stz', title:'Janice STFU',   artist:'Drake'},
+    {uri:'spotify:track:2lpygKqzPFtItQ4ss3cgfb', title:'Cinderella',    artist:'Mac Miller, Ty Dolla $ign'},
+    {uri:'spotify:track:6svevQditWxJzW2WUfqe2p', title:'Money Over Everything', artist:'Future'},
+    {uri:'spotify:track:0npTS3tR5pfQKgUFQMObJc', title:'Pollen',        artist:'Sebastian Kamae'},
+    {uri:'spotify:track:0hcX7etCRdZALhZEV33Vip', title:'Mood Swings',   artist:'Mr. Käfer, Niklas Nadidai'},
+    {uri:'spotify:track:1jVykeNDR8gZGpxV3bB7kI', title:'Mosaics',       artist:'Tah., skrn'}
+  ];
+
+  var i=0, ctrl=null, ready=false, playing=false, wantPlay=false;
+  var $=function(id){return document.getElementById(id)};
+  var elTitle=$('trk-title'), elArtist=$('trk-artist'), elCount=$('counter'),
+      elPlay=$('play'), elNow=$('now'), elDeck=$('deck'), elPwr=$('pwr');
+
+  function render(){
+    elTitle.textContent=TRACKS[i].title;
+    elArtist.textContent=TRACKS[i].artist;
+    elCount.textContent=String(i+1).padStart(2,'0')+'/'+String(TRACKS.length).padStart(2,'0');
+  }
+  function setPlaying(p){
+    playing=p;
+    elPlay.querySelector('.glyph').textContent=p?'❚❚':'►';
+    elPlay.classList.toggle('active',p);
+    elNow.parentElement.parentElement.classList.toggle('playing',p);
+    elDeck.classList.toggle('playing',p);
+    elPwr.classList.toggle('on',p);
+  }
+  function press(el){ el.classList.add('press'); setTimeout(function(){el.classList.remove('press')},120); }
+
+  function load(n, autoplay){
+    i=(n+TRACKS.length)%TRACKS.length;
+    render();
+    if(ctrl){ ctrl.loadUri(TRACKS[i].uri); if(autoplay){ wantPlay=true; setTimeout(function(){ try{ctrl.play()}catch(e){} },420);} }
+  }
+
+  var api={
+    play:function(){ if(ctrl){ press(elPlay); try{ctrl.play()}catch(e){} } },
+    toggle:function(){ if(!ctrl)return; press(elPlay); try{ctrl.togglePlay()}catch(e){} },
+    stop:function(){ if(ctrl){ try{ctrl.pause();ctrl.seek(0)}catch(e){} } },
+    next:function(){ press($('next')); load(i+1, true); },
+    prev:function(){ press($('prev')); load(i-1, true); },
+    _bind:function(controller){
+      ctrl=controller; ready=true;
+      controller.addListener('playback_update', function(e){
+        setPlaying(!e.data.isPaused);
+      });
+    }
+  };
+
+  render();
+  // wire buttons
+  document.addEventListener('DOMContentLoaded', function(){
+    $('play').addEventListener('click', api.toggle);
+    $('stop').addEventListener('click', api.stop);
+    $('next').addEventListener('click', api.next);
+    $('prev').addEventListener('click', api.prev);
+  });
+  return api;
+})();
+
+// Spotify iFrame API callback
+window.onSpotifyIframeApiReady = function(IFrameAPI){
+  var first = 'spotify:track:514joG57v4yKTsfQmz7stz';
+  IFrameAPI.createController(
+    document.getElementById('spotify'),
+    { uri:first, width:'100%', height:'80' },
+    function(controller){ window.AAudio._bind(controller); }
+  );
+};
+</script>
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+
+</body>
+</html>

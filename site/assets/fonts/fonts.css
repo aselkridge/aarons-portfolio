@@ -1,0 +1,8 @@
+/* Aaronautics — self-hosted type (Bebop cut). No external font CDN. */
+@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url('./anton-400.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:300;font-display:swap;src:url('./oswald-300.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url('./oswald-400.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:500;font-display:swap;src:url('./oswald-500.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('./oswald-700.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./space-mono-400.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./space-mono-700.woff2') format('woff2')}
