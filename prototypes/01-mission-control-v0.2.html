@@ -1,0 +1,386 @@
+<style>
+/* ============ AARONAUTICS · MISSION CONTROL — concept v0.2 ============ */
+:root{
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#04060c;overflow:hidden}
+body{font-family:var(--sans)}
+
+/* ---------- theme skins (scoped to #ship) ---------- */
+#ship{
+  --bg:#050912; --bg2:#0a1120; --panel:rgba(18,30,52,.72); --panel-line:rgba(120,180,230,.22);
+  --ink:#e8f1ff; --dim:#8ba3c6; --accent:#3fd0ff; --accent2:#7f8cff; --hot:#ff7a3d; --ok:#57e39b;
+  --glass:blur(10px); --deco-scan:0; --deco-grain:0; --radius:10px;
+  --display:var(--mono); --title:var(--mono); --body:var(--sans);
+  --face:radial-gradient(120% 130% at 50% -10%,#0d1830,#050912 70%);
+}
+#ship[data-skin="retro"]{
+  --bg:#0a0703; --bg2:#160d04; --panel:rgba(38,22,6,.8); --panel-line:rgba(255,176,64,.28);
+  --ink:#ffd9a0; --dim:#c58a45; --accent:#ff9d2e; --accent2:#ffc86b; --hot:#ff5a2a; --ok:#c9d84a;
+  --glass:none; --deco-scan:1; --deco-grain:0; --radius:4px;
+  --display:var(--mono); --title:var(--serif); --body:var(--serif);
+  --face:radial-gradient(120% 130% at 50% 0%,#1c1004,#0a0703 72%);
+}
+#ship[data-skin="modern"]{
+  --bg:#0e0f12; --bg2:#17181c; --panel:rgba(255,255,255,.04); --panel-line:rgba(255,255,255,.14);
+  --ink:#f4f5f7; --dim:#9a9ea8; --accent:#e8e8ea; --accent2:#b8bcc6; --hot:#ff6a3d; --ok:#7fd6a0;
+  --glass:blur(14px); --deco-scan:0; --deco-grain:0; --radius:14px;
+  --display:var(--sans); --title:var(--sans); --body:var(--sans);
+  --face:radial-gradient(120% 130% at 50% -20%,#1a1c22,#0e0f12 70%);
+}
+#ship[data-skin="anime"]{
+  --bg:#0c0a14; --bg2:#171125; --panel:rgba(40,26,58,.72); --panel-line:rgba(255,193,94,.3);
+  --ink:#fdf3e3; --dim:#c9a6b8; --accent:#ffc15e; --accent2:#ff6b8a; --hot:#ff4d6d; --ok:#4ec7c0;
+  --glass:blur(6px); --deco-scan:0; --deco-grain:1; --radius:8px;
+  --display:var(--mono); --title:var(--sans); --body:var(--sans);
+  --face:radial-gradient(130% 120% at 70% -10%,#2a1640,#0c0a14 68%);
+}
+
+#ship{position:fixed;inset:0;background:var(--bg);color:var(--ink);overflow:hidden}
+#ship::after{ /* scanlines / grain overlays */
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px);
+  display:none;
+}
+#ship[data-skin="retro"]::after{display:block}
+#ship[data-skin="anime"]::after{display:block;mix-blend-mode:soft-light;opacity:.35;
+  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.08),transparent 40%),
+             repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 5px)}
+
+/* ---------- scenes ---------- */
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease;z-index:1}
+.scene.active{opacity:1;visibility:visible;z-index:2}
+canvas.field{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ================= BOOT / THEME SELECT ================= */
+#boot{background:var(--face);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:10}
+.boot-mark{font-family:var(--mono);letter-spacing:.4em;font-size:13px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.boot-title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,6vw,3.6rem);margin:0 0 4px;text-align:center;letter-spacing:.02em}
+.boot-sub{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin-bottom:38px}
+.skins{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:840px;width:100%}
+@media(max-width:680px){.skins{grid-template-columns:repeat(2,1fr)}}
+.skin{cursor:pointer;border:1px solid var(--panel-line);border-radius:10px;padding:20px 16px;background:rgba(255,255,255,.02);
+  text-align:left;transition:transform .2s,border-color .2s,background .2s;position:relative;overflow:hidden}
+.skin:hover,.skin:focus-visible{transform:translateY(-4px);border-color:var(--accent);outline:none;background:rgba(255,255,255,.05)}
+.skin .sw{display:flex;gap:5px;margin-bottom:14px}
+.skin .sw span{width:22px;height:22px;border-radius:5px}
+.skin h4{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin:0 0 4px}
+.skin p{margin:0;font-size:11.5px;color:var(--dim);line-height:1.4;font-family:var(--mono)}
+.skin .idx{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:10px;color:var(--dim)}
+.boot-hint{margin-top:30px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+
+/* ================= MISSION CONTROL ================= */
+#control{background:var(--face)}
+.grid-floor{position:absolute;inset:0;background:
+  linear-gradient(transparent 60%,rgba(63,208,255,.05)),
+  repeating-linear-gradient(90deg,var(--panel-line) 0 1px,transparent 1px 64px) 0 0/64px 100%,
+  repeating-linear-gradient(0deg,var(--panel-line) 0 1px,transparent 1px 64px) 0 0/100% 64px;
+  opacity:.25;mask-image:linear-gradient(transparent,black 70%)}
+.hud{position:absolute;inset:0;display:flex;flex-direction:column;padding:clamp(14px,3vw,34px)}
+.hud-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.mark{font-family:var(--mono);letter-spacing:.32em;font-size:13px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.mark b{color:var(--accent)}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--panel-line);border-radius:20px;padding:4px 11px;display:inline-flex;align-items:center;gap:7px}
+.led{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 2.4s infinite}
+@keyframes blink{50%{opacity:.35}}
+
+.control-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+.mission-label{font-family:var(--mono);letter-spacing:.3em;font-size:12px;color:var(--dim);text-transform:uppercase}
+.clock{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums;
+  font-size:clamp(3.4rem,13vw,8.5rem);line-height:.9;letter-spacing:.02em;color:var(--ink);
+  text-shadow:0 0 30px color-mix(in srgb,var(--accent) 55%,transparent)}
+#ship[data-skin="retro"] .clock{color:var(--accent);text-shadow:0 0 18px var(--accent),0 0 3px #fff2}
+.clock .lab{display:block;font-size:.13em;letter-spacing:.5em;color:var(--dim);margin-top:14px;text-shadow:none}
+.launch-btn{margin-top:26px;font-family:var(--mono);letter-spacing:.24em;text-transform:uppercase;font-size:14px;
+  color:#04060c;background:var(--hot);border:none;border-radius:var(--radius);padding:16px 40px;cursor:pointer;
+  font-weight:700;transition:transform .15s,box-shadow .25s;box-shadow:0 0 0 rgba(255,122,61,.6)}
+.launch-btn:hover{transform:translateY(-2px);box-shadow:0 8px 40px color-mix(in srgb,var(--hot) 60%,transparent)}
+.launch-btn:disabled{opacity:.5;cursor:default;animation:none}
+.mini-readouts{display:flex;gap:1px;margin-top:30px;flex-wrap:wrap;justify-content:center;background:var(--panel-line);border:1px solid var(--panel-line);border-radius:var(--radius);overflow:hidden}
+.mini-readouts .r{background:var(--panel);padding:12px 20px;min-width:120px;backdrop-filter:var(--glass)}
+.mini-readouts .rv{font-family:var(--mono);font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums}
+.mini-readouts .rl{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+
+/* ================= COCKPIT ================= */
+#cockpit{background:#02040a}
+.viewport{position:absolute;inset:0}
+.window-frame{position:absolute;inset:clamp(10px,3vw,40px);border:2px solid var(--panel-line);border-radius:26px;
+  box-shadow:inset 0 0 120px rgba(0,0,0,.8);pointer-events:none;z-index:5}
+.cockpit-hud{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(20px,4vw,50px)}
+.cock-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.cock-title{font-family:var(--serif);font-size:clamp(1.1rem,2.6vw,1.7rem);margin:0}
+.cock-title small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-top:4px;font-weight:400}
+.console{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end}
+@media(max-width:720px){.console{grid-template-columns:repeat(2,1fr)}}
+.panelbtn{cursor:pointer;background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);
+  padding:16px 14px;text-align:left;backdrop-filter:var(--glass);transition:transform .2s,border-color .2s,background .2s;position:relative;overflow:hidden}
+.panelbtn:hover,.panelbtn:focus-visible{transform:translateY(-6px);border-color:var(--accent);outline:none;background:color-mix(in srgb,var(--accent) 12%,var(--panel))}
+.panelbtn .sig{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.panelbtn h3{font-family:var(--title);font-size:clamp(1rem,2vw,1.35rem);margin:8px 0 5px;font-weight:600}
+.panelbtn p{margin:0;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.45}
+.panelbtn .glow{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.panelbtn:hover .glow,.panelbtn:focus-visible .glow{transform:scaleX(1)}
+
+/* section overlay */
+.overlay{position:absolute;inset:0;z-index:40;background:rgba(3,6,14,.86);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .35s}
+.overlay.open{opacity:1;visibility:visible}
+.sheet{max-width:640px;width:100%;border:1px solid var(--panel-line);border-radius:16px;background:var(--panel);padding:34px;backdrop-filter:var(--glass)}
+.sheet .sig{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+.sheet h2{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);margin:10px 0 14px}
+.sheet p{color:var(--dim);line-height:1.7;margin:0 0 12px}
+.close{margin-top:20px;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  background:none;border:1px solid var(--panel-line);color:var(--ink);border-radius:var(--radius);padding:10px 20px;cursor:pointer}
+.close:hover{border-color:var(--accent)}
+
+/* ================= TAPE DECK (persistent) ================= */
+#deck{position:absolute;left:clamp(14px,3vw,34px);bottom:clamp(14px,3vw,34px);z-index:50;
+  width:min(300px,72vw);border:1px solid var(--panel-line);border-radius:var(--radius);
+  background:var(--panel);backdrop-filter:var(--glass);padding:14px;display:none;overflow:hidden}
+#deck.show{display:block}
+.deck-head{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.reels{display:flex;align-items:center;gap:16px;justify-content:center;padding:6px 0 12px}
+.reel{width:40px;height:40px;border-radius:50%;border:3px solid var(--panel-line);position:relative;background:
+  radial-gradient(circle,transparent 30%,color-mix(in srgb,var(--accent) 20%,transparent) 31% 34%,transparent 35%)}
+.reel::before,.reel::after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed var(--panel-line)}
+.reel.spin{animation:spin 1.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tape{flex:1;height:5px;background:var(--panel-line);border-radius:3px;position:relative}
+.nowplaying{overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:11px;color:var(--ink);border-top:1px solid var(--panel-line);padding-top:10px}
+.nowplaying .scrollx{display:inline-block;padding-left:100%;animation:marq 12s linear infinite}
+.nowplaying .scrollx.paused{animation-play-state:paused}
+@keyframes marq{to{transform:translateX(-100%)}}
+.deck-controls{display:flex;gap:8px;margin-top:10px}
+.deck-controls button{flex:1;font-family:var(--mono);font-size:11px;background:none;border:1px solid var(--panel-line);
+  color:var(--ink);border-radius:6px;padding:7px;cursor:pointer;letter-spacing:.1em}
+.deck-controls button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* launch flash */
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:70;pointer-events:none}
+.shake{animation:shake .5s linear infinite}
+@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}50%{transform:translate(2px,-3px)}75%{transform:translate(-2px,-1px)}}
+
+/* re-boot button */
+.reboot{position:absolute;top:clamp(14px,3vw,34px);right:clamp(14px,3vw,34px);z-index:50;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  background:none;border:1px solid var(--panel-line);border-radius:20px;padding:6px 12px;cursor:pointer;display:none}
+.reboot.show{display:block}
+.reboot:hover{color:var(--accent);border-color:var(--accent)}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.05ms!important}}
+</style>
+
+<div id="ship" data-skin="futuristic">
+
+  <!-- ============ BOOT ============ -->
+  <section id="boot" class="scene active">
+    <div class="boot-mark">◈ Aaronautics · flight systems</div>
+    <h1 class="boot-title">Select cabin aesthetic</h1>
+    <div class="boot-sub">Choose your reality — the whole ship reskins</div>
+    <div class="skins" id="skinPicker">
+      <button class="skin" data-skin="retro">
+        <span class="idx">01</span>
+        <div class="sw"><span style="background:#ff9d2e"></span><span style="background:#ffc86b"></span><span style="background:#160d04"></span></div>
+        <h4>Retro</h4><p>Apollo-era. Amber bulbs, CRT scanlines, warm serif.</p>
+      </button>
+      <button class="skin" data-skin="modern">
+        <span class="idx">02</span>
+        <div class="sw"><span style="background:#f4f5f7"></span><span style="background:#9a9ea8"></span><span style="background:#17181c"></span></div>
+        <h4>Modern</h4><p>Clean & quiet. Glass, restraint, monochrome.</p>
+      </button>
+      <button class="skin" data-skin="futuristic">
+        <span class="idx">03</span>
+        <div class="sw"><span style="background:#3fd0ff"></span><span style="background:#7f8cff"></span><span style="background:#0a1120"></span></div>
+        <h4>Futuristic</h4><p>The Expanse. Holo-blue, thin lines, cold glass.</p>
+      </button>
+      <button class="skin" data-skin="anime">
+        <span class="idx">04</span>
+        <div class="sw"><span style="background:#ffc15e"></span><span style="background:#ff6b8a"></span><span style="background:#171125"></span></div>
+        <h4>Anime</h4><p>Cowboy Bebop. Jazzy warmth, grain, bold titles.</p>
+      </button>
+    </div>
+    <div class="boot-hint">↑ pick one to board · you can switch anytime</div>
+  </section>
+
+  <!-- ============ MISSION CONTROL ============ -->
+  <section id="control" class="scene">
+    <canvas class="field" id="field1"></canvas>
+    <div class="grid-floor"></div>
+    <div class="hud">
+      <div class="hud-top">
+        <div class="mark"><b>◈ AARONAUTICS</b> · LAUNCH CONTROL</div>
+        <div class="chip"><span class="led"></span>All systems nominal</div>
+      </div>
+      <div class="control-center">
+        <div class="mission-label">Mission AAX-01 · vehicle "Bronx Star" · T-minus</div>
+        <div class="clock" id="clock">00:00:20<span class="lab">HRS · MIN · SEC</span></div>
+        <button class="launch-btn" id="launchBtn">▲ Initiate Launch</button>
+        <div class="mini-readouts">
+          <div class="r"><div class="rv">9×</div><div class="rl">Builds · AlphaForge</div></div>
+          <div class="r"><div class="rv">1st→Lead</div><div class="rl">Automation @ RevOps</div></div>
+          <div class="r"><div class="rv">∞</div><div class="rl">Not just one thing</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COCKPIT ============ -->
+  <section id="cockpit" class="scene">
+    <canvas class="field" id="field2"></canvas>
+    <div class="window-frame"></div>
+    <div class="cockpit-hud">
+      <div class="cock-top">
+        <h2 class="cock-title">Orbit achieved.<small>Bridge · select a station</small></h2>
+        <div class="chip"><span class="led"></span>Cruising · 27,000 km/s</div>
+      </div>
+      <div class="console" id="console">
+        <button class="panelbtn" data-sec="mission"><div class="sig">AAX·001</div><h3>Mission</h3><p>The thesis. What I believe.</p><div class="glow"></div></button>
+        <button class="panelbtn" data-sec="alphaforge"><div class="sig">AAX·002</div><h3>AlphaForge</h3><p>9 GTM builds + real numbers.</p><div class="glow"></div></button>
+        <button class="panelbtn" data-sec="life"><div class="sig">AAX·003</div><h3>Life</h3><p>Reading · watching · eating.</p><div class="glow"></div></button>
+        <button class="panelbtn" data-sec="craft"><div class="sig">AAX·004</div><h3>Craft</h3><p>Poetry · drawing · physics.</p><div class="glow"></div></button>
+        <button class="panelbtn" data-sec="notes"><div class="sig">AAX·005</div><h3>Notes</h3><p>Fatherhood · Bronx · building.</p><div class="glow"></div></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- overlay + persistent chrome -->
+  <div class="overlay" id="overlay">
+    <div class="sheet">
+      <div class="sig" id="ovSig">AAX</div>
+      <h2 id="ovTitle">Section</h2>
+      <p id="ovBody"></p>
+      <button class="close" id="ovClose">◄ Back to bridge</button>
+    </div>
+  </div>
+
+  <button class="reboot" id="reboot">⟲ Re-select aesthetic</button>
+
+  <div id="deck">
+    <div class="deck-head"><span>◉ TAPE DECK · NOW PLAYING</span><span id="deckSkin">FUT</span></div>
+    <div class="reels">
+      <div class="reel" id="reelL"></div>
+      <div class="tape"></div>
+      <div class="reel" id="reelR"></div>
+    </div>
+    <div class="nowplaying"><span class="scrollx paused" id="npText">Press ▶ — this is where Aaron's current rotation plays · placeholder track · real Spotify/YouTube hooks up later</span></div>
+    <div class="deck-controls">
+      <button id="deckPlay">▶ Play</button>
+      <button id="deckNext">⏭ Next</button>
+    </div>
+  </div>
+
+  <div id="flash"></div>
+</div>
+
+<script>
+(function(){
+  var ship=document.getElementById("ship");
+  var scenes={boot:sec("boot"),control:sec("control"),cockpit:sec("cockpit")};
+  function sec(id){return document.getElementById(id);}
+  function show(name){for(var k in scenes)scenes[k].classList.toggle("active",k===name);}
+
+  /* ---- theme select ---- */
+  document.getElementById("skinPicker").addEventListener("click",function(e){
+    var b=e.target.closest(".skin");if(!b)return;
+    setSkin(b.dataset.skin);
+    document.getElementById("deck").classList.add("show");
+    document.getElementById("reboot").classList.add("show");
+    show("control");startClock();
+  });
+  function setSkin(s){ship.dataset.skin=s;document.getElementById("deckSkin").textContent=s.slice(0,3).toUpperCase();}
+  document.getElementById("reboot").addEventListener("click",function(){
+    stopClock();show("boot");document.getElementById("deck").classList.remove("show");this.classList.remove("show");
+  });
+
+  /* ---- countdown ---- */
+  var t=20,timer=null,launched=false;
+  var clock=document.getElementById("clock");
+  function paint(){
+    var s=Math.max(0,t),hh=String(Math.floor(s/3600)).padStart(2,"0"),
+        mm=String(Math.floor(s%3600/60)).padStart(2,"0"),ss=String(Math.floor(s%60)).padStart(2,"0");
+    clock.innerHTML=hh+":"+mm+":"+ss+'<span class="lab">HRS · MIN · SEC</span>';
+  }
+  function startClock(){t=20;launched=false;paint();var b=document.getElementById("launchBtn");b.disabled=false;b.textContent="▲ Initiate Launch";
+    clearInterval(timer);timer=setInterval(function(){t--;paint();if(t<=0){clearInterval(timer);launch();}},1000);}
+  function stopClock(){clearInterval(timer);}
+  document.getElementById("launchBtn").addEventListener("click",function(){this.disabled=true;t=5;paint();this.textContent="IGNITION…";});
+
+  /* ---- launch sequence ---- */
+  function launch(){
+    if(launched)return;launched=true;stopClock();
+    var flash=document.getElementById("flash");
+    scenes.control.classList.add("shake");
+    beep(120,.18);
+    flash.animate([{opacity:0},{opacity:.9,offset:.4},{opacity:0}],{duration:1400,easing:"ease-out"});
+    setTimeout(function(){beep(80,.3);},400);
+    setTimeout(function(){
+      scenes.control.classList.remove("shake");
+      show("cockpit");
+    },1500);
+  }
+
+  /* ---- section overlay ---- */
+  var content={
+    mission:["AAX·001 · MISSION","More than one thing.","This is the flagship — not the résumé. GTM engineer, automation lead, aerospace grad, poet, father from the Bronx. The belief underneath all of it: build systems that free people to do the human parts. Everything else on this ship is evidence for that."],
+    alphaforge:["AAX·002 · ALPHAFORGE","The proof.","Nine GTM builds from the Clay-led cohort — each one a real problem, a system I built, and the numbers behind it. This is where the Clay tables and weekly prompt solutions live as case studies. (Drop the files and this becomes real.)"],
+    life:["AAX·003 · LIFE","The relatable frequencies.","What I'm reading, watching, listening to, and eating right now. Anime, hip-hop, movies, the restaurants worth the trip. The page where a stranger finds the thing we have in common — and a conversation starts."],
+    craft:["AAX·004 · CRAFT","Made by hand.","Poetry, drawings, and the physics rabbit holes I fall into for fun. The made things with no ROI attached — the reason 'more than one thing' isn't a slogan."],
+    notes:["AAX·005 · NOTES","Writing & video.","Long-form and short: fatherhood from the Bronx, building my own home, becoming a husband, and GTM explained for a community that was never handed the map. Blog-style, easy to navigate."]
+  };
+  var ov=document.getElementById("overlay");
+  document.getElementById("console").addEventListener("click",function(e){
+    var b=e.target.closest(".panelbtn");if(!b)return;var c=content[b.dataset.sec];
+    document.getElementById("ovSig").textContent=c[0];
+    document.getElementById("ovTitle").textContent=c[1];
+    document.getElementById("ovBody").textContent=c[2];
+    ov.classList.add("open");beep(440,.05);
+  });
+  document.getElementById("ovClose").addEventListener("click",function(){ov.classList.remove("open");});
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.classList.remove("open");});
+
+  /* ---- tape deck ---- */
+  var tracks=["◉ Cowboy Bebop — 'Tank!' · Seatbelts","◉ Kendrick Lamar — 'Money Trees'","◉ Miles Davis — 'Blue in Green'","◉ A Tribe Called Quest — 'Electric Relaxation'","◉ Floating Points — 'Silhouettes'"];
+  var ti=0,playing=false;
+  var np=document.getElementById("npText"),rL=document.getElementById("reelL"),rR=document.getElementById("reelR");
+  function setTrack(){np.textContent=tracks[ti]+"  ·  now playing on the Bronx Star  ·  ";}
+  document.getElementById("deckPlay").addEventListener("click",function(){
+    playing=!playing;this.textContent=playing?"⏸ Pause":"▶ Play";
+    np.classList.toggle("paused",!playing);rL.classList.toggle("spin",playing);rR.classList.toggle("spin",playing);
+    if(playing){setTrack();beep(330,.05);}
+  });
+  document.getElementById("deckNext").addEventListener("click",function(){ti=(ti+1)%tracks.length;setTrack();beep(392,.05);});
+  setTrack();
+
+  /* ---- tiny web-audio blips (no external assets) ---- */
+  var AC=null;
+  function beep(freq,dur){
+    try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+      var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=freq;o.type="sine";
+      o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.0001,AC.currentTime);
+      g.gain.exponentialRampToValueAtTime(.08,AC.currentTime+.01);
+      g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+dur);
+      o.start();o.stop(AC.currentTime+dur+.02);}catch(e){}
+  }
+
+  /* ---- starfields ---- */
+  function starfield(cv,speedy){
+    var x=cv.getContext("2d"),w,h,dpr,st=[];
+    var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+    function size(){dpr=Math.min(devicePixelRatio||1,2);w=cv.width=cv.offsetWidth*dpr;h=cv.height=cv.offsetHeight*dpr;
+      st=[];var n=Math.round(w*h/7000);for(var i=0;i<n;i++)st.push({x:Math.random()*w,y:Math.random()*h,z:Math.random()*.8+.2});}
+    function frame(){x.clearRect(0,0,w,h);var acc=getComputedStyle(ship).getPropertyValue("--accent").trim()||"#fff";
+      for(var i=0;i<st.length;i++){var s=st[i];
+        x.globalAlpha=s.z;x.fillStyle=Math.random()>.985?acc:"#eaf1ff";
+        x.fillRect(s.x,s.y,s.z*2*dpr,s.z*2*dpr);
+        if(speedy){s.y+=s.z*3.2*dpr;if(s.y>h){s.y=0;s.x=Math.random()*w;}}
+      }x.globalAlpha=1;if(!reduce)requestAnimationFrame(frame);}
+    size();frame();addEventListener("resize",size);
+  }
+  starfield(document.getElementById("field1"),false);
+  starfield(document.getElementById("field2"),true);
+})();
+</script>

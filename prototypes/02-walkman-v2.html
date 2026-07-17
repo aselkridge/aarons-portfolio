@@ -1,0 +1,203 @@
+<style>
+/* ===== AARONAUTICS · Walkman (v2) — aimed at the "we are rewind" reference =====
+   Real 3D via CSS. Drag to orbit · tap the top buttons. Works under Reduced Motion. */
+:root{
+  --futura:"Futura","Century Gothic","Avenir Next","Twentieth Century",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --w:340px; --h:236px; --d:66px; --wh:170px; --hh:118px; --dh:33px;
+  --orange:#f47216; --orange-hi:#ff9b45; --orange-lo:#c9560b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:
+    radial-gradient(130% 80% at 50% 8%,#f2f0ec 0%,#dedad3 46%,#c4bfb6 100%);
+  font-family:var(--futura);color:#222;overflow:hidden;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  user-select:none;-webkit-user-select:none;
+}
+.head{position:fixed;top:24px;left:0;right:0;text-align:center;z-index:5}
+.head .k{font-family:var(--mono);font-size:10px;letter-spacing:.32em;color:#8a8378;text-transform:uppercase}
+.head h1{font-weight:700;font-size:clamp(1.2rem,2.6vw,1.7rem);margin:6px 0 2px;letter-spacing:-.01em;color:#2a2620}
+.head p{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:#9a9285;text-transform:uppercase;margin:0}
+
+.wrap{display:flex;flex-direction:column;align-items:center}
+.stage{perspective:1600px;perspective-origin:50% 38%;width:var(--w);height:var(--h);cursor:grab;touch-action:none}
+.stage:active{cursor:grabbing}
+.player{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(-20deg)}
+.face{position:absolute;top:50%;left:50%;transform-style:preserve-3d}
+
+/* ---- body faces (matte anodized orange) ---- */
+.front{width:var(--w);height:var(--h);border-radius:16px;
+  background:linear-gradient(158deg,var(--orange-hi) 0%,var(--orange) 42%,var(--orange-lo) 100%);
+  transform:translate(-50%,-50%) translateZ(var(--dh));
+  box-shadow:inset 0 3px 4px rgba(255,220,180,.5),inset 0 -8px 20px rgba(120,50,0,.35);
+  padding:22px 24px}
+.back{width:var(--w);height:var(--h);border-radius:16px;background:linear-gradient(158deg,#c9560b,#8f3d06);
+  transform:translate(-50%,-50%) rotateY(180deg) translateZ(var(--dh))}
+.right{width:var(--d);height:var(--h);border-radius:8px;background:linear-gradient(#d9640f,#a4480a);
+  transform:translate(-50%,-50%) rotateY(90deg) translateZ(var(--wh));display:flex;align-items:center;justify-content:center}
+.left{width:var(--d);height:var(--h);border-radius:8px;background:linear-gradient(#e86e12,#b4510a);
+  transform:translate(-50%,-50%) rotateY(-90deg) translateZ(var(--wh))}
+.bottom{width:var(--w);height:var(--d);border-radius:8px;background:#6e3204;
+  transform:translate(-50%,-50%) rotateX(-90deg) translateZ(var(--hh))}
+/* top face carries the transport buttons */
+.top{width:var(--w);height:var(--d);border-radius:8px;
+  background:linear-gradient(#ff9138,#e0630f);
+  transform:translate(-50%,-50%) rotateX(90deg) translateZ(var(--hh));
+  display:flex;align-items:center;gap:14px;padding:0 26px}
+
+/* jog wheel on right side */
+.wheel{width:40px;height:40px;border-radius:50%;background:
+  repeating-conic-gradient(#3a3530 0 8deg,#211d19 0 16deg);border:2px solid #4a443c;
+  box-shadow:inset 0 0 6px rgba(0,0,0,.6)}
+
+/* ---- front detail ---- */
+.cassette{position:relative;width:100%;height:120px;border-radius:12px;
+  background:linear-gradient(#141414,#050505);border:3px solid rgba(0,0,0,.35);
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cassette::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 80% at 30% 10%,rgba(255,255,255,.14),transparent 55%)}
+.clabel{position:absolute;inset:10px;border-radius:6px;background:linear-gradient(#e9e4da,#cbc4b7);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:6px}
+.clabel .brand{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:#3a3a3a}
+.clabel .brand b{color:#0a7d3a}
+.hubs{display:flex;gap:74px;margin-top:6px;position:relative}
+.hubs::after{content:"";position:absolute;top:50%;left:8px;right:8px;height:12px;transform:translateY(-50%);
+  background:#2a241c;border-radius:2px}
+.hub{width:34px;height:34px;border-radius:50%;background:
+  radial-gradient(circle,#0d0d0d 0 6px,#7a736a 7px 9px,#e9e4da 10px);position:relative;z-index:2}
+.hub .teeth{position:absolute;inset:9px;border-radius:50%;
+  background:repeating-conic-gradient(#3a352d 0 20deg,#0d0d0d 0 40deg)}
+.hub.spin{animation:spin 1.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.footrow{display:flex;align-items:flex-end;justify-content:space-between;margin-top:16px}
+.mark{font-weight:700;font-size:16px;letter-spacing:-.02em;line-height:1;color:#1c1712}
+.mark .dot{color:#0a0a0a}
+.mark .dot b{color:#ffe08a}
+.status{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#5a2c08;
+  border:1px solid rgba(0,0,0,.25);border-radius:20px;padding:3px 8px;display:flex;align-items:center;gap:6px}
+.pled{width:7px;height:7px;border-radius:50%;background:#7a2c08;box-shadow:inset 0 0 2px #000}
+.pled.on{background:#ffe14a;box-shadow:0 0 8px #ffd83a}
+
+/* ---- transport buttons (on the top face) ---- */
+.tbtn{width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;position:relative;
+  transform-style:preserve-3d;transform:translateZ(18px);touch-action:manipulation;
+  background:linear-gradient(#3a3530,#17140f);
+  box-shadow:0 0 0 2px rgba(0,0,0,.3),inset 0 2px 2px rgba(255,255,255,.18),0 6px 6px rgba(0,0,0,.35);
+  color:#e8e2d4;font-size:12px;display:flex;align-items:center;justify-content:center;
+  transition:transform .08s ease,box-shadow .08s ease}
+.tbtn.play{background:linear-gradient(#ffd23a,#c98f0a)}
+.tbtn.play.active{background:linear-gradient(#7dff9a,#22a44d);box-shadow:0 0 0 2px rgba(0,0,0,.3),0 0 16px rgba(80,255,120,.6),inset 0 2px 2px rgba(255,255,255,.3)}
+.tbtn:hover{filter:brightness(1.12)}
+.tbtn.press{transform:translateZ(8px);box-shadow:0 0 0 2px rgba(0,0,0,.3),inset 0 2px 3px rgba(0,0,0,.4)}
+.tbtn:focus-visible{outline:2px solid #1c1712;outline-offset:3px}
+.tbtn .cap{position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:7px;letter-spacing:.06em;color:#5a2c08;text-transform:uppercase;white-space:nowrap}
+
+.shadow{width:280px;height:40px;margin-top:44px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(60,40,10,.4),transparent 70%);filter:blur(7px)}
+
+.hint{position:fixed;bottom:22px;left:0;right:0;text-align:center;z-index:5;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:#8a8378;text-transform:uppercase}
+.hint b{color:var(--orange-lo)}
+
+@media(max-width:520px){:root{--w:290px;--h:200px;--d:58px;--wh:145px;--hh:100px;--dh:29px}}
+</style>
+
+<div class="head">
+  <div class="k">◈ Aaronautics · proof v2</div>
+  <h1>Walkman — aimed at your reference</h1>
+  <p>drag to orbit · tap the top buttons</p>
+</div>
+
+<div class="wrap">
+  <div class="stage" id="stage">
+    <div class="player" id="player">
+      <div class="face front">
+        <div class="cassette">
+          <div class="clabel">
+            <div class="brand">AAX&nbsp;<b>◈</b>&nbsp;C-90 · TYPE II</div>
+            <div class="hubs"><div class="hub" id="hubL"><div class="teeth"></div></div><div class="hub" id="hubR"><div class="teeth"></div></div></div>
+          </div>
+        </div>
+        <div class="footrow">
+          <div class="mark">aaronautics<span class="dot"><b>.</b></span></div>
+          <div class="status"><span class="pled" id="pled"></span><span id="statTxt">STANDBY</span></div>
+        </div>
+      </div>
+      <div class="face top">
+        <button class="tbtn play" data-act="play" id="playBtn" aria-label="Play">▶<span class="cap">play</span></button>
+        <button class="tbtn" data-act="stop" aria-label="Stop">◼<span class="cap">stop</span></button>
+        <button class="tbtn" data-act="prev" aria-label="Rewind">◀◀<span class="cap">rew</span></button>
+        <button class="tbtn" data-act="next" aria-label="Forward">▶▶<span class="cap">ff</span></button>
+      </div>
+      <div class="face back"></div>
+      <div class="face right"><div class="wheel"></div></div>
+      <div class="face left"></div>
+      <div class="face bottom"></div>
+    </div>
+  </div>
+  <div class="shadow"></div>
+</div>
+
+<div class="hint">real site: this plays your <b>Spotify</b> rotation in a real 3D model</div>
+
+<script>
+(function(){
+  var stage=document.getElementById("stage"),player=document.getElementById("player");
+  var rx=-22,ry=-20,dragging=false,px=0,py=0,idle=true,it=0;
+  var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function apply(){player.style.transform="rotateX("+rx+"deg) rotateY("+ry+"deg)";}
+  stage.addEventListener("pointerdown",function(e){
+    if(e.target.closest(".tbtn"))return;
+    dragging=true;idle=false;px=e.clientX;py=e.clientY;stage.setPointerCapture(e.pointerId);
+  });
+  addEventListener("pointermove",function(e){if(!dragging)return;
+    ry+=(e.clientX-px)*0.5;rx-=(e.clientY-py)*0.5;px=e.clientX;py=e.clientY;
+    rx=Math.max(-80,Math.min(75,rx));apply();});
+  addEventListener("pointerup",function(){dragging=false;setTimeout(function(){idle=true;},1500);});
+  function loop(){if(idle&&!reduce){it+=0.01;ry+=Math.sin(it)*0.03;apply();}requestAnimationFrame(loop);}
+  if(!reduce)requestAnimationFrame(loop);apply();
+
+  /* playback */
+  var tracks=["TANK! — SEATBELTS","MONEY TREES — KENDRICK","BLUE IN GREEN — MILES DAVIS","ELECTRIC RELAXATION — ATCQ","SILHOUETTES — FLOATING POINTS"];
+  var i=0,playing=false;
+  var hubL=document.getElementById("hubL"),hubR=document.getElementById("hubR"),
+      pled=document.getElementById("pled"),stat=document.getElementById("statTxt"),playBtn=document.getElementById("playBtn");
+  function render(){
+    hubL.classList.toggle("spin",playing&&!reduce);hubR.classList.toggle("spin",playing&&!reduce);
+    pled.classList.toggle("on",playing);
+    playBtn.classList.toggle("active",playing);
+    playBtn.firstChild.nodeValue=playing?"❚❚":"▶";
+    stat.textContent=playing?("▶ "+tracks[i].split(" — ")[0]):(i>=0?"CUED":"STANDBY");
+  }
+  /* audio — resume on gesture so mobile actually makes sound */
+  var AC=null;
+  function tone(f,d){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended")AC.resume();
+    var o=AC.createOscillator(),g=AC.createGain();o.type="triangle";o.frequency.value=f;
+    o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.0001,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.1,AC.currentTime+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);
+    o.start();o.stop(AC.currentTime+d+.02);}catch(e){}}
+  function hit(btn,act){
+    btn.classList.add("press");setTimeout(function(){btn.classList.remove("press");},120);
+    if(act==="play"){playing=!playing;tone(playing?392:180,.1);}
+    else if(act==="stop"){playing=false;tone(140,.16);}
+    else if(act==="next"){i=(i+1)%tracks.length;playing=true;tone(523,.06);}
+    else if(act==="prev"){i=(i-1+tracks.length)%tracks.length;playing=true;tone(330,.06);}
+    render();
+  }
+  document.querySelectorAll(".tbtn").forEach(function(btn){
+    var act=btn.dataset.act;
+    /* pointerdown gives instant tactile + reliable mobile response */
+    btn.addEventListener("pointerdown",function(e){e.stopPropagation();e.preventDefault();hit(btn,act);});
+    /* keyboard access */
+    btn.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();hit(btn,act);}});
+  });
+  render();
+})();
+</script>
