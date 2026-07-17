@@ -238,6 +238,31 @@ Live URL will be **https://aselkridge.github.io/aarons-portfolio/**. (Or point i
    (with spend limit!), create free CF worker, paste file, set secret, send URL.
    Then build the alien hull chat UI. 8. Galaga cabinet: still queued.
 
+**2026-07-17 — Orbit v5 (big feedback batch, shipped as separate commits):**
+- Polish: real visible minimize tabs (both themes), bold nav, angular bleeding
+  'See you space cowboy' signoff, clean planet callout, removed Walkman link,
+  cache-bust ?v so stale JS stops masking fixes (aim-from-ship was a cache issue).
+- Popups: single big center-top BANNER for major events (gold asteroid / bogey /
+  most-wanted / uncharted world); minor milestones + pilot-fact TRANSMISSIONS go
+  to a capped(3) auto-dismissing right-side stack. No more center pileup.
+- Hangar: ship swap now happens INSIDE the NAV·COM console as a hull bay (blast
+  doors, hazard floor, ship parks/launches), not a center-screen box.
+- ENVIRONMENT ART OVERHAUL (biggest ask - 'squares and circles' fix): replaced
+  primitive scenes with real path-drawn silhouette + layered art, dramatically
+  theme-aware (cel+outline vs soft/gradient). Mission=the SUN w/ caped hero
+  absorbing solar energy; AlphaForge=real neon skyline + coupe; Life=layered
+  forest + spirit&kid; Craft=real water + sloop; Notes=real people (DJ, masked
+  MC 'DUMILE', crew) + speakers. Reusable helpers in makeEnv (hero/car/tree/ship/
+  person/skyline). Hidden desert world = lone swordsman.
+- Type: Orbitron (wide technical) is now the Rocinante display face vs Anton.
+
+**NOT yet done from that batch (next up):**
+- Real WebGL hyperspace warp shader (Aaron greenlit 'try it') - deferred; the
+  canvas star-streak warp is still in place.
+- Alien hull LLM chat: worker file ready (docs/orbit/worker/alien-worker.js);
+  BLOCKED on Aaron creating the Cloudflare worker + Anthropic key and sending URL.
+- Galaga cabinet. Swapping generic silhouettes for Aaron's AI-gen exact cameos.
+
 **Still to do (next):**
 3. Aaron's real content into Orbit stations (AlphaForge builds, Life picks, poems).
 4. The mission-control desk vision (see §11 notes from 2026-07-17 session) stays the
