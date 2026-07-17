@@ -6,3 +6,6 @@
 @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('./oswald-700.woff2') format('woff2')}
 @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./space-mono-400.woff2') format('woff2')}
 @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./space-mono-700.woff2') format('woff2')}
+/* Orbitron — technical display for the Rocinante (Expanse) theme */
+@font-face{font-family:'Orbitron';font-style:normal;font-weight:500;font-display:swap;src:url('./orbitron-500.woff2') format('woff2')}
+@font-face{font-family:'Orbitron';font-style:normal;font-weight:800;font-display:swap;src:url('./orbitron-800.woff2') format('woff2')}

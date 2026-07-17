@@ -22,6 +22,7 @@
   --accent:#ff7a3c; --accent2:#ffd36a; --star:#ffe9cf;
   --bg1:#1a1310; --bg2:#110b08; --bg3:#080605; --grain-o:.09; --scan-o:.30;
   --anton:'Anton',Impact,sans-serif; --os:'Oswald','Arial Narrow',sans-serif; --mono:'Space Mono',ui-monospace,monospace;
+  --display:'Anton',Impact,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -70,6 +71,10 @@ body.t-roci .flare{display:block}
 
 .sun-orbit{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(239,236,230,.09);transform:translate(-50%,-50%);pointer-events:none}
 body.t-roci .sun-orbit{border-style:solid;border-color:rgba(116,208,255,.10)}
+body.t-roci{--display:'Orbitron','Anton',sans-serif}
+body.t-roci .wordmark{font-family:var(--display);font-weight:800;letter-spacing:-.01em;font-size:clamp(1.15rem,2.2vw,1.7rem)}
+body.t-roci .dock h2,body.t-roci .card h2{font-family:var(--display);font-weight:800;letter-spacing:-.01em;line-height:1.02}
+body.t-roci .bnr .bt,body.t-roci .toast .tt{font-family:var(--display);font-weight:800}
 
 /* ───────── planets ───────── */
 .planet{position:absolute;transform:translate(-50%,-50%);cursor:pointer;pointer-events:auto;will-change:left,top}
@@ -532,8 +537,8 @@ body.t-roci .bnr .bk{color:#9affea}
 <div id="ach" aria-live="polite"></div>
 
 <audio id="audio" preload="none"></audio>
-<script src="audio/tracks.js?v=5"></script>
-<script src="data/facts.js?v=5"></script>
-<script src="orbit.js?v=5"></script>
+<script src="audio/tracks.js?v=6"></script>
+<script src="data/facts.js?v=6"></script>
+<script src="orbit.js?v=6"></script>
 </body>
 </html>
