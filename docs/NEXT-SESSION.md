@@ -1,8 +1,27 @@
 # How to start the next session correctly
 
-The **only reason** the 3D model was blocked last time: the cloud environment's
-**Network access** was set to **Trusted**, which blocks Google Drive and the general
-web. To do the real 3D work, the new session needs **Full** network access.
+Two things went wrong last session and both need fixing for the next one:
+
+1. **Network access was `Trusted`** → blocked Google Drive + the general web, so the
+   3D model couldn't be downloaded. Fix: set it to **Full**.
+2. **GitHub access was read-only** → the session could read the repo but not *push*
+   to it (error: "Resource not accessible by integration"). Fix: grant the Claude
+   GitHub connection **write access** to `aselkridge/aarons-portfolio`.
+
+## Fix #2 first — GitHub write access (plain English)
+
+When you connect GitHub to Claude Code, the app has to be allowed to *write* to this
+specific repo, not just read it. To fix:
+- Go to your GitHub settings → **Applications** → the Claude / Claude Code GitHub App
+  → **Configure**.
+- Under **Repository access**, make sure **`aselkridge/aarons-portfolio`** is selected
+  (either "All repositories" or add it to "Only select repositories").
+- Save. That grants the "Contents: write" permission the app needs to push.
+- (If you connected via a personal access token instead, the token needs the **`repo`**
+  scope.)
+
+Without this, a new session still can't save code to GitHub — it'll only be able to
+show you previews (Artifacts), like last time.
 
 ## For Aaron (plain English)
 
