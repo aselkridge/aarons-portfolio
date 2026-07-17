@@ -20,12 +20,13 @@ var themeId = 'sword';
 function T(){ return THEMES[themeId]; }
 
 /* ══════════ STATIONS ══════════ */
+/* The MISSION is the sun — the thing everything else orbits. */
+var SUN_STATION = { id:'mission', name:'Mission', color:'#ffb44a', num:'01', r:60,
+  env:'hero', envlab:'UPPER ATMOSPHERE',
+  eyebrow:'THE CORE · EVERYTHING ORBITS THIS', title:'Built to be more than one thing.',
+  body:['This is the flagship — the point of view, not the résumé. Aeronautics engineer by degree, automation builder by trade, poet and father by nature. The through-line isn\'t a job title; it\'s the range itself.','Aaronautics is a place to interface with that range — not a page to scroll. Everything in this system orbits this one idea.'],
+  tags:['point of view','the mission','more than one thing'] };
 var STATIONS = [
-  { id:'mission', name:'Mission', tag:'the thesis', color:'#ff7a3c', r:22, type:'molten', orbit:0.30, speed:0.055, a0:0.2,
-    env:'wasteland', envlab:'SCORCHED FLATS',
-    eyebrow:'STATION 01 · THE THESIS', title:'Built to be more than one thing.',
-    body:['This is the flagship — the point of view, not the résumé. Aeronautics engineer by degree, automation builder by trade, poet and father by nature. The through-line isn\'t a job title; it\'s the range itself.','Aaronautics is a place to interface with that range — not a page to scroll.'],
-    tags:['point of view','the mission','more than one thing'] },
   { id:'alphaforge', name:'AlphaForge', tag:'the proof', color:'#74d0ff', r:18, type:'ringed', orbit:0.44, speed:0.040, a0:1.1,
     env:'shipyard', envlab:'ORBITAL YARD',
     eyebrow:'STATION 02 · THE PROOF', title:'Nine GTM builds.',
@@ -147,7 +148,7 @@ STATIONS.forEach(function(s,si){
     '<div class="tag"><div class="n">'+s.name+'</div><div class="d">'+s.tag+'</div></div>'+
     '<div class="dock">▶ dock &amp; enter</div>';
   if(!fine) el.addEventListener('click', function(){ if(state==='free') beginLanding(s); });
-  s.el=el; s.orb=el.querySelector('.orb'); s.a=s.a0; s.num='0'+(si+1);
+  s.el=el; s.orb=el.querySelector('.orb'); s.a=s.a0; s.num='0'+(si+2);
   system.appendChild(el);
   var ring=document.createElement('div'); ring.className='sun-orbit'; s.oring=ring;
   system.insertBefore(ring, system.firstChild);
@@ -156,6 +157,33 @@ function sizeOrbits(){ STATIONS.forEach(function(s){
   s.oring.style.width=(s.orbit*unit*2)+'px'; s.oring.style.height=(s.orbit*unit*2*0.62)+'px'; }); }
 function paintPlanets(){ STATIONS.forEach(function(s){ s.orb.style.background = themeId==='sword'? s.gradCel : s.gradReal; }); }
 sizeOrbits(); paintPlanets();
+
+/* the sun is the Mission */
+SUN_STATION.el=$('sun');
+function sunMetrics(){ SUN_STATION.x=CX; SUN_STATION.y=CY; SUN_STATION.r=$('sun').offsetWidth/2||60; }
+sunMetrics();
+var ALL=[SUN_STATION].concat(STATIONS);
+$('sun').addEventListener('click', function(){ if(state!=='free') return;
+  if(fine&&lockStation===SUN_STATION) beginLanding(SUN_STATION);
+  else if(fine) beginLanding(SUN_STATION);
+  else beginLanding(SUN_STATION); });
+
+/* nav strip — the fast way to travel */
+(function(){
+  var nav=$('stnav');
+  ALL.forEach(function(s){
+    var a=document.createElement('a');
+    a.textContent=s.name; a.dataset.id=s.id;
+    a.addEventListener('click', function(){ if(state==='free') beginWarp(s); });
+    a.addEventListener('mouseenter', function(){ if(s.el) s.el.classList.add('live'); });
+    a.addEventListener('mouseleave', function(){ if(s.el&&lockId!==s.id) s.el.classList.remove('live'); });
+    nav.appendChild(a);
+  });
+})();
+function navHere(id){
+  var links=$('stnav').querySelectorAll('a');
+  for(var i=0;i<links.length;i++) links[i].classList.toggle('here', links[i].dataset.id===id);
+}
 
 /* ══════════ CANVASES ══════════ */
 var sc=$('stars'), sctx=sc.getContext('2d');
@@ -261,7 +289,7 @@ var tcTimer=null;
 function updateLock(){
   if(state!=='free'){ setLock(null); return; }
   var best=null,bd=1e9;
-  STATIONS.forEach(function(s){
+  ALL.forEach(function(s){
     var d=Math.hypot(mx-(s.x+plx),my-(s.y+ply));
     if(d<s.r+52&&d<bd){ bd=d; best=s; }
   });
@@ -271,7 +299,7 @@ function setLock(s){
   var id=s?s.id:null;
   if(id===lockId){ if(s) lockStation=s; positionTgtbox(); return; }
   lockId=id; lockStation=s;
-  STATIONS.forEach(function(st){ st.el.classList.toggle('live', !!s&&st.id===s.id); });
+  ALL.forEach(function(st){ st.el.classList.toggle('live', !!s&&st.id===s.id); });
   $('target').textContent = s? s.name.toUpperCase()+' · LOCKED' : '— DRIFTING —';
   var tb=$('tgtbox');
   if(s){
@@ -325,6 +353,7 @@ function openStation(s){
   sizeEnv();
   panel.classList.add('open');
   state='station'; $('c-stat').textContent='● SURFACE';
+  $('loc').textContent=s.name.toUpperCase()+' · '+s.envlab; navHere(s.id);
   warpStreaks=[];
   (function envLoop(t){ if(!envScene) return;
     envScene.paint(ectx, envc.clientWidth, envc.clientHeight, (t||0)/1000);
@@ -335,6 +364,7 @@ function closeStation(){
   panel.classList.remove('open');
   history.replaceState(null,'',location.pathname);
   cancelAnimationFrame(envRAF); envScene=null;
+  $('loc').textContent='SYSTEM MAP'; navHere(null);
   setTimeout(function(){ system.classList.remove('warp'); state='free'; $('c-stat').textContent='● ONLINE'; },260);
 }
 $('close').addEventListener('click', closeStation);
@@ -430,6 +460,44 @@ function makeEnv(kind){
       var sh=c.createLinearGradient(0,h*0.5,0,h);
       sh.addColorStop(0,'rgba(232,236,244,.16)'); sh.addColorStop(1,'transparent');
       c.fillStyle=sh; c.fillRect(w*0.66,h*0.5,w*0.12,h*0.5); } };
+  }
+  if(kind==='hero'){
+    // dusk sky over a city — one figure floating above it all, cape in the wind
+    var sky=[['#1a1030',0],['#3d1d4a',0.42],['#8a3a3c',0.68],['#d97742',0.85],['#1c0f14',1]];
+    var b1=[],b2=[]; for(i=0;i<Math.ceil(w/46)+2;i++){ b1.push({x:i*46,wd:26+R()*18,ht:40+R()*110}); }
+    for(i=0;i<Math.ceil(w/30)+2;i++){ b2.push({x:i*30,wd:18+R()*12,ht:20+R()*70}); }
+    var lit=[]; for(i=0;i<70;i++) lit.push({x:R()*w,y:R()*0.16,ph:R()*6.28});
+    return { paint:function(c,w,h,t){
+      var g=c.createLinearGradient(0,0,0,h); sky.forEach(function(s){ g.addColorStop(s[1],s[0]); });
+      c.fillStyle=g; c.fillRect(0,0,w,h);
+      // low sun halo
+      var halo=c.createRadialGradient(w*0.5,h*0.72,10,w*0.5,h*0.72,w*0.42);
+      halo.addColorStop(0,'rgba(255,190,110,.5)'); halo.addColorStop(1,'transparent');
+      c.fillStyle=halo; c.fillRect(0,0,w,h);
+      // drifting cloud bands
+      for(var i=0;i<4;i++){ c.globalAlpha=0.10; c.fillStyle='#f8d9b0';
+        var cy=h*(0.3+i*0.09), off=((t*(6+i*3))%(w+400))-200;
+        c.beginPath(); c.ellipse(off,cy,150+i*40,10+i*3,0,0,7); c.fill(); }
+      c.globalAlpha=1;
+      // THE FIGURE — floating, cape rippling
+      var fx2=w*0.18, fy=h*0.22+Math.sin(t*0.7)*6, S=Math.min(w,h)/560;
+      c.fillStyle='#0d0a10';
+      c.beginPath(); c.arc(fx2,fy,7*S,0,7); c.fill();                       // head
+      c.beginPath(); c.moveTo(fx2-6*S,fy+6*S); c.lineTo(fx2+6*S,fy+6*S);    // torso→legs
+      c.lineTo(fx2+4*S,fy+42*S); c.lineTo(fx2+1*S,fy+42*S); c.lineTo(fx2,fy+30*S);
+      c.lineTo(fx2-1*S,fy+42*S); c.lineTo(fx2-4*S,fy+42*S); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(fx2-6*S,fy+8*S); c.lineTo(fx2-16*S,fy+22*S); c.lineTo(fx2-13*S,fy+24*S); c.lineTo(fx2-5*S,fy+14*S); c.fill(); // arm
+      c.beginPath(); c.moveTo(fx2+6*S,fy+8*S); c.lineTo(fx2+16*S,fy+22*S); c.lineTo(fx2+13*S,fy+24*S); c.lineTo(fx2+5*S,fy+14*S); c.fill();
+      c.beginPath(); c.moveTo(fx2-7*S,fy+7*S);                              // cape
+      var k; for(k=0;k<=6;k++){ var px3=fx2-7*S-k*6*S, py3=fy+7*S+k*9*S+Math.sin(t*3+k)*4*S; c.lineTo(px3,py3); }
+      for(k=6;k>=0;k--){ c.lineTo(fx2-7*S-k*6*S+10*S, fy+10*S+k*10*S+Math.sin(t*3+k+1)*4*S); }
+      c.closePath(); c.fill();
+      // skyline
+      c.fillStyle='#120b16'; b2.forEach(function(b){ c.fillRect(b.x,h-b.ht-h*0.06,b.wd,b.ht+h*0.06); });
+      c.fillStyle='#0a060d'; b1.forEach(function(b){ c.fillRect(b.x,h-b.ht,b.wd,b.ht); });
+      lit.forEach(function(L){ if(Math.sin(t*0.9+L.ph)>-0.2){ c.globalAlpha=0.75; c.fillStyle='#ffd9a0';
+        c.fillRect(L.x, h-8-L.y*260, 1.6,1.6); } });
+      c.globalAlpha=1; } };
   }
   /* desert */
   var d1=ridge(w,h,h*0.72,26,7), d2=ridge(w,h,h*0.85,20,5);
@@ -639,13 +707,13 @@ if(!fine){
 if(!fine||innerWidth<720){ $('console').classList.add('min'); $('player').classList.add('min'); }
 
 /* ══════════ RESIZE / BOOT / DEEP LINK ══════════ */
-addEventListener('resize', function(){ metrics(); sizeCanvases(); sizeOrbits(); initStars(); if(envScene) sizeEnv(); });
+addEventListener('resize', function(){ metrics(); sizeCanvases(); sizeOrbits(); sunMetrics(); initStars(); if(envScene) sizeEnv(); });
 var boot=$('boot');
 setTimeout(function(){ boot.classList.add('gone'); },1900);
 boot.addEventListener('click', function(){ boot.classList.add('gone'); });
 addEventListener('load', function(){
   Music.init();
-  var hsh=location.hash.slice(1), s=STATIONS.filter(function(x){return x.id===hsh;})[0];
+  var hsh=location.hash.slice(1), s=ALL.filter(function(x){return x.id===hsh;})[0];
   if(s) setTimeout(function(){ system.classList.add('warp'); openStation(s); }, 600);
 });
 applyTheme('sword');
@@ -654,6 +722,6 @@ applyTheme('sword');
 window.__orbit = {
   state:function(){ return { state:state, theme:themeId, weapon:weapon, asteroids:asteroids.length,
     projectiles:projectiles.length, bounty:bounty, lock:lockId, stations:STATIONS.map(function(s){return {id:s.id,x:s.x+plx,y:s.y+ply,r:s.r};}) }; },
-  fire:fire, land:function(id){ var s=STATIONS.filter(function(x){return x.id===id;})[0]; if(s) beginLanding(s); }
+  fire:fire, land:function(id){ var s=ALL.filter(function(x){return x.id===id;})[0]; if(s) beginLanding(s); }
 };
 })();
