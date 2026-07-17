@@ -248,6 +248,34 @@ body.t-roci .c-row button{border:1px solid rgba(116,208,255,.3);color:#6fa8c9;cl
 body.t-roci .c-row button.on{background:rgba(116,208,255,.16);color:#dff4ff;border-color:#86dcff;box-shadow:0 0 16px rgba(116,208,255,.35), inset 0 0 10px rgba(116,208,255,.15)}
 body.t-roci .c-data{color:#9cc8e4}
 
+/* ── ship-exchange bay (inside the console) ── */
+.bay{position:absolute;inset:0;z-index:8;display:none;overflow:hidden}
+.console.baying .bay{display:block}
+.console.baying .c-row,.console.baying .c-data{visibility:hidden}
+.bay::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 2px,transparent 2px 24px)}
+body.t-sword .bay{background:radial-gradient(120% 95% at 50% 18%,#2e2216 0%,#140b04 78%)}
+body.t-roci .bay{background:radial-gradient(120% 95% at 50% 18%,#122232 0%,#060e18 78%)}
+.bay-label{position:absolute;top:9px;left:13px;z-index:5;font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase}
+body.t-sword .bay-label{color:#ffb44a}body.t-roci .bay-label{color:#bfe8ff}
+.bay-floor{position:absolute;left:0;right:0;bottom:0;height:22%;z-index:1}
+body.t-sword .bay-floor{background:repeating-linear-gradient(45deg,#ffb44a 0 9px,#1c1206 9px 18px);opacity:.55;box-shadow:0 -2px 0 rgba(255,180,74,.5)}
+body.t-roci .bay-floor{background:repeating-linear-gradient(45deg,rgba(116,208,255,.55) 0 9px,rgba(6,14,24,.9) 9px 18px);box-shadow:0 -2px 0 rgba(116,208,255,.6)}
+.bay-ship{position:absolute;left:50%;bottom:-46px;width:40px;height:46px;transform:translateX(-50%);z-index:2;
+  transition:bottom .5s cubic-bezier(.5,0,.5,1),opacity .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
+.bay-ship svg{width:100%;height:100%;display:block}
+.console.ship-in .bay-ship{bottom:34%}
+.console.ship-out .bay-ship{bottom:112%;opacity:0}
+.bay-door{position:absolute;top:0;bottom:0;width:51%;z-index:3;transition:transform .55s cubic-bezier(.7,0,.3,1);
+  background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.3) 0 11px,rgba(255,255,255,.04) 11px 13px)}
+.bay-door.l{left:0}.bay-door.r{right:0}
+body.t-sword .bay-door{background-color:#2c2419;border-top:4px solid #57452f;border-bottom:4px solid #57452f}
+body.t-sword .bay-door.l{border-right:2px solid #ffb44a}body.t-sword .bay-door.r{border-left:2px solid #ffb44a}
+body.t-roci .bay-door{background-color:#152030;border-top:3px solid rgba(116,208,255,.4);border-bottom:3px solid rgba(116,208,255,.4)}
+body.t-roci .bay-door.l{border-right:1px solid #86dcff}body.t-roci .bay-door.r{border-left:1px solid #86dcff}
+.console.bay-open .bay-door.l{transform:translateX(-101%)}
+.console.bay-open .bay-door.r{transform:translateX(101%)}
+
 /* ───────── MUSIC PLAYER (bottom-right) ───────── */
 .player{pointer-events:auto;position:relative}
 .pl-credit{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;text-align:right;margin-top:6px}
@@ -330,27 +358,6 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
   body.t-roci .dock{background:linear-gradient(0deg,rgba(4,10,18,.9) 60%,rgba(4,10,18,.72) 88%,transparent)}
   .backhint{display:none}
 }
-
-/* ───────── hangar (ship swap sequence) ───────── */
-.hangar{position:fixed;inset:0;z-index:7;pointer-events:none;display:grid;place-items:center;
-  opacity:0;transition:opacity .4s ease}
-.hangar.show{opacity:1}
-.hbody{position:relative;width:min(300px,80vw);height:190px;border-radius:18px;overflow:hidden;
-  box-shadow:0 30px 80px rgba(0,0,0,.65)}
-body.t-sword .hbody{background:linear-gradient(180deg,#3a2f22,#241d15);border:2px solid #57452f}
-body.t-roci .hbody{background:linear-gradient(180deg,#2a3340,#161c26);border:1px solid rgba(116,208,255,.5)}
-.hbody::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(80% 60% at 50% 50%,rgba(255,220,150,.35),transparent 70%)}
-body.t-roci .hbody::before{background:radial-gradient(80% 60% at 50% 50%,rgba(116,208,255,.3),transparent 70%)}
-.hdoor{position:absolute;top:0;bottom:0;width:50.5%;transition:transform .5s cubic-bezier(.7,0,.3,1)}
-body.t-sword .hdoor{background:repeating-linear-gradient(90deg,#241d15 0 22px,#2c2419 22px 24px);border-top:6px solid #57452f;border-bottom:6px solid #57452f}
-body.t-roci .hdoor{background:repeating-linear-gradient(90deg,#1c2430 0 26px,#232d3c 26px 28px);border-top:4px solid rgba(116,208,255,.4);border-bottom:4px solid rgba(116,208,255,.4)}
-.hdoor.l{left:0;border-right:3px solid var(--accent)}
-.hdoor.r{right:0;border-left:3px solid var(--accent)}
-.hangar.open .hdoor.l{transform:translateX(-101%)}
-.hangar.open .hdoor.r{transform:translateX(101%)}
-.hlab{position:absolute;left:50%;bottom:-30px;transform:translateX(-50%);font-family:var(--mono);
-  font-size:9px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;white-space:nowrap}
 
 /* ───────── achievement / transmission toasts ───────── */
 /* right-side stack — minor milestones + transmissions (capped, auto-dismiss) */
@@ -458,6 +465,13 @@ body.t-roci .bnr .bk{color:#9affea}
           <span><span class="k">VEL</span> <b id="vel">0.00 AU/s</b></span>
           <span class="wide"><span class="k">BOUNTY</span> <b id="bounty">₩ 0</b></span>
           <span class="wide"><span class="k">TGT</span> <b id="target">— DRIFTING —</b></span>
+        </div>
+        <!-- ship-exchange bay (opens inside the console) -->
+        <div class="bay" id="bay">
+          <div class="bay-label">◈ HANGAR BAY</div>
+          <div class="bay-floor"></div>
+          <div class="bay-ship" id="bay-ship"></div>
+          <div class="bay-door l"></div><div class="bay-door r"></div>
         </div>
       </div>
     </div>

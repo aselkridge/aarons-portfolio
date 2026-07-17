@@ -749,25 +749,26 @@ function applyTheme(id){
   Music.onTheme();
   Sound.blip(id==='roci'?520:880);
 }
-var hangarEl=null, hangarXY=null, rocketHidden=false;
+function shipSVG(id){ var g=$('ship-'+(id==='sword'?'sword':'roci')); return '<svg viewBox="0 0 40 44">'+g.innerHTML+'</svg>'; }
 function shipSwap(toId){
   if(themeId===toId||state==='hangar') return;
   if(!fine||state!=='free'){ applyTheme(toId); return; }
   state='hangar'; setLock(null);
+  var con=$('console');
+  if(con.classList.contains('min')) con.classList.remove('min');   // must be open to watch it
   $('c-stat').textContent='● HANGAR';
-  hangarEl=document.createElement('div'); hangarEl.className='hangar';
-  hangarEl.innerHTML='<div class="hbody"><div class="hdoor l"></div><div class="hdoor r"></div><div class="hlab">AARONAUTICS HANGAR · SHIP EXCHANGE</div></div>';
-  document.body.appendChild(hangarEl);
-  hangarXY={x:W/2,y:H/2};
-  requestAnimationFrame(function(){ hangarEl.classList.add('show'); });
+  $('bay-ship').innerHTML=shipSVG(themeId);          // current ship pulls in
+  con.classList.add('baying');                        // bay visible, doors closed
   Sound.warp();
-  setTimeout(function(){ hangarEl.classList.add('open'); },420);              // doors open
-  setTimeout(function(){ rocketHidden=true; hangarEl.classList.remove('open'); Sound.thump(); },1600); // parked, doors shut
-  setTimeout(function(){ applyTheme(toId); },2050);                           // swap behind closed doors
-  setTimeout(function(){ hangarEl.classList.add('open'); rocketHidden=false; rx=hangarXY.x; ry=hangarXY.y; Sound.pew(); },2500);
-  setTimeout(function(){ hangarEl.classList.remove('open'); hangarEl.classList.remove('show');
-    state='free'; $('c-stat').textContent='● ONLINE';
-    var he=hangarEl; hangarEl=null; setTimeout(function(){ he.remove(); },500); },3250);
+  setTimeout(function(){ con.classList.add('bay-open'); },260);          // doors part
+  setTimeout(function(){ con.classList.add('ship-in'); },520);           // ship descends & parks
+  setTimeout(function(){ con.classList.remove('bay-open'); Sound.thump(); },1500); // doors shut over it
+  setTimeout(function(){ applyTheme(toId);                               // reskin everything behind closed doors
+    con.classList.add('baying');                                        // (applyTheme leaves classes; ensure bay stays)
+    $('bay-ship').innerHTML=shipSVG(toId); con.classList.remove('ship-in'); },1950);
+  setTimeout(function(){ con.classList.add('bay-open','ship-out'); Sound.pew(); },2300); // doors open, new ship launches
+  setTimeout(function(){ con.classList.remove('baying','bay-open','ship-in','ship-out');
+    state='free'; $('c-stat').textContent='● ONLINE'; },3150);
 }
 $('b-sword').addEventListener('click', function(){ shipSwap('sword'); });
 $('b-roci').addEventListener('click', function(){ shipSwap('roci'); });
@@ -804,13 +805,11 @@ function loop(t){
       if(p>=1) touchdown();
     } else if(state==='landed'&&landTarget){
       rx=landTarget.x+plx; ry=landTarget.y+ply-(landTarget.r+15); ra=0;
-    } else if(state==='hangar'&&hangarXY){
-      rx+=(hangarXY.x-rx)*0.12; ry+=(hangarXY.y-ry)*0.12; ra*=0.88;
     }
     if(rollT>0) rollT=Math.max(0,rollT-dt/0.7);
     var rollOff=(1-rollT)*Math.PI*2*(rollT>0?1:0);
     rocket.style.transform='translate('+rx+'px,'+ry+'px) rotate('+(ra+(rollT>0?rollOff:0))+'rad)';
-    rocket.style.opacity = (state==='warp'||state==='station'||rocketHidden)?'0':'1';
+    rocket.style.opacity = (state==='warp'||state==='station'||state==='hangar')?'0':'1';
     var fl=rocket.querySelectorAll('.flame'), fscale= state==='free'? Math.min(1,Math.hypot(mx-rx,my-ry)/55) : 0.15;
     for(var i=0;i<fl.length;i++){ fl[i].style.opacity=(0.5+Math.random()*0.5*Math.max(0.25,fscale)).toFixed(2); }
     shipSpeed = Math.hypot(rx-prevRx,ry-prevRy)/Math.max(dt,0.001); prevRx=rx; prevRy=ry;
