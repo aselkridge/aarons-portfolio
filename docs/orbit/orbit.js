@@ -146,7 +146,7 @@ STATIONS.forEach(function(s,si){
     '<div class="orb '+s.type+'" style="width:'+d+'px;height:'+d+'px"></div></div>'+
     '<div class="tag"><div class="n">'+s.name+'</div><div class="d">'+s.tag+'</div></div>'+
     '<div class="dock">▶ dock &amp; enter</div>';
-  if(!fine) el.addEventListener('click', function(){ if(state==='free') beginWarp(s); });
+  if(!fine) el.addEventListener('click', function(){ if(state==='free') beginLanding(s); });
   s.el=el; s.orb=el.querySelector('.orb'); s.a=s.a0; s.num='0'+(si+1);
   system.appendChild(el);
   var ring=document.createElement('div'); ring.className='sun-orbit'; s.oring=ring;
@@ -186,8 +186,8 @@ var warpOrigin=null, warpT=0, activeStation=null;
 addEventListener('pointermove', function(e){ mx=e.clientX; my=e.clientY; });
 addEventListener('pointerdown', function(e){
   Sound.unlock(); Music.autostart();
-  if(e.target.closest('.hud')||e.target.closest('.panel')||e.target.closest('#boot')) return;
-  if(!fine) return;                       // touch: planets handle taps directly
+  if(e.target.closest('.hud')||e.target.closest('.panel')||e.target.closest('#boot')||e.target.closest('#fireb')) return;
+  if(!fine){ mx=e.clientX; my=e.clientY; return; }   // touch: tap/drag = fly there; FIRE button shoots
   if(state!=='free') return;
   if(lockStation){ beginLanding(lockStation); }
   else fire();
@@ -229,7 +229,8 @@ function fire(){
 /* ══════════ ASTEROIDS ══════════ */
 function rockVerts(n,r){ var v=[]; for(var i=0;i<n;i++){ v.push(r*(0.72+Math.random()*0.5)); } return v; }
 function spawnAsteroid(tier,x,y){
-  var r = tier===3? 15+Math.random()*8 : tier===2? 10+Math.random()*5 : 6+Math.random()*3;
+  var ms = Math.min(W,H)<720? 0.6 : 1;   // phones: keep rocks proportional
+  var r = ms*(tier===3? 15+Math.random()*8 : tier===2? 10+Math.random()*5 : 6+Math.random()*3);
   var edge=Math.floor(Math.random()*4), px,py;
   if(x===undefined){
     px = edge===0? -60 : edge===1? W+60 : Math.random()*W;
@@ -258,7 +259,7 @@ function killAsteroid(i){
 /* ══════════ LOCK-ON ══════════ */
 var tcTimer=null;
 function updateLock(){
-  if(!fine||state!=='free'){ setLock(null); return; }
+  if(state!=='free'){ setLock(null); return; }
   var best=null,bd=1e9;
   STATIONS.forEach(function(s){
     var d=Math.hypot(mx-(s.x+plx),my-(s.y+ply));
@@ -481,9 +482,9 @@ function loop(t){
     s.el.style.left=s.x+'px'; s.el.style.top=s.y+'px'; s.el.style.zIndex=String(100+Math.round(s.y));
   });
 
-  /* ship */
+  /* ship — desktop cursor-follow AND mobile touch flight */
   var rocket=$('rocket');
-  if(fine){
+  {
     if(state==='free'){ rx+=(mx-rx)*0.16; ry+=(my-ry)*0.16;
       var dx=mx-rx,dy=my-ry,dd=Math.hypot(dx,dy);
       if(dd>0.5) ra+=(Math.atan2(dy,dx)+Math.PI/2-ra)*0.22;
@@ -616,6 +617,26 @@ function loop(t){
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
+
+/* ══════════ MINIMIZABLE PANELS + TOUCH UI ══════════ */
+function zap(el){ el.classList.remove('zap'); void el.offsetWidth; el.classList.add('zap'); Sound.blip(themeId==='sword'?440:660); }
+function toggleMin(el){ zap(el); setTimeout(function(){ el.classList.toggle('min'); },170); }
+$('c-mz').addEventListener('click', function(e){ e.stopPropagation(); toggleMin($('console')); });
+$('c-chip').addEventListener('click', function(){ toggleMin($('console')); });
+(function(){ var b=document.querySelectorAll('.player .mz');
+  for(var i=0;i<b.length;i++) b[i].addEventListener('click', function(e){ e.stopPropagation(); toggleMin($('player')); }); })();
+$('p-chip').addEventListener('click', function(e){ if(e.target.closest('button')) return; toggleMin($('player')); });
+/* chip data mirrors */
+setInterval(function(){
+  $('chip-bounty').textContent='₩ '+bounty.toLocaleString();
+  $('chip-tgt').textContent=$('target').textContent.replace('— ','').replace(' —','');
+},500);
+/* touch: FIRE button + hint copy + start minimized on small screens */
+$('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });
+if(!fine){
+  $('hint').innerHTML='◐ <b>Drag to fly</b> · FIRE shoots · tap a planet to dock · <a href="../">Walkman ↗</a>';
+}
+if(!fine||innerWidth<720){ $('console').classList.add('min'); $('player').classList.add('min'); }
 
 /* ══════════ RESIZE / BOOT / DEEP LINK ══════════ */
 addEventListener('resize', function(){ metrics(); sizeCanvases(); sizeOrbits(); initStars(); if(envScene) sizeEnv(); });

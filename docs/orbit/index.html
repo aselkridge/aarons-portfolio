@@ -109,9 +109,49 @@ body.t-sword .moon{box-shadow:0 0 0 1.5px rgba(24,16,10,.8)}
 @keyframes shieldup{0%{border-color:rgba(150,230,255,.9);transform:scale(.92);box-shadow:0 0 24px rgba(120,220,255,.7), inset 0 0 24px rgba(120,220,255,.4)}
   100%{border-color:rgba(150,230,255,0);transform:scale(1.12);box-shadow:none}}
 
-/* ───────── ship cursor ───────── */
+/* ───────── ship cursor (touch flight keeps it on mobile) ───────── */
 .rocket{position:fixed;z-index:8;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
-@media (hover:none){ .rocket{display:none} }
+
+/* FIRE button — touch devices only */
+#fireb{display:none;position:fixed;left:18px;bottom:88px;z-index:12;width:74px;height:74px;border-radius:50%;
+  cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink);
+  border:2px solid var(--accent);background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.14),rgba(0,0,0,.5));
+  box-shadow:0 0 22px -4px var(--accent), inset 0 0 14px rgba(0,0,0,.6);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#fireb:active{transform:scale(.92);box-shadow:0 0 30px -2px var(--accent)}
+@media (hover:none){ #fireb{display:block} }
+
+/* ───────── minimizable panels ───────── */
+.mz{position:absolute;top:6px;right:8px;z-index:5;width:24px;height:20px;border:0;cursor:pointer;
+  background:transparent;color:inherit;font-family:var(--mono);font-size:12px;line-height:1;opacity:.7}
+.mz:hover{opacity:1}
+.console{position:relative}
+.console .chip,.player .chip{display:none;cursor:pointer;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:8px 13px;white-space:nowrap}
+.console.min .scr{display:none}
+.console.min .chip{display:flex}
+.player.min .pl-skin{display:none!important}
+.player.min .pl-credit{display:none}
+.player.min .chip{display:flex}
+/* chip skins */
+body.t-sword .console.min{background:#241d15;border-radius:9px;padding:2px}
+body.t-sword .console .chip{color:#ffb44a;background:radial-gradient(120% 140% at 50% 0%,#221004,#160a02);border-radius:7px}
+body.t-sword .player .chip{color:#3a2c18;background:linear-gradient(175deg,#e8dcc6,#c9b590);border:1px solid #8f7c5c;border-radius:9px;
+  box-shadow:0 8px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)}
+body.t-roci .console.min{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+body.t-roci .console .chip{color:#bfe8ff}
+body.t-roci .player .chip{color:#bfe8ff;background:rgba(8,20,32,.6);border:1px solid rgba(116,208,255,.4);backdrop-filter:blur(8px);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.chip .mini-reel{width:16px;height:16px;flex:none;border-radius:50%;border:2px solid currentColor;position:relative;opacity:.85}
+.chip .mini-reel::before{content:'';position:absolute;inset:3px;border-radius:50%;border:1.6px dashed currentColor}
+.player.playing .chip .mini-reel{animation:spin 1.4s linear infinite}
+.chip .pl-title{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.chip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:12px;padding:2px 4px}
+/* themed collapse/expand effect */
+@keyframes crtzap{0%{transform:scaleY(1);filter:brightness(1)}55%{transform:scaleY(.05);filter:brightness(2.6)}100%{transform:scaleY(1);filter:brightness(1)}}
+@keyframes holofold{0%{transform:perspective(700px) rotateX(0)}55%{transform:perspective(700px) rotateX(66deg);opacity:.35;filter:brightness(1.7)}100%{transform:none;opacity:1}}
+body.t-sword .zap{animation:crtzap .34s ease both;transform-origin:center}
+body.t-roci .zap{animation:holofold .4s ease both;transform-origin:top center}
 
 /* roci lock brackets */
 .tgtbox{position:fixed;z-index:5;pointer-events:none;display:none}
@@ -258,6 +298,8 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
 @media (max-width:720px){
   .top{flex-direction:column;align-items:stretch}
   .console{width:100%}
+  .console.min{width:auto;align-self:flex-start}
+  .player.min{align-self:flex-end}
   .c-data{grid-template-columns:1fr}
   .bottom{flex-direction:column;align-items:stretch;gap:12px}
   .player,.pl-skin.cassette,.pl-skin.holo{width:100%!important}
@@ -302,7 +344,9 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
   <div class="top">
     <div class="sys">◈ <b>AARONAUTICS</b> — FLIGHT SYSTEMS<span class="sub"><br>SYSTEM MAP · NAV MODE</span></div>
     <div class="console" id="console">
+      <div class="chip" id="c-chip">◈ <b id="chip-bounty">₩ 0</b> · <span id="chip-tgt">DRIFTING</span></div>
       <div class="scr">
+        <button class="mz" id="c-mz" aria-label="Minimize console">─</button>
         <div class="c-head"><span class="c-title">◈ NAV·COM</span><span class="c-stat" id="c-stat">● ONLINE</span></div>
         <div class="c-row"><span class="lab">SHIP</span>
           <button id="b-sword" class="on">Swordfish</button><button id="b-roci">Rocinante</button></div>
@@ -323,7 +367,9 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
       <div class="sign">See you,<br>space cowboy…<small>aaronautics · orbit</small></div>
     </div>
     <div class="player" id="player">
-      <div class="pl-skin cassette" id="skin-cassette">
+      <div class="chip" id="p-chip"><span class="mini-reel"></span><span class="pl-title">—</span><button class="pl-play" aria-label="Play/pause">►</button></div>
+      <div class="pl-skin cassette" id="skin-cassette" style="position:relative">
+        <button class="mz" aria-label="Minimize player">─</button>
         <div class="cs-top"><b>A-Walk</b><span>STEREO · SIDE A</span></div>
         <div class="cs-win"><div class="reel r1"></div>
           <div class="cs-meta"><div class="t pl-title">—</div><div class="a pl-artist">—</div></div>
@@ -334,7 +380,8 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
           <button class="pl-next" aria-label="Next">►►</button>
         </div>
       </div>
-      <div class="pl-skin holo" id="skin-holo">
+      <div class="pl-skin holo" id="skin-holo" style="position:relative">
+        <button class="mz" aria-label="Minimize player">─</button>
         <div class="hp-top"><span>AUDIO·SYS</span><span id="hp-idx">01/02</span></div>
         <div class="hp-eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="hp-meta"><div class="t pl-title">—</div><div class="a pl-artist">—</div></div>
@@ -360,6 +407,8 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
   </div>
   <div class="backhint">press ESC or ✕ to lift off</div>
 </div>
+
+<button id="fireb" aria-label="Fire weapon">⦿ FIRE</button>
 
 <div id="boot"><div class="b">◈ Aaronautics<span class="big">NAV SYSTEMS</span><b>online</b> <span class="cur"></span></div></div>
 
