@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face{font-family:'Anton';src:url('../fonts/anton-400.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';src:url('../fonts/space-mono-400.woff2') format('woff2')}
+body{margin:0;width:1200px;height:630px;overflow:hidden;position:relative;
+ background:radial-gradient(130% 120% at 50% 20%,#1a1310 0%,#0e0a07 50%,#080605 100%);
+ font-family:'Anton',sans-serif;color:#efece6}
+.star{position:absolute;background:#ffe9cf;border-radius:50%}
+.sun{position:absolute;right:-130px;top:-130px;width:420px;height:420px;border-radius:50%;
+ background:radial-gradient(circle at 40% 40%,#ffe9b0,#ffb44a 45%,#e06a28 100%);
+ box-shadow:0 0 120px rgba(255,150,60,.55)}
+.orbit{position:absolute;left:50%;top:58%;width:1500px;height:420px;border:2px solid rgba(239,236,230,.14);
+ border-radius:50%;transform:translate(-50%,-50%) rotate(-8deg)}
+.p{position:absolute;border-radius:50%}
+h1{position:absolute;left:80px;top:200px;margin:0;font-size:150px;letter-spacing:.01em;line-height:.85;text-transform:uppercase}
+h1 em{font-style:normal;color:#ff7a3c}
+.sub{position:absolute;left:84px;top:400px;font-family:'Space Mono',monospace;font-size:26px;
+ letter-spacing:.34em;color:#8b93a6;text-transform:uppercase}
+.name{position:absolute;left:84px;bottom:56px;font-family:'Space Mono',monospace;font-size:22px;
+ letter-spacing:.2em;color:#efece6;text-transform:uppercase}
+</style>
+<div class="sun"></div><div class="orbit"></div>
+<div class="p" style="left:170px;top:130px;width:34px;height:34px;background:radial-gradient(circle at 35% 30%,#c9e9ff,#74d0ff 60%,#1c4a66)"></div>
+<div class="p" style="left:980px;top:470px;width:52px;height:52px;background:radial-gradient(circle at 35% 30%,#d9ffc9,#7cff9b 60%,#1c6634)"></div>
+<h1>Aaro<em>nautics</em></h1>
+<div class="sub">Flight Systems · Portfolio</div>
+<div class="name">◈ Aaron Selkridge</div>
+<script>for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';
+const z=Math.random();s.style.cssText+=`left:${Math.random()*1200}px;top:${Math.random()*630}px;width:${1+z*2}px;height:${1+z*2}px;opacity:${.3+z*.6}`;document.body.appendChild(s);}</script>

@@ -206,10 +206,16 @@ $('w-cannon').addEventListener('click',function(){ setWeapon('cannon'); });
 $('w-pdc').addEventListener('click',function(){ setWeapon('pdc'); });
 
 function noseDir(){ return { x:Math.sin(ra), y:-Math.cos(ra) }; }
+function aimDir(){
+  // aim at the cursor; if the ship has caught up to it, fire along the nose
+  var dx=mx-rx, dy=my-ry, m=Math.hypot(dx,dy);
+  if(m<30) return noseDir();
+  return { x:dx/m, y:dy/m };
+}
 function spawnProj(kind,delay){
   setTimeout(function(){
     if(state!=='free') return;
-    var d=noseDir(), sp = kind==='cannon'?760:980;
+    var d=aimDir(), sp = kind==='cannon'?760:980;
     projectiles.push({ x:rx+d.x*24, y:ry+d.y*24, vx:d.x*sp, vy:d.y*sp, life:1.6, kind:kind });
     if(kind==='cannon') Sound.pew(); else Sound.tick();
   }, delay||0);
@@ -223,7 +229,7 @@ function fire(){
 /* ══════════ ASTEROIDS ══════════ */
 function rockVerts(n,r){ var v=[]; for(var i=0;i<n;i++){ v.push(r*(0.72+Math.random()*0.5)); } return v; }
 function spawnAsteroid(tier,x,y){
-  var r = tier===3? 26+Math.random()*13 : tier===2? 15+Math.random()*8 : 8+Math.random()*5;
+  var r = tier===3? 15+Math.random()*8 : tier===2? 10+Math.random()*5 : 6+Math.random()*3;
   var edge=Math.floor(Math.random()*4), px,py;
   if(x===undefined){
     px = edge===0? -60 : edge===1? W+60 : Math.random()*W;
