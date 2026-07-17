@@ -198,15 +198,33 @@ Live URL will be **https://aselkridge.github.io/aarons-portfolio/**. (Or point i
   reskinning background, lighting color/intensity, HUD accent, grain & scanlines live.
   Logic in `applyTheme()` (`docs/assets/js/walkman.js`) + CSS vars in `index.html`.
 
+**ORBIT (docs/orbit/) — now the main experiment, v3 "game engine" (Aaron loves it):**
+- Two ships/themes named for the shows' ships (Aaron approved): **SWORDFISH**
+  (Cowboy Bebop → cel-shaded/anime everything: hard-stop planet shading + outlines,
+  toon sun rays, halftone, title-card cut-in on lock, CRT amber NAV·COM console,
+  2D cassette-walkman music player) and **ROCINANTE** (The Expanse → stylized-real:
+  soft terminators, atmosphere glow, lens flare, holo ops console, holo audio player).
+- Flight game: proximity lock-on, **weapons** (CANNON / PDC ×3, switchable in console),
+  **destructible asteroids** (split → bounty in ₩ Woolongs), **planet forcefields**
+  (shield shimmer, can't hurt stations), live **POS/VEL coordinates**, synth SFX + hum.
+- **Landing animation** (ship docks on planet top) → **hyperwarp streak tunnel** →
+  each station opens on its own **illustrated environment**: Mission=scorched
+  wasteland, AlphaForge=orbital yard, Life=forest canopy, Craft=open water,
+  Notes=high desert. Deep links (#station) work. Orbit rings match true elliptical paths.
+- **Music**: real audio player (bottom right, skinned per theme). Currently CC-BY
+  placeholders (Kevin MacLeod). **Aaron wants the Cowboy Bebop OST** — he uploads
+  MP3s to `docs/orbit/audio/` and edits `docs/orbit/audio/tracks.js` (instructions
+  in that file). NOTE: site+repo are public; hosting the OST publicly is his
+  accepted risk decision — flagged and acknowledged.
+- Engine lives in `docs/orbit/orbit.js`; test hook `window.__orbit` for headless QA.
+
 **Still to do (next):**
-3. Refine the theme-switch into the full **mission-control room/desk** and make the
-   selector a real 3D console device — using **Aaron's Drive reference images** (the
-   ~27 photos/screenshots; share that Drive folder "Anyone with link" so the session
-   can view them). Add the **NASA bulb countdown clock** (signature object).
-4. Get Aaron's **Clay / AlphaForge** files to make the flagship page real.
-5. Cut per-skin type systems (retro / modern / futuristic) — the Bebop cut is done.
-6. Swap the Walkman deck's **sample track reel** for Aaron's real currently-listening
-   (edit the `TRACKS` array in `docs/index.html`; each entry is a Spotify track URI).
+3. Aaron's real content into Orbit stations (AlphaForge builds, Life picks, poems).
+4. The mission-control desk vision (see §11 notes from 2026-07-17 session) stays the
+   long-term north star — Orbit is the shippable now.
+5. Walkman page: swap sample Spotify reel for Aaron's real tracks.
+6. Aaron's Drive reference folder (~27 images) still private — share "Anyone with
+   link" if we want builds matched to his references.
 
 Still open / to ask Aaron: fonts for the non-anime skins; whether to mention HubSpot
 at all; final page order.
