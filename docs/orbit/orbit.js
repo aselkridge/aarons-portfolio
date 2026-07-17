@@ -133,9 +133,43 @@ var Music=(function(){
   };
 })();
 
+/* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
+var Progress=(function(){
+  var d={ach:{},visited:{},ronin:0,gold:0,saucers:0};
+  try{ var raw=localStorage.getItem('aa_progress'); if(raw) d=Object.assign(d,JSON.parse(raw)); }catch(e){}
+  function save(){ try{ localStorage.setItem('aa_progress',JSON.stringify(d)); }catch(e){} }
+  return { d:d, save:save,
+    award:function(id,title,desc){ if(d.ach[id]) return false;
+      d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
+})();
+function toast(kicker,title,desc){
+  var host=$('ach'), el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML='<div class="tk">'+kicker+'</div><div class="tt"></div>'+(desc?'<div class="td"></div>':'');
+  el.querySelector('.tt').textContent=title;
+  if(desc) el.querySelector('.td').textContent=desc;
+  host.appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  setTimeout(function(){ el.classList.remove('show'); setTimeout(function(){ el.remove(); },400); },4600);
+}
+function factDrop(){
+  var F=window.ORBIT_FACTS||[]; if(!F.length) return;
+  toast('TRANSMISSION ◈ INCOMING','ABOUT THE PILOT',F[(Math.random()*F.length)|0]);
+}
+var prevBounty=0;
+function checkBounty(){
+  if(bounty>=5000) Progress.award('b5k','BOUNTY HEAD ₩5,000','The name starts to circulate.');
+  if(bounty>=25000) Progress.award('b25k','BOUNTY HEAD ₩25,000','Posters are going up.');
+  if(bounty>=100000) Progress.award('b100k','MOST WANTED ₩100,000','See you, space cowboy…');
+  if(Math.floor(bounty/2500)>Math.floor(prevBounty/2500) && !asteroids.some(function(a){return a.gold;}))
+    spawnAsteroid(2,undefined,undefined,true);
+  if(bounty>=20000 && !Progress.d.ronin) unlockRonin(false);
+  prevBounty=bounty;
+}
+
 /* ══════════ BUILD SYSTEM DOM ══════════ */
 var system=$('system');
-STATIONS.forEach(function(s,si){
+function buildPlanet(s,si){
   var d=s.r*2, extra='';
   if(s.type==='ringed') extra='<div class="pring" style="--pw:'+(d*1.95)+'px;--ph:'+(d*0.6)+'px"></div>';
   if(s.type==='mooned') extra='<div class="moonwrap" style="--md:'+(d*1.75)+'px"><div class="moon"></div></div>';
@@ -152,12 +186,30 @@ STATIONS.forEach(function(s,si){
   system.appendChild(el);
   var ring=document.createElement('div'); ring.className='sun-orbit'; s.oring=ring;
   system.insertBefore(ring, system.firstChild);
-});
+}
+STATIONS.forEach(buildPlanet);
 function sizeOrbits(){ STATIONS.forEach(function(s){
   s.oring.style.width=(s.orbit*unit*2)+'px'; s.oring.style.height=(s.orbit*unit*2*0.62)+'px'; }); }
 function paintPlanets(){ STATIONS.forEach(function(s){ s.orb.style.background = themeId==='sword'? s.gradCel : s.gradReal; }); }
 sizeOrbits(); paintPlanets();
 
+/* the hidden sixth world */
+var RONIN={ id:'ronin', name:'???', tag:'uncharted', color:'#d8b56a', r:15, type:'cratered',
+  orbit:0.95, speed:0.013, a0:Math.random()*6.28, env:'desert', envlab:'THE DUNES',
+  eyebrow:'STATION ∅ · UNCHARTED', title:'The lone road.',
+  body:['A world that was not on the charts. Someone walks the ridge out there — sword on his back, headband in the wind, going his own way at his own pace.','Number one is a direction, not a rank.'],
+  tags:['uncharted','the long walk','#1'] };
+function unlockRonin(silent){
+  if(RONIN.el) return;
+  Progress.d.ronin=1; Progress.save();
+  STATIONS.push(RONIN); buildPlanet(RONIN, STATIONS.length-1);
+  RONIN.num='∅';
+  RONIN.oring.style.width=(RONIN.orbit*unit*2)+'px'; RONIN.oring.style.height=(RONIN.orbit*unit*2*0.62)+'px';
+  RONIN.orb.style.background = themeId==='sword'? RONIN.gradCel : RONIN.gradReal;
+  ALL.push(RONIN);
+  if(!silent){ toast('ANOMALY','UNCHARTED WORLD DETECTED','Something new on the far orbit. Go see it.');
+    Progress.award('ronin_found','OFF THE CHARTS','You made the far orbit appear.'); Sound.warp(); }
+}
 /* the sun is the Mission */
 SUN_STATION.el=$('sun');
 function sunMetrics(){ SUN_STATION.x=CX; SUN_STATION.y=CY; SUN_STATION.r=$('sun').offsetWidth/2||60; }
@@ -208,6 +260,7 @@ var bounty=0;
 var projectiles=[],asteroids=[],particles=[],floats=[],warpStreaks=[];
 var weapon='cannon', lastShot=0;
 var landTarget=null, landedAt=0;
+var saucer=null, nextSaucerAt=25+Math.random()*35, gameT=0;
 var warpOrigin=null, warpT=0, activeStation=null;
 
 /* ══════════ INPUT ══════════ */
@@ -220,9 +273,25 @@ addEventListener('pointerdown', function(e){
   if(lockStation){ beginLanding(lockStation); }
   else fire();
 });
+var typedBuf='', rollT=0;
 addEventListener('keydown', function(e){
   if(e.key===' '&&state==='free'&&fine){ e.preventDefault(); fire(); }
   if(e.key==='Escape') closeStation();
+  if(e.key&&e.key.length===1&&/[a-z!]/i.test(e.key)){
+    typedBuf=(typedBuf+e.key.toLowerCase()).slice(-8);
+    if(themeId==='sword'&&/tank!?$/.test(typedBuf)&&typedBuf.slice(-1)==='!'){
+      typedBuf='';
+      $('tc-s').textContent='SESSION ∞'; $('tc-n').textContent='TANK!';
+      var tc=$('titlecard'); tc.classList.add('on');
+      setTimeout(function(){ tc.classList.remove('on'); },1500);
+      Sound.blip(392); Sound.blip(523); setTimeout(function(){Sound.blip(659);Sound.blip(784);},120);
+      Progress.award('tank','3… 2… 1… LET\'S JAM','You know the words.');
+    }
+  }
+  if((e.key==='r'||e.key==='R')&&themeId==='roci'&&state==='free'&&rollT<=0){
+    rollT=1; Sound.warp();
+    Progress.award('roll','DO A BARREL ROLL','Peppy would be proud.');
+  }
 });
 
 /* ══════════ WEAPONS ══════════ */
@@ -256,7 +325,7 @@ function fire(){
 
 /* ══════════ ASTEROIDS ══════════ */
 function rockVerts(n,r){ var v=[]; for(var i=0;i<n;i++){ v.push(r*(0.72+Math.random()*0.5)); } return v; }
-function spawnAsteroid(tier,x,y){
+function spawnAsteroid(tier,x,y,gold){
   var ms = Math.min(W,H)<720? 0.6 : 1;   // phones: keep rocks proportional
   var r = ms*(tier===3? 15+Math.random()*8 : tier===2? 10+Math.random()*5 : 6+Math.random()*3);
   var edge=Math.floor(Math.random()*4), px,py;
@@ -266,8 +335,9 @@ function spawnAsteroid(tier,x,y){
   } else { px=x; py=y; }
   var ang=Math.atan2(CY-py,CX-px)+(Math.random()-0.5)*1.6;
   var sp=14+Math.random()*38+(3-tier)*10;
-  asteroids.push({ x:px,y:py, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp,
-    r:r, tier:tier, rot:Math.random()*6.28, vr:(Math.random()-0.5)*1.4, verts:rockVerts(9+Math.floor(Math.random()*4),r) });
+  asteroids.push({ x:px,y:py, vx:Math.cos(ang)*sp*(gold?0.8:1), vy:Math.sin(ang)*sp*(gold?0.8:1),
+    r:gold?r*1.25:r, tier:tier, gold:!!gold, rot:Math.random()*6.28, vr:(Math.random()-0.5)*1.4,
+    verts:rockVerts(9+Math.floor(Math.random()*4),gold?r*1.25:r) });
 }
 function burst(x,y,col,n,sp){
   for(var i=0;i<n;i++){ var a=Math.random()*6.28, v=(0.3+Math.random()*0.7)*(sp||160);
@@ -275,13 +345,17 @@ function burst(x,y,col,n,sp){
 }
 function killAsteroid(i){
   var a=asteroids[i]; asteroids.splice(i,1);
-  var reward = a.tier===3?500 : a.tier===2?300 : 150;
+  var reward = a.gold?1000 : a.tier===3?500 : a.tier===2?300 : 150;
   bounty += reward;
   $('bounty').textContent='₩ '+bounty.toLocaleString();
-  floats.push({x:a.x,y:a.y,txt:'+₩'+reward,life:1});
-  burst(a.x,a.y,T().accent,a.tier*6,180);
-  Sound.boom(a.tier===3);
-  if(a.tier>1){ spawnAsteroid(a.tier-1,a.x+6,a.y); spawnAsteroid(a.tier-1,a.x-6,a.y); }
+  floats.push({x:a.x,y:a.y,txt:'+₩'+reward.toLocaleString(),life:1});
+  burst(a.x,a.y,a.gold?'#ffd36a':T().accent,a.gold?26:a.tier*6,a.gold?260:180);
+  Sound.boom(a.tier===3||a.gold);
+  if(a.gold){ Progress.d.gold++; Progress.save();
+    Progress.award('gold','GOLD RUSH','You cracked a golden asteroid.'); factDrop(); }
+  else if(a.tier>1){ spawnAsteroid(a.tier-1,a.x+6,a.y); spawnAsteroid(a.tier-1,a.x-6,a.y); }
+  Progress.award('first_blood','FIRST BOUNTY','First rock cracked. The Woolongs flow.');
+  checkBounty();
 }
 
 /* ══════════ LOCK-ON ══════════ */
@@ -354,6 +428,10 @@ function openStation(s){
   panel.classList.add('open');
   state='station'; $('c-stat').textContent='● SURFACE';
   $('loc').textContent=s.name.toUpperCase()+' · '+s.envlab; navHere(s.id);
+  Progress.d.visited[s.id]=1; Progress.save();
+  if(s.id==='ronin'){ RONIN.name='Ronin'; Progress.award('ronin_visit','THE LONE ROAD','You walked the dunes.'); }
+  if(['mission','alphaforge','life','craft','notes'].every(function(k){return Progress.d.visited[k];}))
+    Progress.award('tourist','SYSTEM TOURIST','Every station visited.');
   warpStreaks=[];
   (function envLoop(t){ if(!envScene) return;
     envScene.paint(ectx, envc.clientWidth, envc.clientHeight, (t||0)/1000);
@@ -653,8 +731,28 @@ function applyTheme(id){
   Music.onTheme();
   Sound.blip(id==='roci'?520:880);
 }
-$('b-sword').addEventListener('click', function(){ applyTheme('sword'); });
-$('b-roci').addEventListener('click', function(){ applyTheme('roci'); });
+var hangarEl=null, hangarXY=null, rocketHidden=false;
+function shipSwap(toId){
+  if(themeId===toId||state==='hangar') return;
+  if(!fine||state!=='free'){ applyTheme(toId); return; }
+  state='hangar'; setLock(null);
+  $('c-stat').textContent='● HANGAR';
+  hangarEl=document.createElement('div'); hangarEl.className='hangar';
+  hangarEl.innerHTML='<div class="hbody"><div class="hdoor l"></div><div class="hdoor r"></div><div class="hlab">AARONAUTICS HANGAR · SHIP EXCHANGE</div></div>';
+  document.body.appendChild(hangarEl);
+  hangarXY={x:W/2,y:H/2};
+  requestAnimationFrame(function(){ hangarEl.classList.add('show'); });
+  Sound.warp();
+  setTimeout(function(){ hangarEl.classList.add('open'); },420);              // doors open
+  setTimeout(function(){ rocketHidden=true; hangarEl.classList.remove('open'); Sound.thump(); },1600); // parked, doors shut
+  setTimeout(function(){ applyTheme(toId); },2050);                           // swap behind closed doors
+  setTimeout(function(){ hangarEl.classList.add('open'); rocketHidden=false; rx=hangarXY.x; ry=hangarXY.y; Sound.pew(); },2500);
+  setTimeout(function(){ hangarEl.classList.remove('open'); hangarEl.classList.remove('show');
+    state='free'; $('c-stat').textContent='● ONLINE';
+    var he=hangarEl; hangarEl=null; setTimeout(function(){ he.remove(); },500); },3250);
+}
+$('b-sword').addEventListener('click', function(){ shipSwap('sword'); });
+$('b-roci').addEventListener('click', function(){ shipSwap('roci'); });
 $('snd').addEventListener('click', function(){ var on=Sound.toggle(); this.textContent=on?'sfx on':'sfx off'; });
 
 /* ══════════ MAIN LOOP ══════════ */
@@ -688,9 +786,13 @@ function loop(t){
       if(p>=1) touchdown();
     } else if(state==='landed'&&landTarget){
       rx=landTarget.x+plx; ry=landTarget.y+ply-(landTarget.r+15); ra=0;
+    } else if(state==='hangar'&&hangarXY){
+      rx+=(hangarXY.x-rx)*0.12; ry+=(hangarXY.y-ry)*0.12; ra*=0.88;
     }
-    rocket.style.transform='translate('+rx+'px,'+ry+'px) rotate('+ra+'rad)';
-    rocket.style.opacity = (state==='warp'||state==='station')?'0':'1';
+    if(rollT>0) rollT=Math.max(0,rollT-dt/0.7);
+    var rollOff=(1-rollT)*Math.PI*2*(rollT>0?1:0);
+    rocket.style.transform='translate('+rx+'px,'+ry+'px) rotate('+(ra+(rollT>0?rollOff:0))+'rad)';
+    rocket.style.opacity = (state==='warp'||state==='station'||rocketHidden)?'0':'1';
     var fl=rocket.querySelectorAll('.flame'), fscale= state==='free'? Math.min(1,Math.hypot(mx-rx,my-ry)/55) : 0.15;
     for(var i=0;i<fl.length;i++){ fl[i].style.opacity=(0.5+Math.random()*0.5*Math.max(0.25,fscale)).toFixed(2); }
     shipSpeed = Math.hypot(rx-prevRx,ry-prevRy)/Math.max(dt,0.001); prevRx=rx; prevRy=ry;
@@ -730,6 +832,31 @@ function loop(t){
   }
 
   if(state==='free'||state==='landing'||state==='landed'){
+    /* the saucer — rare, wobbly, extremely shootable */
+    gameT+=dt;
+    if(!saucer&&gameT>nextSaucerAt){
+      var fromLeft=Math.random()<0.5;
+      saucer={ x:fromLeft?-70:W+70, vx:(fromLeft?1:-1)*(52+Math.random()*30),
+               y:H*(0.18+Math.random()*0.5), ph:Math.random()*6.28 };
+    }
+    if(saucer){
+      saucer.x+=saucer.vx*dt;
+      var sy3=saucer.y+Math.sin(gameT*2.2+saucer.ph)*14;
+      if(saucer.x<-90||saucer.x>W+90){ saucer=null; nextSaucerAt=gameT+40+Math.random()*50; }
+      else {
+        fctx.save(); fctx.translate(saucer.x,sy3); fctx.rotate(Math.sin(gameT*3)*0.06);
+        fctx.fillStyle= themeId==='sword'? '#7a8290':'#5a6270';
+        fctx.beginPath(); fctx.ellipse(0,0,26,8.5,0,0,7); fctx.fill();
+        if(themeId==='sword'){ fctx.strokeStyle='#14181f'; fctx.lineWidth=2.2; fctx.stroke(); }
+        fctx.globalAlpha=0.85; fctx.fillStyle='#9be2ff';
+        fctx.beginPath(); fctx.arc(0,-6,9,Math.PI,0); fctx.fill(); fctx.globalAlpha=1;
+        fctx.fillStyle='#1c2027'; fctx.beginPath(); fctx.arc(0,-6,3.4,Math.PI,0); fctx.fill();
+        for(var li=0;li<3;li++){ fctx.globalAlpha= (((gameT*4)|0)%3===li)?1:0.25;
+          fctx.fillStyle=['#ff2d78','#ffd36a','#7cff9b'][li];
+          fctx.beginPath(); fctx.arc(-12+li*12,3,2.2,0,7); fctx.fill(); }
+        fctx.globalAlpha=1; fctx.restore();
+      }
+    }
     /* asteroids */
     while(asteroids.length< (fine?6:4)) spawnAsteroid(3);
     for(i=asteroids.length-1;i>=0;i--){ var A=asteroids[i];
@@ -741,7 +868,14 @@ function loop(t){
         var px2=Math.cos(aa)*A.verts[k], py2=Math.sin(aa)*A.verts[k];
         k? fctx.lineTo(px2,py2) : fctx.moveTo(px2,py2); }
       fctx.closePath();
-      if(themeId==='sword'){ fctx.fillStyle=T().rockFill; fctx.fill();
+      if(A.gold){ var gp=0.6+0.4*Math.sin(t*0.006);
+        fctx.shadowColor='#ffd36a'; fctx.shadowBlur=18*gp;
+        fctx.fillStyle='#e8b84a'; fctx.fill();
+        fctx.lineWidth=2.4; fctx.strokeStyle='#8a6216'; fctx.stroke();
+        fctx.shadowBlur=0;
+        fctx.globalAlpha=0.5*gp; fctx.fillStyle='#fff1c0';
+        fctx.beginPath(); fctx.arc(-A.r*0.25,-A.r*0.25,A.r*0.4,0,7); fctx.fill(); fctx.globalAlpha=1; }
+      else if(themeId==='sword'){ fctx.fillStyle=T().rockFill; fctx.fill();
         fctx.lineWidth=2.4; fctx.strokeStyle=T().rockLine; fctx.stroke();
         fctx.globalAlpha=0.25; fctx.fillStyle='#000';
         fctx.beginPath(); fctx.arc(A.r*0.28,A.r*0.3,A.r*0.55,0,7); fctx.fill(); fctx.globalAlpha=1; }
@@ -762,6 +896,16 @@ function loop(t){
           $('target').textContent=S.name.toUpperCase()+' · SHIELDED'; break; } }
       /* sun */
       if(!dead&&Math.hypot(P.x-(CX+plx),P.y-(CY+ply))<Math.min(W,H)*0.052){ burst(P.x,P.y,'#ffd36a',5,70); dead=true; }
+      /* the saucer */
+      if(!dead&&saucer&&Math.hypot(P.x-saucer.x,P.y-(saucer.y+Math.sin(gameT*2.2+saucer.ph)*14))<27){
+        burst(saucer.x,saucer.y,'#9be2ff',30,300); burst(saucer.x,saucer.y,'#ffd36a',16,200);
+        bounty+=1500; $('bounty').textContent='₩ '+bounty.toLocaleString();
+        floats.push({x:saucer.x,y:saucer.y,txt:'+₩1,500',life:1});
+        Sound.boom(true);
+        Progress.d.saucers++; Progress.save();
+        Progress.award('saucer','SAUCER DOWN','Unidentified? Not anymore.');
+        factDrop(); checkBounty();
+        saucer=null; nextSaucerAt=gameT+40+Math.random()*50; dead=true; }
       /* asteroids */
       if(!dead) for(k=asteroids.length-1;k>=0;k--){ if(Math.hypot(P.x-asteroids[k].x,P.y-asteroids[k].y)<asteroids[k].r){
           killAsteroid(k); dead=true; break; } }
@@ -840,6 +984,7 @@ addEventListener('load', function(){
   if(s) setTimeout(function(){ system.classList.add('warp'); openStation(s); }, 600);
 });
 applyTheme('sword');
+if(Progress.d.ronin) unlockRonin(true);
 
 /* headless test hook */
 window.__orbit = {
