@@ -279,22 +279,39 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
   opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s}
 .panel.open{opacity:1;visibility:visible}
 #envc{position:absolute;inset:0;width:100%;height:100%}
-.panel::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 40%,transparent 30%,rgba(0,0,0,.55) 100%);pointer-events:none}
-.card{position:relative;z-index:2;width:min(720px,94vw);max-height:82vh;overflow:auto;border:1px solid var(--line);border-radius:16px;
-  background:linear-gradient(180deg,rgba(12,13,20,.82),rgba(7,8,13,.88));backdrop-filter:blur(8px);box-shadow:0 40px 100px rgba(0,0,0,.6);
-  padding:clamp(22px,3.4vw,44px);transform:translateY(14px) scale(.98);transition:transform .5s ease}
-.panel.open .card{transform:none}
-.card .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--pc,var(--accent))}
-.card h2{font-family:var(--anton);text-transform:uppercase;font-size:clamp(2.1rem,5.6vw,3.8rem);line-height:.86;margin:.28em 0 .5em}
-.card p{font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.6;color:#dcdee6;max-width:60ch}
-.card p+p{margin-top:.9em}
-.card .list{margin-top:1.1em;display:flex;flex-wrap:wrap;gap:8px}
-.card .list span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
-.card .soon{margin-top:1.3em;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
-.card .envlab{position:absolute;top:16px;right:60px;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+.panel{display:block;padding:0}
+/* left-docked station HUD */
+.dock{position:absolute;left:0;top:0;bottom:0;z-index:2;width:min(400px,88vw);overflow:auto;
+  padding:clamp(20px,3vw,36px) clamp(18px,2.6vw,30px);
+  transform:translateX(-26px);opacity:0;transition:transform .5s ease .15s,opacity .5s ease .15s}
+.panel.open .dock{transform:none;opacity:1}
+body.t-sword .dock{background:linear-gradient(90deg,rgba(12,8,5,.86) 0%,rgba(12,8,5,.72) 78%,transparent 100%);
+  border-right:1px solid rgba(255,180,74,.16)}
+body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,10,18,.7) 78%,transparent 100%);
+  border-right:1px solid rgba(116,208,255,.2)}
+.dock .envlab{font-family:var(--mono);font-size:9px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
+.dock .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--pc,var(--accent))}
+.dock h2{font-family:var(--anton);text-transform:uppercase;font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:.88;margin:.3em 0 .7em}
+.secs{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
+.secs a{font-family:var(--os);font-weight:500;font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);cursor:pointer;padding:9px 12px;border-left:2px solid transparent;transition:.16s;text-decoration:none}
+.secs a:hover{color:var(--ink)}
+.secs a.on{color:var(--pc,var(--accent));border-left-color:var(--pc,var(--accent));background:rgba(255,255,255,.04)}
+.sec-body p{font-size:clamp(.95rem,1.3vw,1.06rem);line-height:1.62;color:#dcdee6}
+.sec-body p+p{margin-top:.8em}
+.sec-body .list{margin-top:1em;display:flex;flex-wrap:wrap;gap:7px}
+.sec-body .list span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.sec-body .soon{margin-top:1.2em;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
 .close{position:absolute;top:14px;right:16px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--ink);border-radius:999px;width:40px;height:40px;cursor:pointer;font-size:15px;font-family:var(--mono);z-index:3}
 .close:hover{border-color:var(--ink)}
 .backhint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.55);text-transform:uppercase;z-index:2}
+@media (max-width:720px){
+  .dock{left:0;right:0;top:auto;bottom:0;width:100%;max-height:56vh;transform:translateY(26px);
+    border-right:0!important;border-top:1px solid var(--line)}
+  body.t-sword .dock{background:linear-gradient(0deg,rgba(12,8,5,.9) 60%,rgba(12,8,5,.72) 88%,transparent)}
+  body.t-roci .dock{background:linear-gradient(0deg,rgba(4,10,18,.9) 60%,rgba(4,10,18,.72) 88%,transparent)}
+  .backhint{display:none}
+}
 
 /* ───────── boot ───────── */
 #boot{position:fixed;inset:0;z-index:40;background:#050609;display:grid;place-items:center;transition:opacity .7s ease,visibility .7s}
@@ -412,13 +429,14 @@ body.t-roci .pl-skin.holo{display:block;width:min(270px,84vw);padding:10px 13px 
 
 <div class="panel" id="panel">
   <canvas id="envc"></canvas>
-  <div class="card" id="card">
-    <button class="close" id="close" aria-label="Close">✕</button>
+  <div class="dock" id="dock">
     <div class="envlab" id="envlab">SURFACE</div>
     <div class="eyebrow" id="p-eye">STATION</div>
     <h2 id="p-title">Title</h2>
-    <div id="p-body"></div>
+    <nav class="secs" id="secs" aria-label="Sections"></nav>
+    <div class="sec-body" id="p-body"></div>
   </div>
+  <button class="close" id="close" aria-label="Lift off">✕</button>
   <div class="backhint">press ESC or ✕ to lift off</div>
 </div>
 
