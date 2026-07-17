@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-17 (structural split + this doc — no gameplay behavior changed)
+Last updated: 2026-07-17 (issue #1 — shots not connected to the ship — fixed)
 
 ---
 
@@ -47,7 +47,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 | # | Issue | Root cause (confirmed) | Lives in |
 |---|-------|------------------------|----------|
-| 1 | Shots don't look connected to the ship | The ship's visual rotation is smoothed/lagged toward the cursor each frame; the bullet's direction is computed fresh from the cursor at the instant of firing, bypassing that lag. Under motion, the nose and the shot point different ways. | `05-combat.js` (`aimDir`), `09-main.js` (ship rotation `ra`) |
+| ~~1~~ | ~~Shots don't look connected to the ship~~ **FIXED 2026-07-17** | Was: two independent calculations for "forward" that didn't have to agree — the ship's visual rotation (`ra`) is smoothed/eased toward the cursor each frame, but the bullet's old `aimDir()` computed a fresh, unsmoothed bearing straight to the raw cursor position, ignoring `ra` entirely. While turning, those two numbers are rarely equal. **Fix:** `aimDir()` now just returns `noseDir()` — the exact same value that rotates the sprite — so a shot can no longer disagree with where the ship is visibly pointing; there's only one "forward" now, not two. Also nudged the spawn point out to ~30px (previously 24px) so it clears the drawn hull instead of starting inside it. Verified numerically: angle between shot direction and nose direction is exactly 0° in all of settled/still, mid-turn (`ra` actively easing), and continuously-moving tests — not just "close," identical. | `05-combat.js` (`aimDir`/`spawnProj`) |
 | 2 | Planets seem to take "random" hits | Hit detection is a single point-in-circle check once per frame; a fast bullet can register from a position that looks like a near-miss between frames. | `09-main.js` (projectile/collision block) |
 | 3 | Sun never reacts to being hit | The sun has its own hard-coded, disconnected hit-radius (unrelated to its real measured size) and reuses the same generic spark burst as everything else — no dedicated sun animation exists. | `09-main.js` (sun-hit check) |
 | 4 | "See you, space cowboy" overlaps the hint sentence | The signoff is `position:fixed` (pinned to the viewport corner, outside normal page flow) while the hint sentence is positioned in normal flow above it; padding the flow container does nothing because the signoff isn't part of that flow. | `index.html` CSS (`.sign`, `.hint`, `.bl`) |
@@ -65,17 +65,29 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- Split `orbit.js` (1,072 lines, one file) into the 9 labeled files in `docs/orbit/js/` described in §1. **This was a byte-for-byte verified mechanical relocation** — every original line was accounted for (script-diffed against the original before deleting it), nothing was rewritten, no logic touched.
-- Regression-tested after the split: firing, landing → warp → station panel, achievements/toasts, minimize/expand, and theme+ship swap all confirmed working identically to pre-split behavior.
-- Created this file.
+- Fixed issue #1 (shots not connected to the ship) — see the strikethrough
+  entry in §2 for the full root cause and the fix. Verified with a numeric
+  test (angle between shot direction and nose direction), not just "ran
+  without errors": 0° difference in every tested scenario, including the
+  exact "cursor sitting still" case Aaron used to disprove my first (wrong)
+  diagnosis, plus mid-turn and continuously-moving cases.
+- Along the way, confirmed my *previous* explanation for issue #1 (frame lag)
+  was incorrect — Aaron's counter-example (bug persists even with the cursor
+  fully still) was the right call. The real cause was two separate direction
+  calculations that could disagree, not a timing lag. Root-caused this time
+  by instrumenting the actual running code (reading live `rx/ry/ra` values,
+  monkey-patching `aimDir` to trace what it saw internally) rather than
+  reasoning about it from the source alone.
 
-**Explicitly NOT touched this shipment** (per Aaron: work one issue at a time,
-he has comments on the rest first): none of the 12 issues in §2 above. They
-are diagnosed and documented, not fixed.
+**Explicitly NOT touched this shipment** (per Aaron: work one issue at a time):
+issues #2–12 in §2. Still diagnosed and documented, not fixed.
 
-**Process note for whoever picks this up next:** the last shipment before this
-one (v5) was reported as "done" based on code running without errors, not on
+**Process note for whoever picks this up next:** the shipment before this one
+(v5) was reported as "done" based on code running without errors, not on
 re-checking the actual visual against Aaron's original screenshots — several
-things shipped as "fixed" were not. Going forward: before calling anything
-fixed, re-screenshot the *exact* scenario from the complaint and compare, don't
-just confirm the mechanism runs.
+things shipped as "fixed" were not, and one of my follow-up *diagnoses* (this
+file's old issue #1 entry) was also wrong until Aaron's own testing disproved
+it. Going forward: before calling anything fixed, get a number or a screenshot
+that directly proves the specific complaint is gone — don't reason from the
+source code alone, and take the user's counter-examples seriously enough to
+re-open a diagnosis, not just patch around it.

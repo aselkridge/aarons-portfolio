@@ -45,17 +45,20 @@ $('w-cannon').addEventListener('click',function(){ setWeapon('cannon'); });
 $('w-pdc').addEventListener('click',function(){ setWeapon('pdc'); });
 
 function noseDir(){ return { x:Math.sin(ra), y:-Math.cos(ra) }; }
-function aimDir(){
-  // aim at the cursor; if the ship has caught up to it, fire along the nose
-  var dx=mx-rx, dy=my-ry, m=Math.hypot(dx,dy);
-  if(m<30) return noseDir();
-  return { x:dx/m, y:dy/m };
-}
+// Bullets always fire along noseDir() — the exact same value that rotates the
+// ship sprite (ra) — so the shot can never disagree with where the ship is
+// visibly pointing. (Previously this aimed at the raw, unsmoothed cursor
+// bearing instead, which diverges from the sprite's eased rotation while
+// turning — that was the "shots aren't connected to the ship" bug.)
+function aimDir(){ return noseDir(); }
 function spawnProj(kind,delay){
   setTimeout(function(){
     if(state!=='free') return;
     var d=aimDir(), sp = kind==='cannon'?760:980;
-    projectiles.push({ x:rx+d.x*24, y:ry+d.y*24, vx:d.x*sp, vy:d.y*sp, life:1.6, kind:kind });
+    // spawn ahead of the nose tip (the drawn nose sits ~17-22px from the
+    // sprite's rotation origin; clear it fully so the shot doesn't appear
+    // to start inside the hull).
+    projectiles.push({ x:rx+d.x*30, y:ry+d.y*30, vx:d.x*sp, vy:d.y*sp, life:1.6, kind:kind });
     if(kind==='cannon') Sound.pew(); else Sound.tick();
   }, delay||0);
 }
