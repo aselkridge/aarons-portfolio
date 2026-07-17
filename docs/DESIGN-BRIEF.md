@@ -188,10 +188,23 @@ write-scope gap noted in NEXT-SESSION.md). To go live with **zero** further code
 Live URL will be **https://aselkridge.github.io/aarons-portfolio/**. (Or point it at
 `claude/website-build-nevi30` once this work is merged there — same `/docs` folder.)
 
+**Also done (this session, 2nd pass):**
+- The Walkman now sits on a **visible desk**, with **physically pressable 3D transport
+  keys** on the desk (raycast → press animation → drives the music; play-key lights up).
+  Clicking the deck itself also toggles play. (The model's molded buttons aren't
+  separable meshes — Sketchfab merged them — so the transport is a matched 3D key panel.)
+- **Theme-switch v1**: a ◄ / ► **AESTHETIC selector** (top-right console) cycles the four
+  approved skins — Anime·Bebop / Retro·Apollo / Modern·Glass / Futuristic·Expanse —
+  reskinning background, lighting color/intensity, HUD accent, grain & scanlines live.
+  Logic in `applyTheme()` (`docs/assets/js/walkman.js`) + CSS vars in `index.html`.
+
 **Still to do (next):**
-3. Build the **theme-switch desk** (◄ / ► device that reskins the room) — "Step 2".
+3. Refine the theme-switch into the full **mission-control room/desk** and make the
+   selector a real 3D console device — using **Aaron's Drive reference images** (the
+   ~27 photos/screenshots; share that Drive folder "Anyone with link" so the session
+   can view them). Add the **NASA bulb countdown clock** (signature object).
 4. Get Aaron's **Clay / AlphaForge** files to make the flagship page real.
-5. Cut per-skin type systems (retro / modern / futuristic).
+5. Cut per-skin type systems (retro / modern / futuristic) — the Bebop cut is done.
 6. Swap the Walkman deck's **sample track reel** for Aaron's real currently-listening
    (edit the `TRACKS` array in `docs/index.html`; each entry is a Spotify track URI).
 

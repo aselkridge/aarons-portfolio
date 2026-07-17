@@ -11,6 +11,8 @@
 :root{
   --ink:#efece6; --paper:#0a0908; --dim:#8f8a82; --line:rgba(239,236,230,.16);
   --amber:#ffb44a; --holo:#74d0ff; --led:#7cff9b;
+  /* theme-driven (set by walkman.js applyTheme; defaults = Bebop) */
+  --accent:#ff7a3c; --bg1:#16171c; --bg2:#0c0c0f; --bg3:#0a0908; --grain-o:.09; --scan-o:.34;
   --anton:'Anton',Impact,sans-serif;
   --os:'Oswald','Arial Narrow',sans-serif;
   --mono:'Space Mono',ui-monospace,monospace;
@@ -19,10 +21,11 @@
 html,body{height:100%}
 body{
   background:
-    radial-gradient(120% 90% at 50% 8%, #16171c 0%, #0c0c0f 45%, var(--paper) 100%);
+    radial-gradient(120% 90% at 50% 8%, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
   color:var(--ink); font-family:var(--os); overflow:hidden;
   filter:contrast(1.05) brightness(1.02);
   -webkit-font-smoothing:antialiased;
+  transition:background .8s ease;
 }
 
 /* ── 3D stage ─────────────────────────────────────────── */
@@ -34,12 +37,12 @@ body{
 
 /* ── cinematic overlays ───────────────────────────────── */
 .grain,.vig,.scan{position:fixed;inset:0;pointer-events:none}
-.grain{inset:-50%;z-index:40;opacity:.06;mix-blend-mode:overlay;
+.grain{inset:-50%;z-index:40;opacity:var(--grain-o);mix-blend-mode:overlay;transition:opacity .8s ease;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation:grain .6s steps(3) infinite}
 @keyframes grain{0%{transform:translate(0,0)}33%{transform:translate(-6%,4%)}66%{transform:translate(4%,-5%)}100%{transform:translate(0,0)}}
 .vig{z-index:41;background:radial-gradient(135% 100% at 50% 42%,transparent 44%,rgba(0,0,0,.72) 100%)}
-.scan{z-index:42;opacity:.35;mix-blend-mode:multiply;
+.scan{z-index:42;opacity:var(--scan-o);mix-blend-mode:multiply;transition:opacity .8s ease;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
 
 /* ── HUD frame ─────────────────────────────────────────── */
@@ -56,13 +59,32 @@ body{
   letter-spacing:.08em;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
 .timer .lbl{display:block;color:var(--dim);font-weight:400;font-size:.74em;letter-spacing:.24em;margin-bottom:.35em}
 
+/* aesthetic selector — a small console device with physical ◄ / ► */
+.top-r{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.aesthetic{pointer-events:auto;display:flex;align-items:stretch;gap:0;
+  border:1px solid var(--line);border-radius:11px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(24,22,20,.9),rgba(12,11,10,.92));
+  box-shadow:0 16px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(8px)}
+.aesthetic .arw{border:0;cursor:pointer;color:var(--ink);background:transparent;
+  font-size:15px;width:38px;display:flex;align-items:center;justify-content:center;
+  transition:background .15s, color .15s}
+.aesthetic .arw:hover{background:rgba(239,236,230,.08);color:var(--accent)}
+.aesthetic .arw:active{transform:translateY(1px)}
+.aesthetic .arw:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.aesthetic-face{min-width:158px;text-align:center;padding:9px 8px 8px;
+  border-left:1px solid var(--line);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:3px;justify-content:center}
+.aesthetic-face .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase}
+.aesthetic-face #theme-name{font-family:var(--os);font-weight:600;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);transition:color .5s ease}
+
 /* object title, lower-left */
 .plate{max-width:min(46ch,60vw)}
 .plate .kicker{font-family:var(--mono);font-size:clamp(9px,1.1vw,11px);letter-spacing:.3em;
   color:var(--dim);text-transform:uppercase;margin-bottom:.7em}
 .plate h1{font-family:var(--anton);font-weight:400;text-transform:uppercase;line-height:.84;
   font-size:clamp(2.3rem,7vw,5.4rem);letter-spacing:.005em;text-shadow:0 6px 40px rgba(0,0,0,.6)}
-.plate h1 em{font-style:normal;color:var(--amber)}
+.plate h1 em{font-style:normal;color:var(--accent)}
 .plate .spec{margin-top:.9em;display:flex;flex-wrap:wrap;gap:.4em 1.4em;
   font-family:var(--mono);font-size:clamp(9px,1.05vw,11px);letter-spacing:.12em;
   color:var(--dim);text-transform:uppercase}
@@ -91,7 +113,7 @@ body{
 .tape{padding:13px 15px 4px}
 .now{display:flex;align-items:center;gap:10px;min-height:34px}
 .eq{display:flex;align-items:flex-end;gap:2px;height:20px;width:22px;flex:none}
-.eq i{width:3px;background:var(--amber);height:20%;border-radius:1px;opacity:.85}
+.eq i{width:3px;background:var(--accent);height:20%;border-radius:1px;opacity:.85}
 .playing .eq i{animation:eq .9s ease-in-out infinite}
 .eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
 @keyframes eq{0%,100%{height:18%}50%{height:100%}}
@@ -112,7 +134,7 @@ body{
 .key:active,.key.press{transform:translateY(3px);box-shadow:0 0 0 #0c0b0a, 0 2px 5px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05)}
 .key .glyph{filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))}
 .key.play{background:linear-gradient(180deg,#3a2f1c,#241c10)}
-.key.play.active{background:linear-gradient(180deg,#5a4114,#3a2a0d);color:var(--amber)}
+.key.play.active{background:linear-gradient(180deg,#5a4114,#3a2a0d);color:var(--accent)}
 .key:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
 
 /* embedded spotify (audio engine + album art) */
@@ -141,7 +163,7 @@ body{
   text-transform:uppercase;display:flex;gap:12px;align-items:baseline}
 #load .row b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
 .bar{width:min(280px,70vw);height:2px;background:rgba(239,236,230,.14);overflow:hidden}
-.bar i{display:block;height:100%;width:40%;background:var(--amber);
+.bar i{display:block;height:100%;width:40%;background:var(--accent);
   animation:sweep 1.2s ease-in-out infinite}
 @keyframes sweep{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
 
@@ -166,7 +188,17 @@ body{
 <div class="hud">
   <div class="top">
     <div class="sys">◈ <b>AARONAUTICS</b> — FLIGHT SYSTEMS<span class="sub"><br>OBJECT 001 · AUDIO / TAPE TRANSPORT</span></div>
-    <div class="timer"><span class="lbl">MISSION TIME</span><span id="clock">T+ 00:00:00</span></div>
+    <div class="top-r">
+      <div class="aesthetic" role="group" aria-label="Aesthetic selector">
+        <button class="arw" id="theme-prev" aria-label="Previous aesthetic">◄</button>
+        <div class="aesthetic-face">
+          <span class="lbl">AESTHETIC</span>
+          <span id="theme-name">ANIME · BEBOP</span>
+        </div>
+        <button class="arw" id="theme-next" aria-label="Next aesthetic">►</button>
+      </div>
+      <div class="timer"><span class="lbl">MISSION TIME</span><span id="clock">T+ 00:00:00</span></div>
+    </div>
   </div>
 
   <div class="bottom">
@@ -179,7 +211,7 @@ body{
         <span>TEX <b>2K WEBP</b></span>
         <span>PAYLOAD <b>4.7 MB</b></span>
       </div>
-      <div class="hint">◐ <span>Drag to orbit</span> · scroll to zoom · click the deck to play</div>
+      <div class="hint">◐ <span>Drag to orbit</span> · scroll to zoom · <span>press the keys on the desk</span> to run the tape</div>
     </div>
 
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px">
@@ -290,6 +322,7 @@ window.AAudio = (function(){
     stop:function(){ if(ctrl){ try{ctrl.pause();ctrl.seek(0)}catch(e){} } },
     next:function(){ press($('next')); load(i+1, true); },
     prev:function(){ press($('prev')); load(i-1, true); },
+    isPlaying:function(){ return playing; },
     _bind:function(controller){
       ctrl=controller; ready=true;
       controller.addListener('playback_update', function(e){
@@ -305,6 +338,9 @@ window.AAudio = (function(){
     $('stop').addEventListener('click', api.stop);
     $('next').addEventListener('click', api.next);
     $('prev').addEventListener('click', api.prev);
+    // aesthetic selector → walkman.js scene themes
+    $('theme-prev').addEventListener('click', function(){ if(window.AAscene) window.AAscene.cycle(-1); });
+    $('theme-next').addEventListener('click', function(){ if(window.AAscene) window.AAscene.cycle(1); });
   });
   return api;
 })();
