@@ -98,20 +98,31 @@ Each *other* skin should get its own type cut (retro: warm serif; modern: clean
 grotesque; futuristic: technical). Fonts are pulled from the **npm `@fontsource/*`
 packages** and inlined — see `prototypes/build-type.js` for the exact method.
 
-## 6. The 3D model (chosen, but BLOCKED — see constraints)
+## 6. The 3D model (DONE — downloaded, optimized, live in a real WebGL scene)
 
 - Aaron picked the **Sony Walkman WM-F2078** (Sketchfab, by *Dolgov12*,
-  Creative Commons – Attribution → we must credit the maker on the site).
-- The file is in **Aaron's Google Drive**: `sony_walkman_wm-f2078.glb`,
-  file id `1FNHrIAFbC2tQC-730DSA-Q-pi8eAyuEr`.
-- **It is 167 MB — unusable as-is.** Must be optimized to ~5 MB (resize textures to
-  ~1–2K, decimate/compress geometry) with e.g. `gltf-transform` or `gltfpack` before
-  it can go on the web or in the repo (GitHub caps files at 100 MB).
+  Creative Commons – Attribution → we credit the maker on the site; done in the
+  Walkman page footer, linking the Sketchfab source).
+- Source file (167 MB) lives in **Aaron's Google Drive**: `sony_walkman_wm-f2078.glb`,
+  file id `1FNHrIAFbC2tQC-730DSA-Q-pi8eAyuEr`. (Downloading it needs the file's Drive
+  sharing set to "Anyone with the link" — the authenticated MCP only returns base64,
+  which is too large for a 167 MB binary. Aaron flipped sharing on, we grabbed it, he
+  can revert.)
+- **Optimized 167 MB → 4.66 MB** with `gltf-transform optimize` (Draco geometry +
+  2048² WebP textures + mesh simplify). Command captured in `package.json` →
+  `npm run opt:model`. The result is committed at `docs/assets/models/walkman.glb`.
+- The model is now rendered for real: **Three.js r169, WebGL, PBR** with
+  RoomEnvironment image-based lighting, a key/fill/rim rig, a soft contact shadow,
+  and OrbitControls (drag-orbit + auto-rotate). See `docs/index.html` +
+  `docs/assets/js/walkman.js`.
 
 ## 7. Tech decisions
 
-- **Real 3D = Three.js / WebGL** on the real site (loads fine on free GitHub Pages;
-  the visitor's browser fetches Three from a CDN). The CSS-only 3D in the prototypes
+- **Real 3D = Three.js / WebGL** on the real site (loads fine on free GitHub Pages).
+  *Decision update:* Three.js is now **bundled with esbuild and self-hosted** in the
+  repo (`docs/assets/js/walkman.bundle.js`) rather than pulled from a CDN — the site
+  is fully self-contained (also the Draco decoder in `docs/assets/vendor/draco/` and
+  the fonts), so nothing breaks if a CDN is down. The CSS-only 3D in the prototypes
   was ONLY a workaround for the artifact sandbox — the real build should use WebGL +
   the real `.glb` model for photoreal quality (Aaron rejected the "Tomb Raider"/gamey
   CSS look for the final).
@@ -161,14 +172,28 @@ files they mostly work but aren't the final site.)*
 Aaron liked: the aesthetic-select concept + descriptions, the diegetic direction,
 the real-font type identity. He wants photoreal 3D objects (not gamey CSS).
 
-Immediate next steps once on a **Full-network** session:
-1. Download `sony_walkman_wm-f2078.glb` from Aaron's Drive and **optimize to ~5 MB**.
-2. Stand up a real **Three.js** preview of the Walkman (orbit + clickable transport +
-   Spotify) deployed to **GitHub Pages** so Aaron gets a live URL.
-3. Build the **theme-switch desk** (◄ / ► device that reskins the room) — "Step 2"
-   he asked for.
+**DONE (this session):**
+1. ✅ Downloaded `sony_walkman_wm-f2078.glb` and **optimized 167 MB → 4.66 MB**.
+2. ✅ Built the real **Three.js** Walkman preview — orbit + clickable transport keys
+   (play/stop/next/back) wired to the **Spotify iFrame API**, in the mission-control
+   design system. Web root is `docs/` (self-contained: Three.js is bundled &
+   self-hosted, Draco decoder + fonts self-hosted; only the Spotify embed is external).
+
+**Deployment — one manual step remaining (needs Aaron / repo admin):**
+GitHub Pages is not yet enabled, and neither the Actions GITHUB_TOKEN nor the API
+proxy can enable it programmatically (both return "not accessible" — the same
+write-scope gap noted in NEXT-SESSION.md). To go live with **zero** further code:
+> **Repo → Settings → Pages → Build and deployment → Source: "Deploy from a branch"
+> → Branch: `claude/session-jrd7sj`, Folder: `/docs` → Save.**
+Live URL will be **https://aselkridge.github.io/aarons-portfolio/**. (Or point it at
+`claude/website-build-nevi30` once this work is merged there — same `/docs` folder.)
+
+**Still to do (next):**
+3. Build the **theme-switch desk** (◄ / ► device that reskins the room) — "Step 2".
 4. Get Aaron's **Clay / AlphaForge** files to make the flagship page real.
 5. Cut per-skin type systems (retro / modern / futuristic).
+6. Swap the Walkman deck's **sample track reel** for Aaron's real currently-listening
+   (edit the `TRACKS` array in `docs/index.html`; each entry is a Spotify track URI).
 
 Still open / to ask Aaron: fonts for the non-anime skins; whether to mention HubSpot
 at all; final page order.
