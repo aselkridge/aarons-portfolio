@@ -38,6 +38,45 @@ half alone):
   interior highlights aren't punched out; optimize/resize before inlining.
 - Assets live in `docs/orbit/assets/` (quill.png, wax_seal.png so far).
 
+## Sourcing art in LAYERS + animating it (Phase 3 — highest-leverage knowledge)
+Text-to-image generators (Firefly, Midjourney, DALL·E, etc.) output ONE FLAT
+image — they do NOT hand back movable layers. How to actually get layers:
+- **Props:** prompt each element "isolated on transparent background" as its own
+  image, OR hand me a flat one and I cut it (I flood-fill-key clean fg/bg splits).
+- **Scenes:** ask for DEPTH LAYERS — sky/background, midground, foreground as
+  separate images (enables parallax + moving individual elements).
+- **Characters that must move:** get them RIGGED (Live2D / Spine / After-Effects→
+  Lottie) or drawn in separated parts. A flat character can only do ambient motion.
+What I can/can't separate myself: I CAN isolate an object on a clean background
+(PIL keying, like the quill). I CANNOT split same-colored/overlapping regions,
+paint in the hole behind a cut-out (no generative fill here), or rig a flat
+figure. So complex layering must come from how the art is SOURCED, not from me.
+
+Animation tiers (state which a scene needs before Aaron sources art):
+- **A — ambient (any image, my wheelhouse):** bob, sway, drift, parallax,
+  breathing-scale, glow pulses, drifting fog/clouds, particles (embers/snow),
+  light rays, shimmer. Most "alive" feeling comes from here.
+- **B — blinking lights / glowing windows:** either the lights on their own
+  layer (I flicker it) OR I overlay CSS glow spots on the static image and blink
+  those. City lights like the current build → yes.
+- **C — true character motion (walk/talk/gesture):** a single flat image CANNOT.
+  Needs separated parts, a frame sequence (sprite sheet), a pre-animated file
+  (Lottie/GIF/APNG/WebM), or AI image-to-video (Runway/Kling/Pika). I'll say
+  which, per character, before art is sourced.
+
+## Responsive — art and text must NEVER collide (any screen)
+The parchment mockup overlapped text on a narrow phone because the quill was
+`position:absolute` (out of text flow) — a quick-mockup shortcut, NOT how the
+real thing ships. Real integration rule:
+- Give the art its OWN ZONE via grid/flex (don't absolutely overlap text/art).
+- Reposition/shrink on small screens with media/container queries (container
+  queries matter — these boxes reappear at different sizes, e.g. the Ground
+  Control screen in Phase 4).
+- `shape-outside` CAN wrap text around an image's contour (Word-style) — elegant
+  on larger screens, but on tiny screens still shrink/move the art.
+- ALWAYS verify with a real mobile screenshot before merge — this is exactly
+  what the "desktop + mobile screenshots" sign-off step is for.
+
 ## Show before it goes live — always
 "Live" = merged to the default branch (GitHub Pages serves `docs/`). The work
 branch is NOT live. For any design change:

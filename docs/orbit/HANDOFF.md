@@ -94,6 +94,14 @@ before the biggest structural change):
 2. **Content-viewer panel**: richer right-side display for station content
    (blog/poem/image-grid layouts) — built reusably so it can double as the
    Ground Control computer screen's content display in Phase 4.
+   **Scope reminder (bigger than one box): the Oromugai parchment box is only
+   the WARM (Swordfish/Bebop) poetry window. Still to design — rich content
+   windows for the OTHER stations, AND the EXPANSE (Rocinante/cool) counterpart
+   of each, including the Expanse version of the poetry window (likely the
+   blue-HUD language from Aaron's first reference image, not parchment). Two
+   themes × multiple stations = many rich windows. Open design question when we
+   resume: does each window get a theme-specific treatment (parchment vs. HUD)
+   or one shell re-skinned? Also see the Ronin-content brainstorm note below.**
 3. **Visual fidelity collaboration**: real illustrated backgrounds/
    characters replacing procedural shapes (hangar ship size, forest
    contrast, blocky silhouettes, themes not visibly differing — see the
@@ -121,8 +129,27 @@ before the biggest structural change):
    to the control room. **Entry flow addition (per Aaron): after choosing a
    mode, the player picks their theme/ship (Swordfish vs. Rocinante) BEFORE
    entering — both for Launch and for Ground Control.**
-5. **Tutorial** (last, on purpose): built once everything above is final,
-   likely living in/around the Ground Control entry flow.
+5. **In-site tutorial** (built once everything above is final): teaches
+   *visitors* how to *operate* the site, likely living in/around the Ground
+   Control entry flow. NOTE: this is the on-site walkthrough for users — NOT
+   the build manual in Phase 6 below.
+6. **The DIY build manual** (THE FINAL PHASE — after everything, no matter
+   what): a personal learning walkthrough FOR AARON on how this site was
+   actually built. Not a user tutorial — a teach-yourself manual. Covers: the
+   coding languages/tools recommended and why, where to learn each, the
+   concepts that actually matter, and the real lessons + mistakes from this
+   build. Constraints (Aaron's, honor them): plain English, no jargon; taught
+   through concrete EXAMPLES and VISUALS (he learns by seeing/doing); honest
+   about what went wrong, not just what worked. Deliverable is a "DIY learning
+   manual." Must be last so it can teach the *final* shape of the site.
+
+**Pending brainstorm — Ronin (the hidden planet) content.** We defined its
+*mood* (STATION ∅, "the lone road," "#1 is a direction, not a rank," ronin w/
+sword + headband) but never its actual *content* — what a visitor reads/sees
+when they land there. Needs its own brainstorm session with Aaron to define.
+Can happen anytime; should be settled before its scene is finalized in Phase 3
+and before it's wired as a Ground-Control menu entry in Phase 4. (Ties to the
+Phase 2 content-window work above — it's one more window to design.)
 
 (An interstitial **Phase 1.5 — reward presentation & log polish** was added
 and shipped after Phase 1; see §3.2.)
