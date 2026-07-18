@@ -20,7 +20,10 @@ function setLock(s){
   var id=s?s.id:null;
   if(id===lockId){ if(s) lockStation=s; positionTgtbox(); return; }
   lockId=id; lockStation=s;
-  ALL.forEach(function(st){ st.el.classList.toggle('live', !!s&&st.id===s.id); });
+  ALL.forEach(function(st){ var on=!!s&&st.id===s.id;
+    st.el.classList.toggle('live', on);
+    if(st.oring) st.oring.classList.toggle('live', on);   // orbit ring brightens with its planet
+  });
   $('target').textContent = s? s.name.toUpperCase()+' · LOCKED' : '— DRIFTING —';
   var tb=$('tgtbox');
   if(s){

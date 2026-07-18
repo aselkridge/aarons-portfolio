@@ -8,9 +8,22 @@
 /* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
 var Progress=(function(){
   var d={ach:{},visited:{},gold:0,saucers:0,rw:{},rwNew:0};
-  try{ var raw=localStorage.getItem('aa_progress'); if(raw) d=Object.assign(d,JSON.parse(raw)); }catch(e){}
-  if(!d.rw||typeof d.rw!=='object') d.rw={};   // older saved profiles predate rewards
-  function save(){ try{ localStorage.setItem('aa_progress',JSON.stringify(d)); }catch(e){} }
+  try{
+    var raw=localStorage.getItem('aa_progress');
+    if(raw){
+      var saved=JSON.parse(raw);
+      // rewards are session-only, same as bounty and the secret planet —
+      // never restored from a previous visit, always earned fresh.
+      delete saved.rw; delete saved.rwNew;
+      d=Object.assign(d,saved);
+    }
+  }catch(e){}
+  function save(){
+    try{
+      var out=Object.assign({},d); delete out.rw; delete out.rwNew;   // never persisted
+      localStorage.setItem('aa_progress',JSON.stringify(out));
+    }catch(e){}
+  }
   return { d:d, save:save,
     award:function(id,title,desc){ if(d.ach[id]) return false;
       d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
@@ -50,9 +63,12 @@ function banner(kicker,title,desc){
    reward-earning moment opens the big centered reward signal modal
    (openRewardPicker, in 08-ui.js) straight to a category picker so the
    player chooses what kind of thing to learn, rather than the system
-   picking for them. Whatever's revealed is permanently recorded in
-   Progress.d.rw so the ◈ LOG panel can show it later under its category
-   tab. d.rwNew flags the log button to glow until the log is opened. */
+   picking for them. Whatever's revealed is recorded in Progress.d.rw for
+   the rest of THIS session so the ◈ LOG panel can show it later under its
+   category tab — session-only, same as bounty and the secret planet (see
+   the Progress constructor above), so it's earned fresh every visit.
+   d.rwNew counts how many are waiting unviewed, driving both the log
+   button's glow and its numeric badge until the log is opened. */
 var REWARD_META={
   pilot:  {label:'ABOUT THE PILOT',     kicker:'REWARD ◈ PILOT FILE'},
   career: {label:'CAREER INTEL',        kicker:'REWARD ◈ CAREER FILE'},
@@ -73,9 +89,9 @@ function earnFromCategory(cat){
   var id=cat+':'+i;
   if(!Progress.d.rw[id]){
     Progress.d.rw[id]=Date.now();
-    Progress.d.rwNew=1;
+    Progress.d.rwNew=(Progress.d.rwNew||0)+1;
     Progress.save();
-    if(window.markLogNew) markLogNew();   // defined in 08-ui.js (glow)
+    if(window.markLogNew) markLogNew();   // defined in 08-ui.js (glow + badge count)
   }
   return { cat:cat, txt:pool[i] };
 }

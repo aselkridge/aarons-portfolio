@@ -108,8 +108,12 @@ document.addEventListener('pointerdown', function(e){
    there's an un-viewed reward; opening the log clears it. Once opened, the
    log stays open until explicitly closed via the ✕ — it no longer
    auto-dismisses on an outside click. */
-var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot';
-function markLogNew(){ logBtn.classList.add('hasnew'); }
+var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot', logBadge=$('log-badge');
+function markLogNew(){
+  logBtn.classList.add('hasnew');
+  logBadge.textContent=String(Progress.d.rwNew||0);
+  logBtn.classList.remove('bump'); void logBtn.offsetWidth; logBtn.classList.add('bump');   // re-trigger the bounce
+}
 window.markLogNew=markLogNew;
 function renderLog(){
   var R=rewardPool(), tabs=$('log-tabs'), list=$('log-list');
@@ -190,6 +194,7 @@ function setLog(on){
   if(on){
     renderLog();
     logBtn.classList.remove('hasnew');
+    logBadge.textContent='';
     if(Progress.d.rwNew){ Progress.d.rwNew=0; Progress.save(); }
   }
   logBtn.classList.toggle('on',on); logBtn.setAttribute('aria-expanded',String(on));
@@ -197,7 +202,6 @@ function setLog(on){
 }
 logBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(false); setLog(!logPanel.classList.contains('on')); });
 $('log-close').addEventListener('click', function(){ setLog(false); });
-if(Progress.d.rwNew) markLogNew();   // unseen reward from a previous session
 
 /* ══════════ CONTACT CARD ══════════ */
 var contactWrap=$('contactwrap');

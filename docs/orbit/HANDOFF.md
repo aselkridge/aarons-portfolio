@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (Reward signal is now the main event: bounty HUD, category-picker reward modal, control-panel redesign)
+Last updated: 2026-07-18 (Phase 1 of the new roadmap: planet approach glow, log button prominence, session-only rewards, redesigned "?" button)
 
 ---
 
@@ -80,90 +80,102 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 ---
 
-## 3. This shipment — what changed / what didn't
+## 3. The roadmap (agreed with Aaron, 2026-07-18)
 
-Four rounds today, building on each other — visual fixes first, then the
-reward system became the actual centerpiece of the page per Aaron's
-reframe: *this is a portfolio, the facts/quotes/stats ARE the content, so
-they should be front and center, not a small popup nobody reads.*
+A much bigger backlog got planned out this session, in five phases,
+ordered smallest/easiest → biggest, with the tutorial deliberately last
+(it needs to teach the *final* shape of the site, so it can't be built
+before the biggest structural change):
 
-**Round 1 — two visual fixes:**
-- Station title (`.dock h2`): was colliding/cramped at a large size with
-  tight line-height. Reduced max size (2.6rem→2rem), loosened line-height
-  (.88→1.15), added letter-spacing.
-- Log panel fonts were too small to read: tabs 8.5px→10px, tab counts
-  7.5px→9px, entry text 11px→13px, entry titles 12.5px→13.5px.
+1. **Quick wins** (this shipment — see §3.1): planet approach glow, log
+   button prominence, session-only rewards, redesigned "?" button.
+2. **Content-viewer panel**: richer right-side display for station content
+   (blog/poem/image-grid layouts) — built reusably so it can double as the
+   Ground Control computer screen's content display in Phase 4.
+3. **Visual fidelity collaboration**: real illustrated backgrounds/
+   characters replacing procedural shapes (hangar ship size, forest
+   contrast, blocky silhouettes, themes not visibly differing — see the
+   still-open issues #5/#6 in §2). Aaron supplies art or picks a sourcing
+   route (commission / itch.io / Kenney.nl / CraftPix / AI-assisted); scene
+   specifics get resolved as that art arrives, not planned in the abstract.
+   Can overlap with other phases since it's partly gated on gathering art.
+4. **Ground Control** (the giant): boot screen becomes a real choice —
+   **Launch** (today's space experience) vs. **Ground Control**, a
+   control-room scene (desk, computer screen, panels) with direct-access
+   station navigation, an always-visible facts/stats browse list (separate
+   from the earned-only ◈ LOG), a Pong mini-game, and a themed "Ronin"
+   entry that appears in the station menu once unlocked. Ronin unlocks via
+   *either* winning Pong on the ground OR the existing ₩20,000 bounty in
+   space — whichever happens first in a session unlocks it in both places,
+   and both tracks stay live simultaneously so a player can chase either.
+   Launch button on the desk → space; a Return Home button in space → back
+   to the control room.
+5. **Tutorial** (last, on purpose): built once everything above is final,
+   likely living in/around the Ground Control entry flow.
 
-**Round 2 — bounty made prominent + a next-reward indicator:**
-- Bounty pulled out of the small `.c-data` stats grid into its own `.bounty-hud`
-  row at the top of the console — large Anton-font display with a themed
-  glow — plus mirrored in the minimized chip (`#chip-bounty`), both were
-  previously buried in 10px mono text.
-- Added a next-reward progress bar (`.bh-next`/`#bh-bar-fill`) that fills
-  toward the next ₩2,500 gold-asteroid spawn threshold (the existing
-  cadence in `checkBounty()`, just never surfaced before), switching to a
-  pulsing red "◈ SIGNAL LIVE" state whenever a gold asteroid is already out
-  and waiting to be cracked.
+## 3.1 This shipment — Phase 1 of the roadmap: quick wins
 
-**Round 3 (superseded by Round 4, see below) — reward toasts became
-click-to-expand**, opening a centered modal for full readability. Short-
-lived: Round 4 replaced the toast-then-click flow with reward earning
-opening the big modal directly.
+**Planet approach animation** (`index.html`, `04-world.js`, `06-flight.js`):
+- Added `.pglow` — a large radial-gradient glow bloom behind every planet
+  (each planet's own color via `--pc`), invisible at rest, blooming in via
+  a back-out/overshoot easing (`cubic-bezier(.34,1.56,.64,1)`) when the
+  planet goes `.live` (proximity lock) — reads as a flare rather than a
+  flat fade. The existing `.ring`/`.orb` scale transitions got the same
+  bouncy easing so the whole "coming into range" moment feels like one
+  cohesive pop rather than several small, disjointed transitions.
+- Orbit rings (`.sun-orbit`, one per station, built in `buildPlanet()`)
+  now carry their own planet's color and a constant ambient glow
+  (`box-shadow`) at all times, brightening further via a new `.live` state
+  toggled in `setLock()` (`06-flight.js`) alongside the planet's own — the
+  system map reads as a lit set of flight paths instead of flat reference
+  lines.
+- Ronin (the secret world) gets a real one-shot entrance — `.materialize`,
+  added in `unlockRonin()` and removed ~1.2s later — scaling in from
+  nothing past full size with its own glow flash, instead of snapping into
+  existence mid-frame.
 
-**Round 4 — reward signal is the main event, with a category picker
-(the current, final shape of this feature):**
-- **Every reward-earning moment now opens the reward modal directly** —
-  gold asteroid crack and saucer kill both call `factDrop()`
-  (`03-progress.js`), which calls `openRewardPicker()` (`08-ui.js`).
-  Rewards no longer toast in the corner at all; the modal *is* the
-  notification. Achievement toasts (`Progress.award`, e.g. "FIRST BOUNTY")
-  are untouched — they don't carry a fact/stat, so they stay small,
-  per Aaron's call ("only if it comes with a stat or fact").
-- **Category picker**: the modal opens showing four buttons — Pilot /
-  Career / Random / Quotes — each with a live earned/total count, so the
-  player chooses what kind of thing to learn rather than the system
-  picking at random. `earnFromCategory(cat)` (`03-progress.js`) marks one
-  unearned item in that category (falling back to a random already-earned
-  one once a category is fully cleared), saves it, and flags the log-new
-  glow. Picking a category swaps the modal from the picker view to the
-  reveal view (kicker/label/full text) in place.
-- **Viewing history is separate from earning**: clicking an already-earned
-  entry in the ◈ LOG opens the same modal straight to the reveal view —
-  `openRewardModal(kicker,label,text)` — with no picker, since there's
-  nothing left to choose.
-- **Log panel now persists until explicitly closed**: the old "click
-  anywhere outside closes it" behavior is gone (removed from the shared
-  outside-pointerdown handler in `08-ui.js`); a real ✕ close button
-  (`#log-close`) was added since that affordance no longer exists.
-- **Both the log panel and the reward modal were restyled as a themed ship
-  control panel** (new shared `.ctrlpanel`/`.cp-head`/`.cp-screen` CSS,
-  `index.html`) instead of the old plain glass card: Swordfish gets a
-  rounded chunky panel with four corner "rivets" and the same CRT scanline
-  flicker the nav console already uses; Rocinante gets the same cut-corner
-  holo-glass clip-path as the console/bay, backdrop blur, and a slow
-  animated light-sweep across the header. Built without a reference image
-  (Aaron confirmed one wasn't available) — reused the visual vocabulary
-  already established by `.console`/`.scancard`/`.tgtbox` rather than
-  inventing a new language.
+**Log button prominence** (`index.html`, `08-ui.js`): the old single
+pulsing dot was too subtle. `.hasnew` now fills the button with a solid
+red-tinted background (not just a border), and a new numeric badge
+(`#log-badge`) shows exactly how many rewards are waiting — both driven by
+`Progress.d.rwNew` now being a **count**, not a boolean. `markLogNew()`
+also re-triggers a brief scale "bump" (`.bump`, reflow-retriggered) the
+instant a new reward lands, so there's an announce moment, not just a
+static glow. Badge clears and the bump stops firing once the log is opened.
 
-**Verified** (fresh-profile, live state via headless browser, not source-
-reading): `factDrop()` opens the modal in picking mode with exactly 4
-category buttons; clicking one exits picking mode and shows the correct
-label/text; the ✕ closes it; achievement toasts still render (count 1) and
-carry zero `.toast.rw` (the now-removed reward-toast class) after earning
-a reward; the log panel stays open after a click on empty canvas space and
-only closes via the new `#log-close` button or Escape; a log-item click
-opens the modal directly to the reveal view (picking class absent); zero
-console errors across every flow. Screenshotted the picker, the reveal,
-and the log panel in **both** themes to confirm the per-theme control-panel
-skins render distinctly and correctly.
+**Session-only rewards** (`03-progress.js`): `Progress.d.rw`/`rwNew` are
+now excluded from what's read from and written to `localStorage` — deleted
+from the saved blob before both load and save — so the reward collection
+resets every visit, exactly like `bounty` and the secret planet already
+did. Achievements (`d.ach`) and the visit/gold/saucer counters are
+untouched and still persist normally; only the reward log is session-only.
+
+**Redesigned "?" button** (`index.html`): was a plain generic circle
+(`border:1px solid var(--line)`). Now themed per ship to match the
+console/log-tab language — amber-bordered with a solid-fill hover for
+Swordfish, cyan-bordered with a translucent-glow hover for Rocinante — and
+the log button's base styling was folded into the same shared rule so both
+nav buttons read as one consistent chip family.
+
+**Verified** (live state via headless browser, not source-reading): a
+planet's `.live` toggle (via real ship proximity, not a one-off manual
+call that the per-frame proximity check would immediately override)
+correctly sets `.live` on both the planet and its orbit ring, and the
+`.pglow` opacity settles at the intended 0.55 with the ring's box-shadow
+showing the planet's own color; Ronin gains `.materialize` immediately on
+unlock and loses it again ~1.2s later; earning rewards increments the log
+badge text (1, then 2) and sets `.hasnew`, both clear on opening the log;
+a full reload confirms `Progress.d.rw`/`rwNew` reset to empty/0 while a
+test achievement survives the same reload; the existing reward
+picker→reveal flow and a real gold-asteroid-crack→modal path both still
+work end-to-end; zero console errors throughout. Screenshotted the glow
+flash, the settled state, Ronin's materialize moment, the log badge, and
+the full nav row in both themes.
 
 **Still pending from Aaron:** Clay table screenshots (AlphaForge gallery),
 poems (Oromugai), eating/fatherhood content (Life). All have marked
 placeholder sections that need no code changes to fill.
 
 **Explicitly NOT touched this shipment**: issues #2, #5–8, #11, #12a in §2,
-all still outstanding. Backlog (not started): tutorial system, redesigned
-"?" button, richer right-side content-viewer panel, further log-button
-new-reward-indicator polish, making rewards session-only like bounty/the
-secret planet.
+all still outstanding — folded into Phase 3 (visual fidelity) and Phase 4
+(Ground Control) of the roadmap above. Phases 2–5 not started.

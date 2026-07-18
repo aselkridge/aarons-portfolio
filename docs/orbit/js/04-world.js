@@ -21,13 +21,13 @@ function buildPlanet(s,si){
   s.gradReal = 'radial-gradient(circle at 36% 32%,'+shade(s.color,70)+','+s.color+' 58%,'+shade(s.color,-80)+' 100%)';
   var el=document.createElement('div');
   el.className='planet'+(s.secret?' secret':''); el.dataset.id=s.id; el.style.setProperty('--pc',s.color);
-  el.innerHTML='<div class="ring"></div><div class="shield"></div><div class="pwrap">'+extra+
+  el.innerHTML='<div class="pglow"></div><div class="ring"></div><div class="shield"></div><div class="pwrap">'+extra+
     '<div class="orb '+s.type+'" style="width:'+d+'px;height:'+d+'px"></div></div>'+
     '<div class="tag"><div class="n">'+s.name+'</div><div class="d">'+s.tag+'</div></div>';
   if(!fine) el.addEventListener('click', function(){ if(state==='free') beginLanding(s); });
   s.el=el; s.orb=el.querySelector('.orb'); s.a=s.a0; s.num='0'+(si+2);
   system.appendChild(el);
-  var ring=document.createElement('div'); ring.className='sun-orbit'; s.oring=ring;
+  var ring=document.createElement('div'); ring.className='sun-orbit'; ring.style.setProperty('--pc',s.color); s.oring=ring;
   system.insertBefore(ring, system.firstChild);
 }
 STATIONS.forEach(buildPlanet);
@@ -52,6 +52,10 @@ function unlockRonin(silent){
   RONIN.oring.style.width=(RONIN.orbit*unit*2)+'px'; RONIN.oring.style.height=(RONIN.orbit*unit*2*0.62)+'px';
   RONIN.orb.style.background = themeId==='sword'? RONIN.gradCel : RONIN.gradReal;
   ALL.push(RONIN);
+  // a world that appears out of nowhere gets a real entrance, not a snap —
+  // see .materialize in index.html.
+  RONIN.el.classList.add('materialize');
+  setTimeout(function(){ RONIN.el.classList.remove('materialize'); },1200);
   if(!silent){ banner('◈ ANOMALY','UNCHARTED WORLD DETECTED','A sixth world just appeared on the far orbit.');
     Progress.award('ronin_found','OFF THE CHARTS','You made the far orbit appear.'); Sound.warp(); }
 }
