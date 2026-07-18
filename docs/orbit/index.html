@@ -681,11 +681,36 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 .sec-body .list{margin-top:1em;display:flex;flex-wrap:wrap;gap:7px}
 .sec-body .list span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
 .sec-body .soon{margin-top:1.2em;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
-/* ──── content-viewer: poem layout ──── */
-.sec-body .poem-wrap{margin:1.5em 0;text-align:center;padding:1.5em 0}
-.sec-body .poem-visual{width:100%;max-height:240px;object-fit:cover;border-radius:4px;margin-bottom:1.2em;background-size:cover;background-position:center}
-.sec-body .poem-text{font-size:1.1rem;line-height:1.8;color:#e8ebf0;font-style:italic;margin:1.2em 0}
-.sec-body .poem-author{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:1em}
+/* ──── content-viewer: Oromugai parchment poem sheets ────
+   Aged-manuscript treatment (see docs — the reference quality bar). CSS builds
+   the sheet (paper gradient + live fractal-noise grain + edge foxing); the real
+   ouroboros seal + quill/inkwell art are composited in. Each sheet holds ONE
+   short line so text and the corner quill never collide — works in the narrow
+   dock and on a phone. */
+.sec-body .poem-intro{font-size:.95rem;line-height:1.6;color:#cbb78d;margin:0 0 16px}
+.sec-body .poem-sheet{position:relative;overflow:hidden;isolation:isolate;border-radius:6px;margin:0 0 16px;
+  padding:20px 22px 18px;
+  background:radial-gradient(130% 120% at 22% 8%,#f2e8cf 0%,#e9dcbe 34%,#d3bd93 100%);
+  box-shadow:0 16px 32px -16px rgba(0,0,0,.6), inset 0 0 0 1px rgba(120,90,50,.28),
+    inset 0 0 60px rgba(90,60,25,.18)}
+.sec-body .poem-sheet::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:multiply;opacity:.45;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size:240px 240px}
+.sec-body .poem-sheet::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;mix-blend-mode:multiply;opacity:.4;
+  background:radial-gradient(60px 90px at 100% 24%,rgba(140,100,50,.2),transparent 68%),
+    radial-gradient(90px 66px at -6% 92%,rgba(120,85,40,.18),transparent 70%)}
+.sec-body .poem-sheet>*{position:relative;z-index:1}
+.sec-body .poem-eye{font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:#8a6a3c;margin-bottom:10px}
+.sec-body .poem-line{font-family:'Dancing Script',cursive;font-weight:600;color:#2a1f14;margin:0;
+  font-size:clamp(1.55rem,7vw,2.25rem);line-height:1.16;max-width:15ch;text-shadow:0 1px 0 rgba(255,250,235,.5)}
+.sec-body .poem-foot{display:flex;align-items:center;gap:12px;margin-top:16px}
+.sec-body .poem-seal{flex:none;width:40px;height:auto;transform:rotate(-4deg);filter:drop-shadow(0 3px 4px rgba(45,20,10,.45))}
+.sec-body .poem-meta{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5c4a34}
+/* hero sheet reserves a bottom-right zone for the quill so text can't reach it */
+.sec-body .poem-sheet.hero{padding-bottom:58px}
+.sec-body .poem-sheet.hero .poem-foot{max-width:56%}
+.sec-body .poem-quill{position:absolute;right:-8px;bottom:-8px;width:clamp(118px,44%,176px);height:auto;
+  z-index:0;mix-blend-mode:multiply;pointer-events:none}
 /* ──── content-viewer: gallery layout ──── */
 .sec-body .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:1.2em 0}
 .sec-body .gallery-item{position:relative;overflow:hidden;border-radius:4px;aspect-ratio:1}
@@ -958,8 +983,8 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/04-world.js?v=15"></script>
 <script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
-<script src="js/10-content-viewer.js"></script>
-<script src="js/07-environments.js?v=11"></script>
+<script src="js/10-content-viewer.js?v=2"></script>
+<script src="js/07-environments.js?v=12"></script>
 <script src="js/08-ui.js?v=21"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>

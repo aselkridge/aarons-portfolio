@@ -61,7 +61,13 @@ var SECTIONS={
   craft:[
     {k:'How to write one', body:['1. Choose one image, thought, feeling, contradiction, or moment.','2. Write it as one line, and revise until it contains exactly eight syllables.','3. Remove words that explain more than they reveal.','4. Read it aloud in one breath. Check that it carries resonance beyond its literal length.','5. Pair it with a visual, a voice, a beat, or silence.','6. Tag it Oromugai when you share it.']},
     {k:'The roots', body:['Òrò — Yorùbá inspiration: word, speech, utterance. The power of the spoken.','Mugen — Japanese: infinite, limitless. Also the name of Samurai Champloo\'s wildest swordsman, for those who look closer.','Aiyé — Yorùbá inspiration: world, life, existence. The form stays grounded in the lived.','Ouroboros — the serpent eating its own tail. Cycles, eternity, renewal. Eight syllables, laid on its side: infinity.','Oromugai is a new coined word inspired by these roots — not a literal word in any of these languages. The blend is the point.']},
-    {k:'Poems', body:['First transmissions incoming — a body of Oromugais with original visuals, released in waves.'], soon:true}
+    {k:'Poems', type:'poem',
+     intro:'Sample transmissions — the form, live. Aaron’s real Oromugais drop straight in here as they’re released.',
+     poems:[
+       {line:'One line holds more than it can say', n:'01'},
+       {line:'The serpent eats its endless tail',   n:'02'},
+       {line:'Eight slow beats of infinity',        n:'03'}
+     ]}
   ],
   notes:[
     {k:'Fossil records', body:['On reactive systems: a tech stack built panic-by-panic isn\'t architecture — it\'s a fossil record of past panics, and the people using it are the ones living among the bones.','Reacting is natural. Sometimes necessary. The failure isn\'t reacting — it\'s never graduating from it. Structure and proactive design should be the rule; reaction the exception. Most systems have those two backward, and the job almost nobody holds is graduating a team from one to the other.']},

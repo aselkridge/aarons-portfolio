@@ -24,14 +24,31 @@ var ContentViewer=(function(){
     return html;
   }
 
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
   function renderPoem(sec){
-    // Poem entries: centered text with decorative treatment
-    // sec.text is the poem, sec.visual is optional image, sec.author is optional
-    var html='<div class="poem-wrap">';
-    if(sec.visual) html+='<div class="poem-visual" style="background-image:url('+sec.visual+')"></div>';
-    html+='<div class="poem-text">' + (sec.text||'') + '</div>';
-    if(sec.author) html+='<div class="poem-author">— '+sec.author+'</div>';
-    html+='</div>';
+    // The Oromugai parchment treatment — each poem is one 8-syllable line on an
+    // aged manuscript "sheet" (CSS paper + foxing + grain), with the real
+    // illustrated ouroboros wax seal and, on the hero sheet, the quill/inkwell
+    // (multiply-blended, in its own bottom-right zone so it never collides with
+    // the text at any width — the mobile-safe layout). Kept deliberately short
+    // per card (one line + a small meta) so text and art share the sheet cleanly
+    // on a narrow dock or a phone. Real Oromugais drop into sec.poems unchanged.
+    var html='';
+    if(sec.intro) html+='<p class="poem-intro">'+esc(sec.intro)+'</p>';
+    (sec.poems||[]).forEach(function(p,i){
+      var hero=(p.hero!==undefined)?p.hero:(i===0);
+      var num=p.n||('#'+('0'+(i+1)).slice(-2));
+      html+='<figure class="poem-sheet'+(hero?' hero':'')+'">';
+      html+='<figcaption class="poem-eye">Oromugai ∞ · '+esc(num)+'</figcaption>';
+      html+='<blockquote class="poem-line">'+esc(p.line||'')+'</blockquote>';
+      html+='<div class="poem-foot"><img class="poem-seal" src="assets/wax_seal.png" alt="Oromugai seal — an ouroboros">'+
+            '<span class="poem-meta">'+esc(p.meta||'8 syllables · one breath')+'</span></div>';
+      if(hero) html+='<img class="poem-quill" src="assets/quill.png" alt="" aria-hidden="true">';
+      html+='</figure>';
+    });
+    if(sec.soon) html+='<div class="soon">◇ more transmissions incoming</div>';
     return html;
   }
 
