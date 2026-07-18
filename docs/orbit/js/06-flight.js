@@ -6,7 +6,7 @@
 'use strict';
 
 /* ══════════ LOCK-ON ══════════ */
-var tcTimer=null;
+var tcTimer=null, scTimer=null;
 function updateLock(){
   if(state!=='free'){ setLock(null); return; }
   var best=null,bd=1e9;
@@ -29,8 +29,15 @@ function setLock(s){
       $('tc-s').textContent='SESSION '+s.num; $('tc-n').textContent=s.name;
       var tc=$('titlecard'); tc.classList.add('on');
       clearTimeout(tcTimer); tcTimer=setTimeout(function(){ tc.classList.remove('on'); },950);
-    } else { tb.classList.add('on'); $('tgtlab').textContent=s.name.toUpperCase()+' · LOCKED'; }
-  } else { tb.classList.remove('on'); $('titlecard').classList.remove('on'); }
+    } else { // Expanse: reticle around the target (name only, no "LOCKED" wording)
+      // plus its own themed scan-card popout — the equivalent of the anime
+      // title card, styled for this theme rather than reusing that look.
+      tb.classList.add('on'); $('tgtlab').textContent=s.name.toUpperCase();
+      $('sc-k').textContent='◈ TARGET ACQUIRED'; $('sc-n').textContent=s.name; $('sc-d').textContent=s.tag||'';
+      var sc=$('scancard'); sc.classList.add('on');
+      clearTimeout(scTimer); scTimer=setTimeout(function(){ sc.classList.remove('on'); },950);
+    }
+  } else { tb.classList.remove('on'); $('titlecard').classList.remove('on'); $('scancard').classList.remove('on'); }
   positionTgtbox();
 }
 function positionTgtbox(){

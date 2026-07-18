@@ -213,6 +213,22 @@ body.t-roci .tgtbox.on{display:block}
 .titlecard .n{font-family:var(--anton);font-size:clamp(1.8rem,5vw,3.4rem);text-transform:uppercase;line-height:.9;letter-spacing:.01em}
 body.t-roci .titlecard{display:none}
 
+/* Expanse lock-on popout — its own themed equivalent of the anime title
+   card above, not a reskin of it: a HUD scan-readout using the same
+   glass-panel + cut-corner language as this theme's other panels (the
+   banner, planet tags), sliding in from the left the same way. */
+.scancard{position:fixed;left:0;top:34%;z-index:9;pointer-events:none;display:none;
+  transform:translateX(-102%);transition:transform .22s cubic-bezier(.2,.9,.3,1);
+  background:rgba(4,10,18,.88);backdrop-filter:blur(10px);border:1px solid #86dcff;border-left:3px solid #86dcff;
+  box-shadow:0 0 40px rgba(116,208,255,.35);padding:14px 34px 14px clamp(18px,5vw,54px);
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+body.t-roci .scancard{display:block}
+.scancard.on{transform:translateX(0)}
+.scancard .k{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:#86dcff;text-transform:uppercase}
+.scancard .n{font-family:var(--os);font-weight:700;font-size:clamp(1.3rem,3.2vw,2rem);text-transform:uppercase;color:var(--ink);letter-spacing:.01em;margin-top:2px}
+.scancard .d{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:#9affea;text-transform:uppercase;margin-top:5px}
+.scancard .d:empty{display:none}
+
 /* ───────── HUD ───────── */
 .hud{position:fixed;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(14px,3vw,34px)}
 .hud a,.hud button{pointer-events:auto}
@@ -526,6 +542,7 @@ body.t-roci .bnr .bk{color:#9affea}
 
 <div class="tgtbox" id="tgtbox"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i><span class="lab" id="tgtlab">TGT</span></div>
 <div class="titlecard" id="titlecard"><div class="s" id="tc-s">SESSION</div><div class="n" id="tc-n">STATION</div></div>
+<div class="scancard" id="scancard"><div class="k" id="sc-k">◈ TARGET ACQUIRED</div><div class="n" id="sc-n">STATION</div><div class="d" id="sc-d"></div></div>
 
 <div class="vig"></div><div class="scan"></div><div class="grain"></div>
 
@@ -652,7 +669,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/03-progress.js?v=10"></script>
 <script src="js/04-world.js?v=12"></script>
 <script src="js/05-combat.js?v=11"></script>
-<script src="js/06-flight.js?v=10"></script>
+<script src="js/06-flight.js?v=11"></script>
 <script src="js/07-environments.js?v=10"></script>
 <script src="js/08-ui.js?v=12"></script>
 <script src="js/09-main.js?v=12"></script>

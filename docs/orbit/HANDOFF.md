@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (issue #9 fixed, issue #12 visual half fixed; contact photo pending from Aaron)
+Last updated: 2026-07-18 (contact photo live; "LOCKED" removed + themed lock-on popout added for Expanse)
 
 ---
 
@@ -32,16 +32,11 @@ list above, with `/* ─── section ─── */` comment banners) and the pa
 `audio/tracks.js` and `data/facts.js` are separate small data files you can
 hand-edit directly (documented inline in each).
 
-**Pending content, not a bug**: the contact card (click "See you, space
-cowboy…") expects a photo at `docs/orbit/assets/aaron.jpg` — that file
-doesn't exist yet, so it currently shows an "AS" initials placeholder
-(automatic fallback, no code change needed once the real file is dropped
-in). Aaron pasted a photo directly into chat once already, but a pasted
-chat image doesn't land anywhere on this session's filesystem — confirmed
-by searching for it, nothing was found — so it couldn't be picked up. Next
-attempt should go through something that actually produces a fetchable
-file: a Google Drive share link (the pattern already used earlier for a
-screen recording) or a direct URL. The "Other builds" section is also a
+**Pending content, not a bug**: the contact card's photo landed —
+`docs/orbit/assets/aaron.jpg` now exists (pulled from a Google Drive link
+Aaron shared; a directly-pasted chat image doesn't reach this session's
+filesystem, so that first attempt couldn't be picked up, but a Drive link
+or direct URL works fine). The "Other builds" section is still a
 placeholder ("More coming soon…") until there are other sites to link —
 see `.contact-more-list` in `index.html`.
 
@@ -76,29 +71,41 @@ instruction — do not batch-fix these without his go-ahead on each.
 | 11 | Major-event banner shows before the player can find/reach it in time | Banner currently shows for 3.6s total; on a small/narrow browser window, or if the event is off in a corner of the map, that may not be enough time to register + react. | `03-progress.js` |
 | 12a | ₩20,000 threshold for the hidden planet is too high | Hard-coded number, unchanged — Aaron hasn't asked for a new value yet. | `01-config.js` (threshold check lives in `03-progress.js`) |
 | ~~12b~~ | ~~New/hidden planet has no visual "this is new" treatment~~ **FIXED 2026-07-18** | The hidden planet (Ronin/`RONIN`) rendered through the exact same `buildPlanet()` path as every regular planet — no visual distinction once unlocked. **Fix:** `RONIN` now carries a `secret:true` flag; `buildPlanet()` checks it and adds a `.secret` class plus two new pieces of markup — `.secret-glow` (a soft pulsing radial glow in the planet's own gold color) and `.secret-rings` (two crossed rings at different angles/speeds, gyroscope-style) — all always-on once unlocked, independent of the normal `.live` proximity-hover state everything else uses. **Verified**: unlocked it live and confirmed the `.secret` class and both new elements exist with their animations actually running (`animationName` read back, not just "class present"); screenshotted the result to confirm it visually reads as a distinct, deliberate "this one's different" world rather than another regular planet. | `04-world.js` (`buildPlanet`, `RONIN`), `index.html` (`.secret-glow`/`.secret-rings` CSS) |
+| ~~13~~ | ~~"LOCKED" text shows above the planet in the Expanse theme, not in Bebop~~ **FIXED 2026-07-18** | `setLock()` had a `themeId==='sword'` branch (anime title-card cut-in — never mentions "locked") and an `else` (Expanse) branch that set the on-planet reticle label (`#tgtlab`, in `.tgtbox`, positioned 22px above the target) to `NAME · LOCKED`. That's the theme-specific difference Aaron noticed — Bebop's cut-in never had that word to begin with, it wasn't removed there because it was never added there. **Fix:** the Expanse branch now sets `#tgtlab` to just the station name. The console's own "TGT" readout (top-right NAV·COM panel) still shows "· LOCKED" in both themes — Aaron only asked about the label floating above the planet, not that HUD field, so it was left alone. **Verified**: forced a lock-on in each theme and read back the live text content of both `#tgtlab` and `#target` — Expanse's on-planet label now reads just the name, the console field is unchanged, and the underlying lock-on/dock mechanic itself was untouched (same `setLock`/`positionTgtbox` flow). | `06-flight.js` (`setLock`) |
+| ~~14~~ | ~~Expanse theme has no equivalent of Bebop's hover popout~~ **FIXED 2026-07-18** | Locking onto a planet in Bebop triggers `.titlecard`, a dark anime-style card that slides in from the left with "SESSION ##" + the station name; that element is explicitly hidden in Expanse (`body.t-roci .titlecard{display:none}`) and nothing replaced it, so Expanse had no equivalent moment at all. **Fix:** added `.scancard` — a new themed popout, not a reskin of the anime card: dark glass panel, `backdrop-filter` blur, icy-blue border/glow, and the same cut-corner `clip-path` this theme already uses on its banner and planet tags, so it reads as native to Expanse rather than borrowed. Shows "◈ TARGET ACQUIRED", the station name, and its short tagline; slides in from the left on lock-on and back out after 950ms, same timing as the anime card. **Verified**: forced lock-on in Expanse and read back that `.scancard` gains the `.on` class with the correct kicker/name/tag text, confirmed it auto-hides after the 950ms window, and re-checked Bebop afterward to confirm its title card and this new card don't interfere with each other. | `06-flight.js` (`setLock`), `index.html` (`.scancard` markup/CSS) |
+| — | *(Not a bug — explained, no fix applied pending Aaron's call)* Secret planet appears immediately on load, before reaching ₩20,000 in the current session | `unlockRonin` sets `Progress.d.ronin=1` and saves it to `localStorage` (key `aa_progress`) the first time the ₩20,000 threshold is crossed. `09-main.js` boot code (`if(Progress.d.ronin) unlockRonin(true);`) then silently re-unlocks it on *every future page load*, regardless of that session's current bounty (which always starts back at 0 — `bounty` is a plain in-memory variable, never persisted). So this isn't random: it means Aaron's browser already crossed ₩20,000 at some point in an earlier session (very plausible given how much playtesting has happened today), and the unlock is permanent by design from that point on, like a game achievement rather than a per-session gate. Whether that's the right behavior is a product call, not a bug — flagging it rather than changing it unilaterally. If Aaron wants it to require re-earning every session instead, the fix is small (stop persisting `ronin` in `Progress.d`, or don't call `unlockRonin(true)` at boot). | `03-progress.js` (`checkBounty`), `09-main.js` (boot) |
 
 ---
 
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **Fixed issue #9** (remove the "Dock & enter" label) and **the visual half
-  of issue #12** (the hidden/secret planet now gets a distinguishing
-  treatment once unlocked — a pulsing gold glow plus two crossed rings). See
-  the strikethrough entries in §2 for full detail on each.
-- Tried to receive Aaron's contact-card photo, pasted directly into chat.
-  It doesn't reach this session's filesystem (confirmed by searching for
-  it — nothing landed anywhere), so it couldn't be wired in this round. See
-  the pending-content note in §1 for the two delivery methods that will
-  actually work (Drive link or a direct URL).
-- **Verified**: for #9, queried the live DOM for `.planet .dock` elements
-  and for the literal label text anywhere on the page, in both themes —
-  zero matches either way, not just "looks gone" in a screenshot. For #12b,
-  unlocked the secret planet live and confirmed both new elements exist
-  with their CSS animations actually running (read back `animationName`,
-  not just class presence), then screenshotted it to confirm it visually
-  reads as a distinct, deliberate discovery rather than another regular
-  planet.
+- **Contact photo is live.** The Drive-link delivery worked where the direct
+  chat paste couldn't — downloaded and saved to
+  `docs/orbit/assets/aaron.jpg`; the contact card now shows it instead of
+  the "AS" initials placeholder.
+- **Fixed issue #13** ("LOCKED" showing above the planet in Expanse) and
+  **issue #14** (Expanse gets its own themed lock-on popout, styled to
+  match — not a reskin of Bebop's anime card). See the strikethrough
+  entries in §2 for full detail on each.
+- **Explained, not fixed**, the secret-planet-appears-early report: it's
+  `Progress.d.ronin` persisting in `localStorage` from an earlier session
+  where Aaron's own bounty already crossed ₩20,000, then silently
+  re-unlocking on every later page load regardless of the *current*
+  session's bounty. This is a real, confirmed mechanism (not a guess), and
+  it's a product-design fork (permanent unlock vs. re-earn every session),
+  not obviously a bug — flagged in §2 for Aaron's call rather than changed
+  unilaterally.
+- **Verified**: for #13, forced a lock-on in both themes and read back live
+  text content — Expanse's on-planet label now reads just the name, the
+  console's separate "TGT" field (untouched, different element, not what
+  Aaron flagged) still correctly shows "· LOCKED" in both themes. For #14,
+  forced lock-on in Expanse and confirmed `.scancard` gains `.on` with the
+  right kicker/name/tag text, auto-hides after the same 950ms window as the
+  Bebop card, and doesn't interfere with Bebop's own title card when
+  switching back. For the photo, confirmed `naturalWidth` on the loaded
+  `<img>` (not just "no console error") to prove it actually rendered, not
+  just that the file exists.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
 time): issues #2, #5–8, #10–11, #12a in §2, all still outstanding.
