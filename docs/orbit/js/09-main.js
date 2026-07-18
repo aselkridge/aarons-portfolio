@@ -7,8 +7,26 @@
 
 /* ══════════ MAIN LOOP ══════════ */
 var last=0;
+var lastDPR=devicePixelRatio;
 function loop(t){
   var dt=Math.min(0.05,(t-last)/1000)||0.016; last=t;
+
+  /* Defend against the viewport/DPR drifting out from under us without a
+     'resize' event firing — the classic trigger is dragging the browser
+     window to a display with a different pixel density (e.g. a Retina
+     MacBook screen <-> an external monitor). When that happens, the ship
+     (a DOM element that tracks the live cursor directly) stays correct,
+     but the fx/star canvases keep their OLD pixel-buffer size and get
+     silently stretched/shifted by the browser to fit their new on-screen
+     box — so anything drawn on them (shots, thrust lines, asteroids) ends
+     up rendered in a different physical spot than the ship next to it.
+     Checking this every frame is cheap (a few reads) and only does real
+     work on the rare frame where something actually changed. */
+  if(innerWidth!==W || innerHeight!==H || devicePixelRatio!==lastDPR){
+    metrics(); sizeCanvases(); sizeOrbits(); sunMetrics(); initStars();
+    if(envScene) sizeEnv();
+    lastDPR = devicePixelRatio;
+  }
 
   /* parallax */
   plx += ((mx-CX)*-0.018-plx)*0.06; ply += ((my-CY)*-0.018-ply)*0.06;
