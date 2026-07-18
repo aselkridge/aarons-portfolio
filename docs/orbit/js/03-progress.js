@@ -15,18 +15,16 @@ var Progress=(function(){
     award:function(id,title,desc){ if(d.ach[id]) return false;
       d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
 })();
-/* small right-side stack — minor milestones + facts (capped at 3, auto-dismiss).
-   Reward toasts (onExpand passed) are click-to-expand — they're too small to
-   comfortably read in the stack, so tapping one opens the full text in a
-   centered modal (openRewardModal, defined in 08-ui.js). Achievement toasts
-   (no onExpand) stay as plain, non-interactive pop-ups. */
-function toast(kicker,title,desc,onExpand){
+/* small right-side stack — achievement milestones only now (capped at 3,
+   auto-dismiss). Rewards (facts/quotes/stats) no longer toast here at all —
+   they're the main event, so they go straight to the big centered reward
+   signal modal instead (see factDrop below). */
+function toast(kicker,title,desc){
   var host=$('ach');
   while(host.children.length>=3) host.removeChild(host.firstChild);
-  var el=document.createElement('div'); el.className='toast'+(onExpand?' rw':'');
-  el.innerHTML='<div class="tk">'+kicker+'</div><div class="tt"></div>'+(desc?'<div class="td"></div>':'')+(onExpand?'<i class="tx">⤢</i>':'');
+  var el=document.createElement('div'); el.className='toast';
+  el.innerHTML='<div class="tk">'+kicker+'</div><div class="tt"></div>'+(desc?'<div class="td"></div>':'');
   el.querySelector('.tt').textContent=title; if(desc) el.querySelector('.td').textContent=desc;
-  if(onExpand) el.addEventListener('click', onExpand);
   host.appendChild(el);
   requestAnimationFrame(function(){ el.classList.add('show'); });
   setTimeout(function(){ el.classList.add('out');
@@ -47,12 +45,14 @@ function banner(kicker,title,desc){
   Sound.blip(themeId==='sword'?659:880);
 }
 /* ══════════ REWARDS ══════════ */
-/* Rewards are the collectible layer: categorized facts/quotes (data/facts.js)
-   earned through play (gold asteroids, saucers). Each drop picks a random
-   reward the player hasn't earned yet, shows it as a toast, and permanently
-   records it in Progress.d.rw so the ◈ LOG panel can display it under its
-   category tab. d.rwNew flags the log button to glow until the log is opened.
-   Once every reward is earned, drops re-show random earned ones (no re-log). */
+/* Rewards are the whole point — categorized facts/stats/quotes about Aaron
+   (data/facts.js) surfaced through play (gold asteroids, saucers). Every
+   reward-earning moment opens the big centered reward signal modal
+   (openRewardPicker, in 08-ui.js) straight to a category picker so the
+   player chooses what kind of thing to learn, rather than the system
+   picking for them. Whatever's revealed is permanently recorded in
+   Progress.d.rw so the ◈ LOG panel can show it later under its category
+   tab. d.rwNew flags the log button to glow until the log is opened. */
 var REWARD_META={
   pilot:  {label:'ABOUT THE PILOT',     kicker:'REWARD ◈ PILOT FILE'},
   career: {label:'CAREER INTEL',        kicker:'REWARD ◈ CAREER FILE'},
@@ -60,29 +60,28 @@ var REWARD_META={
   quotes: {label:'QUOTE UNLOCKED',      kicker:'REWARD ◈ QUOTE'}
 };
 function rewardPool(){ return window.ORBIT_REWARDS||{}; }
-function rewardDrop(){
-  var R=rewardPool(), unearned=[], all=[];
-  Object.keys(REWARD_META).forEach(function(cat){
-    (R[cat]||[]).forEach(function(txt,i){
-      var id=cat+':'+i, item={id:id,cat:cat,txt:txt};
-      all.push(item);
-      if(!Progress.d.rw[id]) unearned.push(item);
-    });
-  });
-  if(!all.length) return;
-  var fresh=unearned.length>0;
-  var pick=(fresh?unearned:all)[(Math.random()*(fresh?unearned:all).length)|0];
-  if(fresh){
-    Progress.d.rw[pick.id]=Date.now();
+/* Marks one item earned within a single category — unearned pool first,
+   falling back to a random already-earned item once that category is fully
+   cleared out — and returns {cat,txt} for display. Null if the category
+   (or the whole reward pool) is empty. */
+function earnFromCategory(cat){
+  var pool=(rewardPool()[cat])||[];
+  if(!pool.length) return null;
+  var unearned=[];
+  pool.forEach(function(txt,i){ if(!Progress.d.rw[cat+':'+i]) unearned.push(i); });
+  var i = unearned.length ? unearned[(Math.random()*unearned.length)|0] : (Math.random()*pool.length)|0;
+  var id=cat+':'+i;
+  if(!Progress.d.rw[id]){
+    Progress.d.rw[id]=Date.now();
     Progress.d.rwNew=1;
     Progress.save();
     if(window.markLogNew) markLogNew();   // defined in 08-ui.js (glow)
   }
-  toast(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt, function(){
-    if(window.openRewardModal) window.openRewardModal(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt);
-  });
+  return { cat:cat, txt:pool[i] };
 }
-function factDrop(){ rewardDrop(); }   // legacy call sites (gold/saucer) route here
+/* Reward-earning moments (gold asteroid crack, saucer kill) call this —
+   it hands straight off to the on-screen category picker. */
+function factDrop(){ if(window.openRewardPicker) window.openRewardPicker(); }
 var prevBounty=0;
 function checkBounty(){
   if(bounty>=5000) Progress.award('b5k','BOUNTY HEAD ₩5,000','The name starts to circulate.');

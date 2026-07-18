@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (Rewards Log redesign + full content pass: real station copy, Oromugai station, categorized reward drops)
+Last updated: 2026-07-18 (Reward signal is now the main event: bounty HUD, category-picker reward modal, control-panel redesign)
 
 ---
 
@@ -19,12 +19,12 @@ call functions defined in earlier ones):
 |---|------|------|--------------------------------|
 | 1 | `01-config.js` | Theme colors (Swordfish/Rocinante palettes), the 4 station definitions + copy, shared tiny helpers | Change a theme's accent color; edit station name/tagline/body copy; add a new station |
 | 2 | `02-sound.js` | All synth sound effects + the music player (play/pause/next, track list wiring) | Change SFX pitch/volume; change how the player behaves |
-| 3 | `03-progress.js` | Achievements/localStorage, the two popup systems (center banner + right-side stack), pilot-fact transmissions | Change popup timing/behavior, add new achievements, change milestone thresholds |
+| 3 | `03-progress.js` | Achievements/localStorage, the two popup systems (center banner + right-side achievement-toast stack), and the rewards system (`earnFromCategory`/`factDrop` — categorized facts/stats/quotes) | Change popup timing/behavior, add new achievements, change milestone thresholds, change how a reward gets picked within a category |
 | 4 | `04-world.js` | Builds the planet/sun/ronin DOM + orbit rings, starfield canvas setup, **shared runtime state variables** (ship position, bounty, current theme, etc. — used by nearly every other file) | Add/remove a planet from the map; change orbit speed/size |
 | 5 | `05-combat.js` | Fire input, weapon switching, asteroid spawn/split/reward, aim direction | Anything about shooting, asteroids, weapon behavior |
 | 6 | `06-flight.js` | Proximity lock-on (the "TARGET · LOCKED" logic), the landing sequence, triggering hyperwarp | Change lock-on distance, landing animation timing |
 | 7 | `07-environments.js` | The station side-panel (sections list) **and every painted planet scene** (Mission/sun, AlphaForge/city, Life/forest, Craft/ocean, Notes/lot, hidden desert) | Anything about what a planet's surface looks like — this is the biggest file, ~360 lines, all drawing code |
-| 8 | `08-ui.js` | Theme/ship switching (incl. the hangar-bay swap animation) + minimize/expand behavior for the console and player | Change how ship-swap or minimize/expand works |
+| 8 | `08-ui.js` | Theme/ship switching (incl. the hangar-bay swap animation), minimize/expand behavior for the console and player, the next-reward bounty HUD, the ◈ LOG panel, and the reward signal modal (category picker + reveal) | Change how ship-swap or minimize/expand works, how the log or reward modal render/open/close |
 | 9 | `09-main.js` | The master per-frame loop (ship movement, stars, particles, warp streaks, HUD text updates) + page boot/resize/deep-link + the `window.__orbit` test hook | Ship movement feel, star density, anything that runs "every frame" |
 
 Also: `index.html` holds all CSS (organized in the same rough order as the file
@@ -82,64 +82,88 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 ## 3. This shipment — what changed / what didn't
 
-**Changed — the Rewards Log redesign (per Aaron's spec):**
-- The log is now **rewards only** — the previous version recorded every
-  popup (achievements, banners, facts); Aaron wanted only the collectible
-  reward drops. Achievements and banners still toast/banner as before, they
-  just aren't logged anywhere anymore.
-- `data/facts.js` is now `window.ORBIT_REWARDS`: four categories matching
-  the log's four tabs — **Pilot** (17 facts about Aaron), **Career** (15
-  GTM/automation/career facts), **Random** (19 physics/space/anime/music/
-  games/mythology facts), **Quotes** (14 — Aaron's own lines + famous ones).
-  All content follows the privacy rules (no employer name, no family names,
-  nothing financial/psychological). The file is hand-editable; counts
-  update automatically.
-- `rewardDrop()` (03-progress.js) replaces `factDrop()`: each drop (gold
-  asteroid crack, saucer kill — same triggers as before) awards a random
-  **unearned** reward, toasts it with a category kicker, and records it
-  permanently in `Progress.d.rw`. Once everything's earned, drops re-show
-  random earned ones without re-logging.
-- The LOG button now carries a bullet dot that **burns red and pulses**
-  (plus a button glow) whenever there's an un-viewed reward — including
-  across sessions (`Progress.d.rwNew` persists). Opening the log clears it.
-- The log panel has **four tabs** with collected/total counts per category,
-  newest-first entries, and per-tab empty states.
+Four rounds today, building on each other — visual fixes first, then the
+reward system became the actual centerpiece of the page per Aaron's
+reframe: *this is a portfolio, the facts/quotes/stats ARE the content, so
+they should be front and center, not a small popup nobody reads.*
 
-**Changed — the approved content pass (all pre-approved by Aaron):**
-- **Mission (sun)**: "The tech is the byproduct. The people are the point."
-  + the should-we-build-this statement + the AI-native-GTM-architect wedge
-  (title only, no company, per Aaron's rule). New sections: The road here,
-  Lantern, Now.
-- **AlphaForge**: the real build story — 199→148→40 numbers, the held send,
-  the deterministic classifier, the fragile-signal thesis. Clay-tables
-  section is a marked placeholder until Aaron sends screenshots.
-- **Life**: multidimensionality hub — Watching (real anime lists from
-  Aaron's Drive doc), Playing (his PS5/Switch library), Listening, Eating
-  (placeholder), Fatherhood+marriage (placeholder, lessons-only per privacy
-  rules), Physics+space, Everything else (birding/Lego/snowboarding/R34).
-- **Craft station is now Oromugai** (nav tab renamed; station id stays
-  `craft` so deep links/env painting don't break): full definition,
-  pronunciation, the four roots with honest coined-word framing (per the
-  Oromugai doc's own accuracy guidance), how-to-write-one steps, and a
-  Poems placeholder until Aaron sends poems.
-- **Notes**: three real essay excerpts adapted from Aaron's AlphaForge
-  writing (Fossil records / The cleaning is the build / The held send),
-  company references removed; On-deck section for what's coming.
-- **Contact card**: tagline now "engineer · artist · space cowboy" + the
-  approved bio line added.
+**Round 1 — two visual fixes:**
+- Station title (`.dock h2`): was colliding/cramped at a large size with
+  tight line-height. Reduced max size (2.6rem→2rem), loosened line-height
+  (.88→1.15), added letter-spacing.
+- Log panel fonts were too small to read: tabs 8.5px→10px, tab counts
+  7.5px→9px, entry text 11px→13px, entry titles 12.5px→13.5px.
 
-**Verified** (fresh-profile run, all via live state not source-reading):
-4 categories load with correct counts; a drop sets the glow + persists;
-opening clears the glow and `rwNew`; 11 drops = 11 unique rewards, all
-surviving a hard reload with the glow correctly re-shown; per-tab counts
-and items render; achievements/banners add **nothing** to the reward store;
-nav shows "Oromugai"; new Mission title and contact card live; zero
-console errors. Screenshotted the glowing LOG button and the open tabbed
-panel.
+**Round 2 — bounty made prominent + a next-reward indicator:**
+- Bounty pulled out of the small `.c-data` stats grid into its own `.bounty-hud`
+  row at the top of the console — large Anton-font display with a themed
+  glow — plus mirrored in the minimized chip (`#chip-bounty`), both were
+  previously buried in 10px mono text.
+- Added a next-reward progress bar (`.bh-next`/`#bh-bar-fill`) that fills
+  toward the next ₩2,500 gold-asteroid spawn threshold (the existing
+  cadence in `checkBounty()`, just never surfaced before), switching to a
+  pulsing red "◈ SIGNAL LIVE" state whenever a gold asteroid is already out
+  and waiting to be cracked.
+
+**Round 3 (superseded by Round 4, see below) — reward toasts became
+click-to-expand**, opening a centered modal for full readability. Short-
+lived: Round 4 replaced the toast-then-click flow with reward earning
+opening the big modal directly.
+
+**Round 4 — reward signal is the main event, with a category picker
+(the current, final shape of this feature):**
+- **Every reward-earning moment now opens the reward modal directly** —
+  gold asteroid crack and saucer kill both call `factDrop()`
+  (`03-progress.js`), which calls `openRewardPicker()` (`08-ui.js`).
+  Rewards no longer toast in the corner at all; the modal *is* the
+  notification. Achievement toasts (`Progress.award`, e.g. "FIRST BOUNTY")
+  are untouched — they don't carry a fact/stat, so they stay small,
+  per Aaron's call ("only if it comes with a stat or fact").
+- **Category picker**: the modal opens showing four buttons — Pilot /
+  Career / Random / Quotes — each with a live earned/total count, so the
+  player chooses what kind of thing to learn rather than the system
+  picking at random. `earnFromCategory(cat)` (`03-progress.js`) marks one
+  unearned item in that category (falling back to a random already-earned
+  one once a category is fully cleared), saves it, and flags the log-new
+  glow. Picking a category swaps the modal from the picker view to the
+  reveal view (kicker/label/full text) in place.
+- **Viewing history is separate from earning**: clicking an already-earned
+  entry in the ◈ LOG opens the same modal straight to the reveal view —
+  `openRewardModal(kicker,label,text)` — with no picker, since there's
+  nothing left to choose.
+- **Log panel now persists until explicitly closed**: the old "click
+  anywhere outside closes it" behavior is gone (removed from the shared
+  outside-pointerdown handler in `08-ui.js`); a real ✕ close button
+  (`#log-close`) was added since that affordance no longer exists.
+- **Both the log panel and the reward modal were restyled as a themed ship
+  control panel** (new shared `.ctrlpanel`/`.cp-head`/`.cp-screen` CSS,
+  `index.html`) instead of the old plain glass card: Swordfish gets a
+  rounded chunky panel with four corner "rivets" and the same CRT scanline
+  flicker the nav console already uses; Rocinante gets the same cut-corner
+  holo-glass clip-path as the console/bay, backdrop blur, and a slow
+  animated light-sweep across the header. Built without a reference image
+  (Aaron confirmed one wasn't available) — reused the visual vocabulary
+  already established by `.console`/`.scancard`/`.tgtbox` rather than
+  inventing a new language.
+
+**Verified** (fresh-profile, live state via headless browser, not source-
+reading): `factDrop()` opens the modal in picking mode with exactly 4
+category buttons; clicking one exits picking mode and shows the correct
+label/text; the ✕ closes it; achievement toasts still render (count 1) and
+carry zero `.toast.rw` (the now-removed reward-toast class) after earning
+a reward; the log panel stays open after a click on empty canvas space and
+only closes via the new `#log-close` button or Escape; a log-item click
+opens the modal directly to the reveal view (picking class absent); zero
+console errors across every flow. Screenshotted the picker, the reveal,
+and the log panel in **both** themes to confirm the per-theme control-panel
+skins render distinctly and correctly.
 
 **Still pending from Aaron:** Clay table screenshots (AlphaForge gallery),
 poems (Oromugai), eating/fatherhood content (Life). All have marked
 placeholder sections that need no code changes to fill.
 
 **Explicitly NOT touched this shipment**: issues #2, #5–8, #11, #12a in §2,
-all still outstanding.
+all still outstanding. Backlog (not started): tutorial system, redesigned
+"?" button, richer right-side content-viewer panel, further log-button
+new-reward-indicator polish, making rewards session-only like bounty/the
+secret planet.

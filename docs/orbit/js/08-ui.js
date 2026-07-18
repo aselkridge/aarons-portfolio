@@ -99,14 +99,15 @@ function setHelp(on){
 helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setLog(false); setHelp(!helpPop.classList.contains('on')); });
 document.addEventListener('pointerdown', function(e){
   if(helpPop.classList.contains('on') && !e.target.closest('.navrow')) setHelp(false);
-  if(logPanel.classList.contains('on') && !e.target.closest('.navrow')) setLog(false);
 });
 
 /* ══════════ REWARDS LOG ══════════ */
 /* The log is the reward collection, nothing else — categorized facts/quotes
-   earned through play (see rewardDrop in 03-progress.js), grouped under one
-   tab per category. The button's dot glows red while there's an un-viewed
-   reward; opening the log clears it. */
+   /stats earned through play (see earnFromCategory in 03-progress.js),
+   grouped under one tab per category. The button's dot glows red while
+   there's an un-viewed reward; opening the log clears it. Once opened, the
+   log stays open until explicitly closed via the ✕ — it no longer
+   auto-dismisses on an outside click. */
 var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot';
 function markLogNew(){ logBtn.classList.add('hasnew'); }
 window.markLogNew=markLogNew;
@@ -141,16 +142,48 @@ function renderLog(){
     list.appendChild(it);
   });
 }
-/* ══════════ REWARD DETAIL MODAL ══════════ */
-/* Shared expand target for both a clicked reward toast (right-side stack)
-   and a clicked ◈ LOG entry — same full-text readout either way. */
-var rewardModal=$('rewardmodal'), rmKicker=$('rm-kicker'), rmLabel=$('rm-label'), rmText=$('rm-text');
-function openRewardModal(kicker,label,text){
+/* ══════════ REWARD SIGNAL MODAL ══════════ */
+/* Every reward-earning moment (gold asteroid crack, saucer kill) calls
+   openRewardPicker() — it's the main event now, not a background toast.
+   The player picks a category, revealReward() marks + saves + shows it big.
+   Re-opening an already-earned entry from the ◈ LOG skips the picker and
+   goes straight to openRewardModal() (view-only, nothing to (re-)earn). */
+var rewardModal=$('rewardmodal'), rmKicker=$('rm-kicker'), rmLabel=$('rm-label'), rmText=$('rm-text'),
+    rmPickerGrid=$('rm-picker-grid');
+var CAT_LABEL={pilot:'Pilot',career:'Career',random:'Random',quotes:'Quotes'};
+function renderPickerGrid(){
+  var R=rewardPool();
+  rmPickerGrid.innerHTML='';
+  Object.keys(REWARD_META).forEach(function(cat){
+    var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
+    var b=document.createElement('button'); b.type='button'; b.className='rm-pick';
+    b.innerHTML='<span class="rp-lab"></span><span class="rp-count"></span>';
+    b.querySelector('.rp-lab').textContent=CAT_LABEL[cat];
+    b.querySelector('.rp-count').textContent=got+'/'+pool.length;
+    b.addEventListener('click', function(){ revealReward(cat); });
+    rmPickerGrid.appendChild(b);
+  });
+}
+function openRewardPicker(){
+  renderPickerGrid();
+  rewardModal.classList.add('on','picking');
+  Sound.blip(themeId==='sword'?880:660);
+}
+window.openRewardPicker=openRewardPicker;
+function revealReward(cat){
+  var r=earnFromCategory(cat);
+  if(!r) return;
+  rewardModal.classList.remove('picking');
+  rmKicker.textContent=REWARD_META[cat].kicker; rmLabel.textContent=REWARD_META[cat].label; rmText.textContent=r.txt;
+  Sound.blip(themeId==='sword'?1180:980);
+}
+function openRewardModal(kicker,label,text){   // view an already-earned entry from the log
+  rewardModal.classList.remove('picking');
   rmKicker.textContent=kicker; rmLabel.textContent=label; rmText.textContent=text;
   rewardModal.classList.add('on');
 }
 window.openRewardModal=openRewardModal;
-function closeRewardModal(){ rewardModal.classList.remove('on'); }
+function closeRewardModal(){ rewardModal.classList.remove('on','picking'); }
 $('rm-close').addEventListener('click', closeRewardModal);
 rewardModal.addEventListener('pointerdown', function(e){ if(e.target===rewardModal) closeRewardModal(); });
 function setLog(on){
@@ -163,6 +196,7 @@ function setLog(on){
   logPanel.classList.toggle('on',on);
 }
 logBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(false); setLog(!logPanel.classList.contains('on')); });
+$('log-close').addEventListener('click', function(){ setLog(false); });
 if(Progress.d.rwNew) markLogNew();   // unseen reward from a previous session
 
 /* ══════════ CONTACT CARD ══════════ */

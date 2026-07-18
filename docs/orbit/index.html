@@ -270,9 +270,10 @@ body.t-roci .scancard{display:block}
   transition:opacity .18s,translate .18s}
 .hint.on{opacity:1;pointer-events:auto;translate:0 0}
 .hint b{color:var(--ink);font-weight:600}.hint a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
-/* mission log — persistent history of every popup (achievements, facts,
-   major events). Same glass-panel language as the hint popover, but a
-   scrollable list. Data comes from Progress.d.log (localStorage). */
+/* mission log — persistent history of every reward earned in flight,
+   styled as a real ship control-panel readout (see .ctrlpanel below).
+   Stays open until explicitly closed via .cp-close — it no longer
+   auto-dismisses on an outside click. */
 .help-btn.logbtn{width:auto;border-radius:11px;padding:0 10px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;
   display:inline-flex;align-items:center;gap:5px}
 .log-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);opacity:.7;transition:background .3s,box-shadow .3s}
@@ -280,32 +281,67 @@ body.t-roci .scancard{display:block}
 .help-btn.logbtn.hasnew{border-color:rgba(255,90,70,.75);color:var(--ink);opacity:1;box-shadow:0 0 12px rgba(255,90,70,.45)}
 .help-btn.logbtn.hasnew .log-dot{background:#ff5a46;opacity:1;box-shadow:0 0 8px rgba(255,90,70,.9);animation:logpulse 1.2s ease-in-out infinite}
 @keyframes logpulse{0%,100%{box-shadow:0 0 4px rgba(255,90,70,.6)}50%{box-shadow:0 0 12px rgba(255,90,70,1)}}
+
+/* ═══ shared "control panel" skin — used by the log panel AND the reward
+   signal modal so both read as real ship hardware, each themed to match
+   its ship: chunky CRT/amber for Swordfish, cut-corner holo-glass for
+   Rocinante. Corner rivets (sword) / cut corners (roci) + a screen area
+   with the same CRT scanline flicker already used by the nav console. ═══ */
+.ctrlpanel{overflow:hidden}
+body.t-sword .ctrlpanel{border-radius:13px;border:1px solid #3a2f22;
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,230,180,.08);
+  background-color:#241d15;background-repeat:no-repeat;
+  background-image:radial-gradient(circle at 11px 11px,rgba(255,180,74,.4) 0 1.6px,transparent 2.2px),
+    radial-gradient(circle at calc(100% - 11px) 11px,rgba(255,180,74,.4) 0 1.6px,transparent 2.2px),
+    radial-gradient(circle at 11px calc(100% - 11px),rgba(255,180,74,.4) 0 1.6px,transparent 2.2px),
+    radial-gradient(circle at calc(100% - 11px) calc(100% - 11px),rgba(255,180,74,.4) 0 1.6px,transparent 2.2px)}
+body.t-roci .ctrlpanel{background:rgba(8,20,32,.68);border:1px solid rgba(116,208,255,.42);backdrop-filter:blur(9px);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow:0 18px 44px rgba(0,0,0,.5), inset 0 0 22px rgba(116,208,255,.07)}
+.cp-head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px 9px}
+body.t-sword .cp-head{border-bottom:1px dashed rgba(255,180,74,.3);color:#ffb44a}
+body.t-roci .cp-head{border-bottom:1px solid rgba(116,208,255,.25);color:#bfe8ff;position:relative;overflow:hidden;
+  background:linear-gradient(100deg,transparent 0%,rgba(116,208,255,.1) 46%,transparent 56%);
+  background-size:260% 100%;animation:holosweep 6s linear infinite}
+@keyframes holosweep{0%{background-position:220% 0}100%{background-position:-120% 0}}
+.cp-title{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase}
+.cp-close{border:0;background:transparent;color:inherit;opacity:.7;cursor:pointer;font-size:13px;padding:2px 4px;transition:opacity .15s}
+.cp-close:hover{opacity:1}
+.cp-screen{position:relative}
+body.t-sword .cp-screen{background:radial-gradient(120% 140% at 50% 0%,#221004 0%,#160a02 70%)}
+body.t-sword .cp-screen::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,180,74,.05) 0 1px,transparent 1px 3px);animation:crt 4s linear infinite}
+body.t-roci .cp-screen::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(116,208,255,.04) 0 1px,transparent 1px 3px)}
+
 .log-tabs{display:flex;gap:4px;padding:8px 10px 0}
-.log-tab{flex:1;background:transparent;border:1px solid var(--line);border-radius:7px;padding:6px 5px 5px;cursor:pointer;
-  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
-  display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .18s,border-color .18s}
+.log-tab{flex:1;padding:6px 5px 5px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:2px;transition:.15s}
 .log-tab i{font-style:normal;font-size:9px;opacity:.7;letter-spacing:.06em}
-.log-tab:hover{color:var(--ink)}
-.log-tab.on{color:var(--accent);border-color:var(--accent)}
-.logpanel{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:min(340px,86vw);
-  background:rgba(8,9,14,.93);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:10px;
-  box-shadow:0 14px 40px rgba(0,0,0,.55);opacity:0;pointer-events:none;translate:0 -4px;
-  transition:opacity .18s,translate .18s}
-.logpanel.on{opacity:1;pointer-events:auto;translate:0 0}
-.log-head{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
-  padding:11px 14px 9px;border-bottom:1px solid var(--line)}
+body.t-sword .log-tab{background:rgba(255,180,74,.08);border:1px solid rgba(255,180,74,.3);border-radius:4px;color:#c9924a}
+body.t-sword .log-tab.on{background:#ffb44a;color:#1c0e04;box-shadow:0 0 14px rgba(255,180,74,.45)}
+body.t-sword .log-tab:hover{color:#ffd9a0}
+body.t-roci .log-tab{border:1px solid rgba(116,208,255,.3);color:#6fa8c9;background:transparent;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+body.t-roci .log-tab.on{background:rgba(116,208,255,.16);color:#dff4ff;border-color:#86dcff;
+  box-shadow:0 0 16px rgba(116,208,255,.35), inset 0 0 10px rgba(116,208,255,.15)}
+body.t-roci .log-tab:hover{color:#dff4ff}
 .log-list{max-height:min(320px,46vh);overflow-y:auto;padding:6px 0}
 .log-item{position:relative;padding:8px 34px 8px 14px;border-bottom:1px solid rgba(239,236,230,.05);
   cursor:pointer;transition:background .15s}
 .log-item:last-child{border-bottom:none}
-.log-item:hover{background:rgba(255,255,255,.045)}
+.log-item:hover{background:rgba(255,255,255,.06)}
 .log-item .lex{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.4;font-style:normal;transition:opacity .18s}
 .log-item:hover .lex{opacity:.9}
 .log-item .lk{font-family:var(--mono);font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
 .log-item .lt{font-family:var(--os);font-weight:600;font-size:13.5px;letter-spacing:.04em;color:var(--ink);margin-top:2px}
-.log-item .ld{font-family:var(--os);font-size:13px;color:var(--dim);margin-top:2px;line-height:1.45}
+.log-item .ld{font-family:var(--os);font-size:13px;color:var(--ink);opacity:.85;margin-top:2px;line-height:1.45}
 .log-item .lw{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);opacity:.7;margin-top:3px}
 .log-empty{padding:18px 14px;font-family:var(--os);font-size:12px;color:var(--dim);font-style:italic}
+.logpanel{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:min(340px,86vw);
+  opacity:0;pointer-events:none;translate:0 -4px;transition:opacity .18s,translate .18s}
+.logpanel.on{opacity:1;pointer-events:auto;translate:0 0}
 /* the signoff is a real button now — click opens the contact card. The
    accent-color touch that used to live in the "aaronautics · orbit"
    subtext (now removed) moves onto a hover/focus color shift instead, so
@@ -352,21 +388,34 @@ body.t-roci .scancard{display:block}
 .contact-more-list{font-family:var(--os);font-size:12.5px;color:var(--dim);margin-top:8px;font-style:italic}
 .contact-more-list a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
 
-/* reward detail modal — same overlay/card language as the contact card,
-   opened from a clicked reward toast OR a clicked ◈ LOG entry so the full
-   text is always reachable from either spot. */
+/* reward signal modal — every reward-earning moment (gold asteroid crack,
+   saucer kill) opens straight to the picker below; a clicked ◈ LOG entry
+   opens straight to the reveal view. Same .ctrlpanel skin as the log so
+   both read as the same piece of ship hardware. */
 .rewardmodal{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
   background:rgba(4,5,8,.76);backdrop-filter:blur(8px);opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .25s,visibility .25s;padding:24px}
 .rewardmodal.on{opacity:1;visibility:visible;pointer-events:auto}
-.rm-card{position:relative;width:min(480px,92vw);max-height:80vh;overflow:auto;background:rgba(10,11,16,.96);
-  border:1px solid var(--line);border-radius:16px;padding:34px 30px 28px;box-shadow:0 30px 80px rgba(0,0,0,.6);
+.rm-card{position:relative;width:min(480px,92vw);
   transform:translateY(14px) scale(.98);transition:transform .25s}
 .rewardmodal.on .rm-card{transform:none}
-.rm-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
-  background:transparent;color:var(--dim);font-size:15px;cursor:pointer;display:inline-grid;place-items:center;
-  transition:color .18s,border-color .18s}
-.rm-close:hover{color:var(--ink);border-color:var(--accent)}
+.rm-body{padding:22px 28px 28px;max-height:min(64vh,540px);overflow-y:auto}
+/* picker vs reveal — only one shows at a time */
+.rm-picker{display:none}
+.rewardmodal.picking .rm-picker{display:block}
+.rewardmodal.picking .rm-reveal{display:none}
+.rm-picker-lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;
+  text-align:center;margin-bottom:16px}
+.rm-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rm-pick{cursor:pointer;padding:18px 10px 14px;border-radius:8px;text-align:center;transition:.15s}
+.rm-pick .rp-lab{display:block;font-family:var(--os);font-weight:700;font-size:13.5px;letter-spacing:.14em;text-transform:uppercase}
+.rm-pick .rp-count{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;opacity:.75;margin-top:5px}
+body.t-sword .rm-pick{background:rgba(255,180,74,.08);border:1px solid rgba(255,180,74,.3);color:#c9924a}
+body.t-sword .rm-pick:hover{background:#ffb44a;color:#1c0e04;box-shadow:0 0 14px rgba(255,180,74,.45)}
+body.t-roci .rm-pick{border:1px solid rgba(116,208,255,.32);color:#6fa8c9;background:transparent;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+body.t-roci .rm-pick:hover{background:rgba(116,208,255,.16);color:#dff4ff;border-color:#86dcff;
+  box-shadow:0 0 16px rgba(116,208,255,.35), inset 0 0 10px rgba(116,208,255,.15)}
 .rm-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent)}
 .rm-label{font-family:var(--anton);font-size:clamp(1.4rem,3vw,2rem);text-transform:uppercase;letter-spacing:.01em;margin-top:.3em;line-height:1.1}
 .rm-text{font-family:var(--os);font-size:clamp(1rem,1.6vw,1.15rem);line-height:1.65;color:#dcdee6;margin-top:1em}
@@ -544,7 +593,8 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 }
 
 /* ───────── achievement / transmission toasts ───────── */
-/* right-side stack — minor milestones + transmissions (capped, auto-dismiss) */
+/* right-side stack — achievement milestones only now (capped, auto-dismiss).
+   Rewards no longer toast here at all — see the reward signal modal. */
 #ach{position:fixed;top:250px;right:16px;z-index:50;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:min(300px,80vw)}
 .toast{position:relative;padding:10px 14px;opacity:0;transform:translateX(24px);transition:opacity .3s,transform .3s}
 .toast.show{opacity:1;transform:none}
@@ -552,13 +602,6 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 .toast .tk{font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;margin-bottom:3px}
 .toast .tt{font-family:var(--anton);font-size:15px;letter-spacing:.03em;text-transform:uppercase;line-height:1.05}
 .toast .td{font-family:var(--os);font-size:12px;color:inherit;opacity:.85;margin-top:2px;line-height:1.4}
-/* reward toasts (kicker+expand icon set) are click-to-expand — pointer-events
-   must be re-enabled per-toast since the #ach host disables them by default
-   so idle toasts never block clicks on what's behind them. */
-.toast.rw{pointer-events:auto;cursor:pointer;padding-right:32px;transition:opacity .3s,transform .3s,box-shadow .2s}
-.toast.rw .tx{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;font-style:normal;transition:opacity .18s}
-.toast.rw:hover{box-shadow:0 0 0 2px var(--accent) inset}
-.toast.rw:hover .tx{opacity:1}
 body.t-sword .toast{background:#f2e7d2;color:#241505;border:2px solid #241505;border-radius:4px;box-shadow:4px 4px 0 rgba(0,0,0,.5)}
 body.t-sword .toast .tk{color:#b8452a}
 body.t-roci .toast{background:rgba(8,22,36,.9);color:#dff4ff;border:1px solid rgba(116,208,255,.55);backdrop-filter:blur(8px);
@@ -602,7 +645,7 @@ body.t-roci .bnr .bk{color:#9affea}
   .player,.pl-skin.cassette,.pl-skin.holo{width:100%!important}
   .sign{display:none}
 }
-@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i,.help-btn.logbtn.hasnew .log-dot,.bounty-hud.signal .bh-next-lab{animation:none!important} }
+@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i,.help-btn.logbtn.hasnew .log-dot,.bounty-hud.signal .bh-next-lab,.cp-head,.cp-screen::after{animation:none!important} }
 </style>
 </head>
 <body class="t-sword">
@@ -648,10 +691,11 @@ body.t-roci .bnr .bk{color:#9affea}
         <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
         <button class="help-btn logbtn" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel"><i class="log-dot"></i> log</button>
         <div class="hint" id="hint" role="tooltip">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
-        <div class="logpanel" id="logpanel" role="dialog" aria-label="Rewards log">
-          <div class="log-head">◈ REWARDS LOG · earned in flight</div>
+        <div class="logpanel ctrlpanel" id="logpanel" role="dialog" aria-label="Rewards log">
+          <div class="cp-head"><span class="cp-title">◈ REWARDS LOG</span>
+            <button class="cp-close" id="log-close" type="button" aria-label="Close log">✕</button></div>
           <div class="log-tabs" id="log-tabs"></div>
-          <div class="log-list" id="log-list"></div>
+          <div class="log-list cp-screen" id="log-list"></div>
         </div>
       </div>
     </div>
@@ -740,15 +784,26 @@ body.t-roci .bnr .bk{color:#9affea}
 <div id="banner" aria-live="assertive"></div>
 <div id="ach" aria-live="polite"></div>
 
-<!-- reward detail modal — opened from either a clicked reward toast (right-
-     side stack) or a clicked entry in the ◈ LOG panel, so the full text is
-     always readable regardless of where it was triggered from. -->
+<!-- reward signal modal — the main event now. Every reward-earning moment
+     (gold asteroid crack, saucer kill) opens this straight to the picker,
+     so the player chooses which channel to tune into rather than the system
+     picking for them. Clicking a ◈ LOG entry opens the same card straight to
+     the reveal view (no picker) to re-read something already earned. -->
 <div class="rewardmodal" id="rewardmodal">
-  <div class="rm-card" role="dialog" aria-modal="true" aria-label="Reward detail">
-    <button class="rm-close" id="rm-close" type="button" aria-label="Close">✕</button>
-    <div class="rm-kicker" id="rm-kicker">REWARD</div>
-    <div class="rm-label" id="rm-label">LABEL</div>
-    <div class="rm-text" id="rm-text"></div>
+  <div class="rm-card ctrlpanel" role="dialog" aria-modal="true" aria-label="Reward signal">
+    <div class="cp-head"><span class="cp-title">◈ REWARD SIGNAL</span>
+      <button class="cp-close" id="rm-close" type="button" aria-label="Close">✕</button></div>
+    <div class="rm-body cp-screen">
+      <div class="rm-picker" id="rm-picker">
+        <div class="rm-picker-lab">SIGNAL ACQUIRED · CHOOSE A CHANNEL</div>
+        <div class="rm-picker-grid" id="rm-picker-grid"></div>
+      </div>
+      <div class="rm-reveal" id="rm-reveal">
+        <div class="rm-kicker" id="rm-kicker">REWARD</div>
+        <div class="rm-label" id="rm-label">LABEL</div>
+        <div class="rm-text" id="rm-text"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -783,12 +838,12 @@ body.t-roci .bnr .bk{color:#9affea}
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
 <script src="js/01-config.js?v=11"></script>
 <script src="js/02-sound.js?v=11"></script>
-<script src="js/03-progress.js?v=14"></script>
+<script src="js/03-progress.js?v=15"></script>
 <script src="js/04-world.js?v=13"></script>
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=11"></script>
 <script src="js/07-environments.js?v=11"></script>
-<script src="js/08-ui.js?v=16"></script>
+<script src="js/08-ui.js?v=17"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>
