@@ -133,11 +133,26 @@ function renderLog(){
   list.innerHTML='';
   earned.forEach(function(e){
     var it=document.createElement('div'); it.className='log-item';
-    it.innerHTML='<div class="ld"></div>';
+    it.innerHTML='<div class="ld"></div><i class="lex">⤢</i>';
     it.querySelector('.ld').textContent=e.txt;
+    it.addEventListener('click', function(){
+      openRewardModal(REWARD_META[logTab].kicker, REWARD_META[logTab].label, e.txt);
+    });
     list.appendChild(it);
   });
 }
+/* ══════════ REWARD DETAIL MODAL ══════════ */
+/* Shared expand target for both a clicked reward toast (right-side stack)
+   and a clicked ◈ LOG entry — same full-text readout either way. */
+var rewardModal=$('rewardmodal'), rmKicker=$('rm-kicker'), rmLabel=$('rm-label'), rmText=$('rm-text');
+function openRewardModal(kicker,label,text){
+  rmKicker.textContent=kicker; rmLabel.textContent=label; rmText.textContent=text;
+  rewardModal.classList.add('on');
+}
+window.openRewardModal=openRewardModal;
+function closeRewardModal(){ rewardModal.classList.remove('on'); }
+$('rm-close').addEventListener('click', closeRewardModal);
+rewardModal.addEventListener('pointerdown', function(e){ if(e.target===rewardModal) closeRewardModal(); });
 function setLog(on){
   if(on){
     renderLog();
@@ -157,7 +172,7 @@ $('sign').addEventListener('click', function(){ setContact(true); Sound.blip(the
 $('contact-close').addEventListener('click', function(){ setContact(false); });
 contactWrap.addEventListener('pointerdown', function(e){ if(e.target===contactWrap) setContact(false); });
 
-addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); } });
+addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); closeRewardModal(); } });
 
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });

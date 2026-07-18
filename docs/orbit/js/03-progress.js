@@ -15,13 +15,18 @@ var Progress=(function(){
     award:function(id,title,desc){ if(d.ach[id]) return false;
       d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
 })();
-/* small right-side stack — minor milestones + facts (capped at 3, auto-dismiss) */
-function toast(kicker,title,desc){
+/* small right-side stack — minor milestones + facts (capped at 3, auto-dismiss).
+   Reward toasts (onExpand passed) are click-to-expand — they're too small to
+   comfortably read in the stack, so tapping one opens the full text in a
+   centered modal (openRewardModal, defined in 08-ui.js). Achievement toasts
+   (no onExpand) stay as plain, non-interactive pop-ups. */
+function toast(kicker,title,desc,onExpand){
   var host=$('ach');
   while(host.children.length>=3) host.removeChild(host.firstChild);
-  var el=document.createElement('div'); el.className='toast';
-  el.innerHTML='<div class="tk">'+kicker+'</div><div class="tt"></div>'+(desc?'<div class="td"></div>':'');
+  var el=document.createElement('div'); el.className='toast'+(onExpand?' rw':'');
+  el.innerHTML='<div class="tk">'+kicker+'</div><div class="tt"></div>'+(desc?'<div class="td"></div>':'')+(onExpand?'<i class="tx">⤢</i>':'');
   el.querySelector('.tt').textContent=title; if(desc) el.querySelector('.td').textContent=desc;
+  if(onExpand) el.addEventListener('click', onExpand);
   host.appendChild(el);
   requestAnimationFrame(function(){ el.classList.add('show'); });
   setTimeout(function(){ el.classList.add('out');
@@ -73,7 +78,9 @@ function rewardDrop(){
     Progress.save();
     if(window.markLogNew) markLogNew();   // defined in 08-ui.js (glow)
   }
-  toast(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt);
+  toast(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt, function(){
+    if(window.openRewardModal) window.openRewardModal(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt);
+  });
 }
 function factDrop(){ rewardDrop(); }   // legacy call sites (gold/saucer) route here
 var prevBounty=0;
