@@ -495,9 +495,20 @@ body.t-roci .rm-pick:hover{background:rgba(116,208,255,.16);color:#dff4ff;border
    rounded/playful; pilot: mono dossier, technical readout. */
 .rewardmodal.cat-quotes .rm-text{font-family:'Dancing Script',cursive;font-size:clamp(1.6rem,3vw,2.1rem);
   line-height:1.5;color:#ffedd2;text-align:center;padding:0 6px;text-shadow:0 0 24px rgba(255,211,106,.3)}
-.rewardmodal.cat-quotes .rm-text::before{content:'“';display:block;font-size:2.6em;line-height:.4;
-  margin:.25em auto .05em;color:var(--accent2);opacity:.8}
+/* the quote sits framed between a matched PAIR of decorative marks —
+   opening above, closing below — with the attribution on its own quiet
+   line under the frame (built by setRevealBody in 08-ui.js, which strips
+   the plain quote marks out of the text so they don't stack with these). */
+.rm-quote{display:block}
+.rm-quote::before{content:'“';display:block;font-size:2.2em;line-height:.5;margin:.2em auto .25em;
+  color:var(--accent2);opacity:.85;text-shadow:0 0 18px rgba(255,211,106,.4)}
+.rm-quote::after{content:'”';display:block;font-size:2.2em;line-height:.5;margin:.35em auto 0;
+  color:var(--accent2);opacity:.85;text-shadow:0 0 18px rgba(255,211,106,.4)}
+.rm-attr{display:block;margin-top:1.1em;font-family:var(--os);font-weight:500;font-size:clamp(.85rem,1.2vw,1rem);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-shadow:none}
+.rm-attr::before{content:'— '}
 body.t-roci .rewardmodal.cat-quotes .rm-text{color:#e7f6ff;text-shadow:0 0 24px rgba(154,255,234,.3)}
+body.t-roci .rm-quote::before,body.t-roci .rm-quote::after{color:#9affea;text-shadow:0 0 18px rgba(154,255,234,.4)}
 .rewardmodal.cat-career .rm-text{font-weight:700;font-size:clamp(1.05rem,1.7vw,1.25rem);line-height:1.7;color:#fff}
 .rm-num{font-family:var(--anton);font-weight:400;font-size:1.65em;line-height:1;padding:0 3px;
   color:var(--accent2);text-shadow:0 0 20px var(--accent);white-space:nowrap}
@@ -932,7 +943,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/07-environments.js?v=11"></script>
-<script src="js/08-ui.js?v=20"></script>
+<script src="js/08-ui.js?v=21"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

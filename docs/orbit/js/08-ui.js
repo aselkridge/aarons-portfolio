@@ -123,15 +123,30 @@ function updateLogButton(){
 function markLogNew(){
   updateLogButton();
   logBtn.classList.remove('bump'); void logBtn.offsetWidth; logBtn.classList.add('bump');   // re-trigger the bounce
+  if(logPanel.classList.contains('on')) renderLog();   // panel already open: counts/entries update live
 }
 window.markLogNew=markLogNew;
 var TAB_LABEL={pilot:'Pilot',career:'Career',random:'Fun',quotes:'Wisdom'};
 function renderLog(){
   var R=rewardPool(), tabs=$('log-tabs'), list=$('log-list');
+  /* Viewing a tab IS seeing its rewards — the player already read each one
+     on the big reveal when they earned it, so just looking at the list is
+     enough to clear that category's NEW state (tab chip + button badge).
+     We capture which entries were fresh BEFORE clearing so this first
+     view still renders them lit — you can spot what's new — and they
+     settle to normal styling from the next render on. */
+  var freshIds={};
+  (R[logTab]||[]).forEach(function(_,i){ var id=logTab+':'+i;
+    if(Progress.d.rw[id]&&!Progress.d.rwSeen[id]){ freshIds[id]=1; Progress.d.rwSeen[id]=1; } });
+  var cleared=Object.keys(freshIds).length;
+  if(cleared){
+    Progress.d.rwNew=Math.max(0,(Progress.d.rwNew||0)-cleared);
+    Progress.save(); updateLogButton();
+  }
   tabs.innerHTML='';
   Object.keys(REWARD_META).forEach(function(cat){
     var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
-    var fresh=unseenIn(cat);
+    var fresh=unseenIn(cat);   // active tab was just cleared above, so its chip is gone
     var b=document.createElement('button'); b.type='button';
     b.className='log-tab'+(cat===logTab?' on':'');
     b.innerHTML='<span></span><i>'+got+'/'+pool.length+'</i>'+(fresh?'<em class="tab-new">'+fresh+'</em>':'');
@@ -149,16 +164,11 @@ function renderLog(){
   }
   list.innerHTML='';
   earned.forEach(function(e){
-    var fresh=!Progress.d.rwSeen[e.id];
+    var fresh=!!freshIds[e.id];   // lit on this first view only
     var it=document.createElement('div'); it.className='log-item'+(fresh?' unseen':'');
     it.innerHTML='<div class="ld"></div>'+(fresh?'<span class="lnew">NEW</span>':'')+'<i class="lex">⤢</i>';
     it.querySelector('.ld').textContent=e.txt;
     it.addEventListener('click', function(){
-      if(!Progress.d.rwSeen[e.id]){   // reading it un-lights it and drops the counts
-        Progress.d.rwSeen[e.id]=1;
-        Progress.d.rwNew=Math.max(0,(Progress.d.rwNew||0)-1);
-        Progress.save(); updateLogButton(); renderLog();
-      }
       openRewardModal(REWARD_META[logTab].kicker, REWARD_META[logTab].label, e.txt, logTab);
     });
     list.appendChild(it);
@@ -201,6 +211,17 @@ function setRevealBody(cat,text){
   if(cat) rewardModal.classList.add('cat-'+cat);
   if(cat==='career'){
     rmText.innerHTML=esc(text).replace(/(₩?\d[\d,.]*(?:%|×|x\b)?)/g,'<b class="rm-num">$1</b>');
+  } else if(cat==='quotes'){
+    /* Frame the quote with a matched PAIR of decorative marks (CSS ::before/
+       ::after on .rm-quote) and move the attribution onto its own quiet
+       line below. The plain quotation marks inside the data text are
+       stripped — the decorative pair replaces them rather than stacking. */
+    var m=text.match(/^([\s\S]*[”"])\s*[—–-]+\s*([\s\S]+)$/);
+    var q=(m?m[1]:text).replace(/^[\s“”"']+/,'').replace(/[\s“”"']+$/,'');
+    var a=m?m[2].trim():'';
+    rmText.innerHTML='<span class="rm-quote"></span>'+(a?'<span class="rm-attr"></span>':'');
+    rmText.querySelector('.rm-quote').textContent=q;
+    if(a) rmText.querySelector('.rm-attr').textContent=a;
   } else rmText.textContent=text;
 }
 /* While the picker is up you MUST choose a category — it can't be dismissed
