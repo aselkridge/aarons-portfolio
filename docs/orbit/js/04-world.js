@@ -53,9 +53,10 @@ function unlockRonin(silent){
   RONIN.orb.style.background = themeId==='sword'? RONIN.gradCel : RONIN.gradReal;
   ALL.push(RONIN);
   // a world that appears out of nowhere gets a real entrance, not a snap —
-  // see .materialize in index.html.
+  // a slow, grand materialize moment. Keep the class the full animation
+  // length (3.4s, see .materialize in index.html) before removing it.
   RONIN.el.classList.add('materialize');
-  setTimeout(function(){ RONIN.el.classList.remove('materialize'); },1200);
+  setTimeout(function(){ RONIN.el.classList.remove('materialize'); },3400);
   if(!silent){ banner('◈ ANOMALY','UNCHARTED WORLD DETECTED','A sixth world just appeared on the far orbit.');
     Progress.award('ronin_found','OFF THE CHARTS','You made the far orbit appear.'); Sound.warp(); }
 }

@@ -9,7 +9,11 @@
 addEventListener('pointermove', function(e){ mx=e.clientX; my=e.clientY; });
 addEventListener('pointerdown', function(e){
   Sound.unlock(); Music.autostart();
-  if(e.target.closest('.hud')||e.target.closest('.panel')||e.target.closest('#boot')||e.target.closest('#fireb')) return;
+  // full-screen overlays (reward signal modal, contact card) sit OUTSIDE
+  // .hud/.panel — without these two, a click on the open modal falls through
+  // to fire()/beginLanding() and docks the planet behind it.
+  if(e.target.closest('.hud')||e.target.closest('.panel')||e.target.closest('#boot')||e.target.closest('#fireb')
+     ||e.target.closest('#rewardmodal')||e.target.closest('#contactwrap')) return;
   if(!fine){ mx=e.clientX; my=e.clientY; return; }   // touch: tap/drag = fly there; FIRE button shoots
   if(state!=='free') return;
   if(lockStation){ beginLanding(lockStation); }

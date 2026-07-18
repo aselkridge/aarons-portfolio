@@ -33,7 +33,8 @@ canvas{display:block}
 #fx{position:fixed;inset:0;z-index:4;pointer-events:none}
 .system{position:fixed;inset:0;z-index:2;transition:opacity .5s ease}
 .system.warp{opacity:0;pointer-events:none}
-@media (hover:hover){ body{cursor:none} .hud,.hud *{cursor:auto} .panel,.panel *{cursor:auto} }
+@media (hover:hover){ body{cursor:none} .hud,.hud *{cursor:auto} .panel,.panel *{cursor:auto}
+  .rewardmodal,.rewardmodal *{cursor:auto} .contactwrap,.contactwrap *{cursor:auto} }
 
 .vig{position:fixed;inset:0;z-index:6;pointer-events:none;background:radial-gradient(130% 100% at 50% 45%,transparent 52%,rgba(0,0,0,.72) 100%)}
 .scan{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:var(--scan-o);mix-blend-mode:multiply;transition:opacity .8s;
@@ -158,14 +159,21 @@ body.t-roci .planet .tag{border:1px solid var(--pc);clip-path:polygon(0 0,calc(1
 @keyframes secretspin1{0%{transform:translate(-50%,-50%) rotate(22deg)}100%{transform:translate(-50%,-50%) rotate(382deg)}}
 @keyframes secretspin2{0%{transform:translate(-50%,-50%) rotate(-38deg)}100%{transform:translate(-50%,-50%) rotate(-398deg)}}
 /* one-shot entrance for a planet that genuinely appears out of nowhere
-   (Ronin unlocking mid-session) — a real materialize moment: scales in
-   past full size with a bright glow flash, then settles. Class is added
-   at build time and removed shortly after by unlockRonin(). */
-@keyframes materialize{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}
-  55%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-.planet.materialize{animation:materialize 1.1s cubic-bezier(.2,.9,.3,1)}
-@keyframes materializeglow{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.5)}100%{opacity:.4;transform:scale(1)}}
-.planet.materialize .pglow{animation:materializeglow 1.1s ease-out}
+   (Ronin unlocking mid-session) — a real materialize MOMENT, deliberately
+   slow and grand: a long low-opacity glow bloom swells first, THEN the
+   planet fades up and scales in past full size, before everything settles.
+   Class is added at build time and removed ~3.6s later by unlockRonin(). */
+@keyframes materialize{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}
+  30%{opacity:.35;transform:translate(-50%,-50%) scale(.4)}
+  72%{opacity:1;transform:translate(-50%,-50%) scale(1.22)}
+  86%{transform:translate(-50%,-50%) scale(.97)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.planet.materialize{animation:materialize 3.4s cubic-bezier(.22,.8,.28,1)}
+@keyframes materializeglow{0%{opacity:0;transform:scale(.4)}
+  38%{opacity:.85;transform:scale(2)}
+  60%{opacity:1;transform:scale(2.6)}
+  100%{opacity:.55;transform:scale(1)}}
+.planet.materialize .pglow{animation:materializeglow 3.4s ease-out}
 
 /* ───────── ship cursor (touch flight keeps it on mobile) ───────── */
 .rocket{position:fixed;z-index:8;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
@@ -286,8 +294,8 @@ body.t-roci .scancard{display:block}
 /* redesigned as a small themed control chip (matches the console/log-tab
    language) rather than a plain generic circle — shared base for both the
    "?" button and the log toggle below, each keeping their own shape. */
-.help-btn{flex:none;width:22px;height:22px;border-radius:50%;background:transparent;
-  color:var(--dim);font:700 12px var(--mono);line-height:1;cursor:pointer;display:inline-grid;place-items:center;
+.help-btn{flex:none;width:30px;height:30px;border-radius:50%;background:transparent;
+  color:var(--dim);font:700 16px var(--mono);line-height:1;cursor:pointer;display:inline-grid;place-items:center;
   padding:0;opacity:.85;transition:.18s}
 .help-btn.on{opacity:1}
 body.t-sword .help-btn{border:1px solid rgba(255,180,74,.4);background:rgba(255,180,74,.08);color:#c9924a}
@@ -305,9 +313,9 @@ body.t-roci .help-btn:hover,body.t-roci .help-btn.on{background:rgba(116,208,255
    styled as a real ship control-panel readout (see .ctrlpanel below).
    Stays open until explicitly closed via .cp-close — it no longer
    auto-dismisses on an outside click. */
-.help-btn.logbtn{width:auto;border-radius:11px;padding:0 10px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;
-  display:inline-flex;align-items:center;gap:5px}
-.log-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);opacity:.7;transition:background .3s,box-shadow .3s}
+.help-btn.logbtn{width:auto;border-radius:15px;padding:0 13px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:6px}
+.log-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);opacity:.7;transition:background .3s,box-shadow .3s}
 /* un-viewed reward: solid red fill (not just a border) + a numeric badge
    showing how many are waiting, so it reads unmistakably at a glance
    instead of relying on a small pulsing dot alone. A brief scale "bump"
@@ -880,8 +888,8 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/01-config.js?v=11"></script>
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=16"></script>
-<script src="js/04-world.js?v=14"></script>
-<script src="js/05-combat.js?v=11"></script>
+<script src="js/04-world.js?v=15"></script>
+<script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/07-environments.js?v=11"></script>
 <script src="js/08-ui.js?v=18"></script>
