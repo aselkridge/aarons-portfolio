@@ -47,7 +47,9 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 | # | Issue | Root cause (confirmed) | Lives in |
 |---|-------|------------------------|----------|
-| ~~1~~ | ~~Shots don't look connected to the ship~~ **FIXED 2026-07-17** | Was: two independent calculations for "forward" that didn't have to agree — the ship's visual rotation (`ra`) is smoothed/eased toward the cursor each frame, but the bullet's old `aimDir()` computed a fresh, unsmoothed bearing straight to the raw cursor position, ignoring `ra` entirely. While turning, those two numbers are rarely equal. **Fix:** `aimDir()` now just returns `noseDir()` — the exact same value that rotates the sprite — so a shot can no longer disagree with where the ship is visibly pointing; there's only one "forward" now, not two. Also nudged the spawn point out to ~30px (previously 24px) so it clears the drawn hull instead of starting inside it. Verified numerically: angle between shot direction and nose direction is exactly 0° in all of settled/still, mid-turn (`ra` actively easing), and continuously-moving tests — not just "close," identical. | `05-combat.js` (`aimDir`/`spawnProj`) |
+| ~~1a~~ | ~~Shot direction not connected to the ship~~ **FIXED 2026-07-17** | Was: two independent calculations for "forward" that didn't have to agree — the ship's visual rotation (`ra`) is smoothed/eased toward the cursor each frame, but the bullet's old `aimDir()` computed a fresh, unsmoothed bearing straight to the raw cursor position, ignoring `ra` entirely. While turning, those two numbers are rarely equal. **Fix:** `aimDir()` now just returns `noseDir()` — the exact same value that rotates the sprite — so a shot can no longer disagree with where the ship is visibly pointing. Verified numerically: angle between shot direction and nose direction is exactly 0° in settled/still, mid-turn, and continuously-moving tests. | `05-combat.js` (`aimDir`/`spawnProj`) |
+| ~~1b~~ | ~~Speed-line "thrust" effect disconnected from the ship~~ **FIXED 2026-07-17** | Separate bug, found from Aaron's screen recording: the anime speed-line effect (shown when flying fast) deliberately started each line 90–470px *away* from the ship and drew it extending even further away — meaning it was never touching the ship at all, by design. Looked exactly like a disconnected effect because it was. **Fix:** lines now start 14–34px from the ship (right at the hull) and extend a shorter, more modest distance. Verified visually: lines now visibly fan out from the ship's position instead of floating in the background. | `09-main.js` (speed-line block) |
+| 1c | Shot *position* looks offset in screenshots (unresolved — see note below) | Checked numerically (spawn point exactly matches ship position + nose-direction offset, 0.000px error, at both 1x and 2x/Retina pixel density) and could not reproduce a spawn-position bug. Leading theory: PDC/cannon bolts travel at 760–980px/s — by the time a screenshot is taken (human reaction time), a bolt already several hundred ms old has visibly traveled far from the ship, which can look identical to "spawned in the wrong place" in a single static frame even though it isn't. Not fully closed — see the note in §3. | `05-combat.js` |
 | 2 | Planets seem to take "random" hits | Hit detection is a single point-in-circle check once per frame; a fast bullet can register from a position that looks like a near-miss between frames. | `09-main.js` (projectile/collision block) |
 | 3 | Sun never reacts to being hit | The sun has its own hard-coded, disconnected hit-radius (unrelated to its real measured size) and reuses the same generic spark burst as everything else — no dedicated sun animation exists. | `09-main.js` (sun-hit check) |
 | 4 | "See you, space cowboy" overlaps the hint sentence | The signoff is `position:fixed` (pinned to the viewport corner, outside normal page flow) while the hint sentence is positioned in normal flow above it; padding the flow container does nothing because the signoff isn't part of that flow. | `index.html` CSS (`.sign`, `.hint`, `.bl`) |
@@ -78,6 +80,17 @@ instruction — do not batch-fix these without his go-ahead on each.
   by instrumenting the actual running code (reading live `rx/ry/ra` values,
   monkey-patching `aimDir` to trace what it saw internally) rather than
   reasoning about it from the source alone.
+
+- Aaron sent a screen recording when direction alone didn't fully resolve his
+  report. Downloaded it from Drive and used `ffmpeg`/`tesseract` (both
+  installed this session) to pull frames and read the on-screen POS/VEL
+  console readout, to find and inspect the exact moments in question. That
+  led to finding and fixing 1b above — a real, separate, confirmed bug
+  (speed lines) that direction-only testing couldn't have caught.
+- **1c is not fully closed.** I have hard numeric proof the spawn point is
+  exact, but Aaron is still seeing something in screenshots. My best theory
+  (fast bolts + screenshot timing) is written above but unconfirmed — don't
+  treat it as resolved without Aaron's confirmation.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a time):
 issues #2–12 in §2. Still diagnosed and documented, not fixed.

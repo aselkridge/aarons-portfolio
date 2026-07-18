@@ -68,14 +68,15 @@ function loop(t){
   /* ══ fx layer ══ */
   fctx.clearRect(0,0,W,H);
 
-  /* speed lines (anime, fast flight) */
+  /* speed lines (anime, fast flight) — must visibly trail FROM the ship,
+     not float disconnected in the background. */
   if(themeId==='sword'&&fine&&state==='free'&&shipSpeed>620&&!reduce){
     var sl=Math.min(1,(shipSpeed-620)/900);
     fctx.globalAlpha=0.28*sl; fctx.strokeStyle='#efece6'; fctx.lineWidth=1.6;
     for(i=0;i<10;i++){ var ang=ra-Math.PI/2+Math.PI+(Math.random()-0.5)*0.9;
-      var ddd=90+Math.random()*Math.min(W,H)*0.42;
+      var ddd=14+Math.random()*20;                    // start right at the hull
       fctx.beginPath(); fctx.moveTo(rx+Math.cos(ang)*ddd, ry+Math.sin(ang)*ddd);
-      fctx.lineTo(rx+Math.cos(ang)*(ddd+40+120*sl), ry+Math.sin(ang)*(ddd+40+120*sl)); fctx.stroke(); }
+      fctx.lineTo(rx+Math.cos(ang)*(ddd+50+90*sl), ry+Math.sin(ang)*(ddd+50+90*sl)); fctx.stroke(); }
     fctx.globalAlpha=1;
   }
 
