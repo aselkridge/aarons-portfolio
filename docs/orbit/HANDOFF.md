@@ -79,6 +79,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 | ~~10~~ | ~~Popups vanish too fast; no way to see what you've done~~ **FIXED 2026-07-18 (as the "Mission Log")** | Toasts self-remove after ~5.2s, banners after ~3.6s, and no history existed anywhere — this needed a new data structure, not a timer tweak. **Built:** `Progress.logEvent()` (`03-progress.js`) records every popup — achievements, transmissions/pilot facts, major-event banners — into `Progress.d.log` in `localStorage` (capped at 200 entries), hooked into `toast()` and `banner()` at the source so nothing that pops can escape being logged. New "◈ LOG" button in the header nav row (next to the "?" button) opens a scrollable Mission Log panel — same glass-panel styling family as the hint popover — listing everything newest-first with kind/title/description/timestamp; closes on outside-click or Escape; shows a friendly empty state on a fresh profile. Unlike the secret planet (session-only by design), the log deliberately **persists across sessions** — it's the "go back and see what you've done" record. **Verified**: fresh profile shows the empty state; generated real achievement/banner/fact events, **hard-reloaded the page**, and confirmed all three appear in the panel newest-first with correct kind labels (persistence proven, not assumed); Escape closes it; screenshotted the open panel. | `03-progress.js` (`logEvent`, hooks), `08-ui.js` (panel behavior), `index.html` (markup/CSS) |
 | 19 | Log panel: the (badge/count) number is cut off in the Expanse (Rocinante) theme | Reported by Aaron with a screenshot 2026-07-18 — the numeric value in the ◈ LOG panel is clipped in the Expanse theme specifically (likely a theme-specific `clip-path`/padding/overflow on the badge or tab-count chip). NOT yet diagnosed against the live code — diagnose the exact element before touching it. Small, self-contained fix (fold into a quick-wins batch). | `08-ui.js` / `index.html` (log panel + `.tab-new` / badge CSS — TBC) |
 | 20 | Ships feel a little small (FYI, not urgent) | Aaron's note: the flying ship cursor could stand to be a touch bigger overall for presence. Separate from the *hangar-bay* ship-too-small point already captured in issue #5 (that one is the docked ship inside the console). Both are size passes; batch with Phase 3 (visual fidelity) since ship art/scale is part of that. | `index.html` (`.rocket` sizing) for the cursor ship; `07-environments.js` for the bay ship |
+| 21 | Mobile touch controls fight the device (LOW priority) | Reported by Aaron 2026-07-18: on a phone the page pans/zooms during play, and a *fire* touch and a *move* touch aren't distinguished — the game can't tell you're trying to do both, so multitouch flails. Two layers: (a) the true bug — the page isn't locking touch gestures (`touch-action:none` + preventDefault missing) and touch handling doesn't track fingers by pointer ID; (b) the bigger design question of whether precise dual-touch flight belongs on mobile at all. See the "MOBILE experience" cross-cutting item in §3 for the recommended direction (calmer tap-to-travel / assisted mobile mode, resolved alongside Phase 4 Ground Control). Do NOT ship an average patch here — Aaron cares about the mobile quality. | touch/pointer handling in `05-combat.js` / `06-flight.js` / `09-main.js`; `index.html` (`touch-action` CSS) |
 
 ---
 
@@ -143,13 +144,39 @@ before the biggest structural change):
    about what went wrong, not just what worked. Deliverable is a "DIY learning
    manual." Must be last so it can teach the *final* shape of the site.
 
-**Pending brainstorm — Ronin (the hidden planet) content.** We defined its
-*mood* (STATION ∅, "the lone road," "#1 is a direction, not a rank," ronin w/
-sword + headband) but never its actual *content* — what a visitor reads/sees
-when they land there. Needs its own brainstorm session with Aaron to define.
-Can happen anytime; should be settled before its scene is finalized in Phase 3
-and before it's wired as a Ground-Control menu entry in Phase 4. (Ties to the
-Phase 2 content-window work above — it's one more window to design.)
+**Cross-cutting work item — Ronin (the hidden planet): brainstorm + build.**
+We defined its *mood* (STATION ∅, "the lone road," "#1 is a direction, not a
+rank," a ronin w/ sword + headband walking the dunes) but never its actual
+*content* — what a visitor reads/sees/does when they land there.
+- **Step 0 — brainstorm (do first, anytime):** a dedicated session with Aaron to
+  decide what Ronin holds. It's the payoff for a hard-won discovery, so it should
+  feel special/different from the other stations — not just another info panel.
+- **Then build, threaded across the existing phases:**
+  - *Phase 2:* its content window (one more rich window to design — likely its
+    own distinct treatment, the way the parchment box is the poetry treatment).
+  - *Phase 3:* its scene/environment (the dunes + the walking ronin — a prime
+    candidate for the layered-art + animation method; see CLAUDE.md).
+  - *Phase 4:* wire it as the Ground-Control menu entry that appears once
+    unlocked (via Pong win OR ₩20,000 bounty).
+- Settle the brainstorm before finalizing the Phase 3 scene and the Phase 4 menu
+  entry, so its content, art, and unlock all point at the same idea.
+
+**Cross-cutting work item — the MOBILE experience (LOW priority, Aaron's call,
+but quality-first — no "eh, this might work" patches).** On a phone the flight
+controls fight the device: the page pans/zooms during play, and a fire-touch and
+a move-touch aren't recognized as two separate fingers. Two layers to this:
+- **The real bug (fix regardless):** stop the page panning/zooming during play
+  (`touch-action:none` + preventDefault) and track fingers by pointer ID so one
+  = move, another = fire. Logged as issue #21 in §2.
+- **The deeper design call:** a precise two-thumb drag-to-fly + tap-to-fire game
+  is genuinely hard to make feel good on touch. Recommended direction (Claude's
+  take, 2026-07-18): don't port desktop combat to phones — give mobile a
+  deliberately *calmer, different* interaction that keeps all the mood/art/
+  content: tap-to-travel (auto-fly to a tapped planet), assisted/optional
+  combat. **This dovetails with Phase 4 — the Ground-Control direct-access mode
+  (a menu you tap, no flying) is the natural mobile-primary path**, with flight
+  as an optional assisted extra. So resolve this alongside Phase 4 rather than as
+  a standalone patch. Revisit the exact shape with Aaron when we get there.
 
 (An interstitial **Phase 1.5 — reward presentation & log polish** was added
 and shipped after Phase 1; see §3.2.)
