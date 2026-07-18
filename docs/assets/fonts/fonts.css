@@ -9,3 +9,7 @@
 /* Orbitron — technical display for the Rocinante (Expanse) theme */
 @font-face{font-family:'Orbitron';font-style:normal;font-weight:500;font-display:swap;src:url('./orbitron-500.woff2') format('woff2')}
 @font-face{font-family:'Orbitron';font-style:normal;font-weight:800;font-display:swap;src:url('./orbitron-800.woff2') format('woff2')}
+/* Dancing Script — script face for the Wisdom (quotes) reward reveal */
+@font-face{font-family:'Dancing Script';font-style:normal;font-weight:600;font-display:swap;src:url('./dancing-script-600.woff2') format('woff2')}
+/* Baloo 2 — rounded fun face for the Fun Facts reward reveal */
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url('./baloo2-600.woff2') format('woff2')}

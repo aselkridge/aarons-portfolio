@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (Phase 1 of the new roadmap: planet approach glow, log button prominence, session-only rewards, redesigned "?" button)
+Last updated: 2026-07-18 (Phase 1.5: per-entry NEW tracking w/ tab badges, lit-up unread log entries, per-category reveal voices + 2 new fonts, clearer picker labels)
 
 ---
 
@@ -109,11 +109,16 @@ before the biggest structural change):
    space — whichever happens first in a session unlocks it in both places,
    and both tracks stay live simultaneously so a player can chase either.
    Launch button on the desk → space; a Return Home button in space → back
-   to the control room.
+   to the control room. **Entry flow addition (per Aaron): after choosing a
+   mode, the player picks their theme/ship (Swordfish vs. Rocinante) BEFORE
+   entering — both for Launch and for Ground Control.**
 5. **Tutorial** (last, on purpose): built once everything above is final,
    likely living in/around the Ground Control entry flow.
 
-## 3.1 This shipment — Phase 1 of the roadmap: quick wins
+(An interstitial **Phase 1.5 — reward presentation & log polish** was added
+and shipped after Phase 1; see §3.2.)
+
+## 3.1 Phase 1 of the roadmap: quick wins (shipped earlier today)
 
 **Planet approach animation** (`index.html`, `04-world.js`, `06-flight.js`):
 - Added `.pglow` — a large radial-gradient glow bloom behind every planet
@@ -171,6 +176,44 @@ picker→reveal flow and a real gold-asteroid-crack→modal path both still
 work end-to-end; zero console errors throughout. Screenshotted the glow
 flash, the settled state, Ronin's materialize moment, the log badge, and
 the full nav row in both themes.
+
+## 3.2 This shipment — Phase 1.5: reward presentation & log polish
+
+Follow-ups shipped after Phase 1 the same day (plus three bug fixes in
+between: reward-modal click-through/cursor, bigger ?/LOG buttons, slower
+grander Ronin reveal, and the picker made non-dismissible so a cracked
+gold asteroid can never be wasted).
+
+- **Per-entry NEW tracking** (`Progress.d.rwSeen`, session-only like the
+  rest of the reward state): an earned reward stays "new" until its log
+  entry is actually clicked and read — NOT merely until the panel opens.
+  The button badge counts unread; each category tab in the log carries its
+  own count chip (`.tab-new`) so you can see *where* the new items are;
+  unread entries render lit up — bold near-white with a themed glow, an
+  accent edge, and a NEW chip — then settle to normal once read.
+- **Log brightened**: entry text lifted from `--ink` @ .85 opacity (dull
+  gray) to a bright near-white.
+- **Per-category reveal voices** (`.rewardmodal.cat-*` CSS + `setRevealBody`
+  in 08-ui.js): quotes render in Dancing Script with a decorative opening
+  quote (wisdom mood); career facts render bold with every number blown up
+  ~1.65× in Anton with an accent glow (`.rm-num`, HTML-escaped then
+  regex-wrapped); fun facts render in rounded Baloo 2 (relaxed); pilot
+  facts render as a mono "PILOT FILE // DECRYPTED" dossier readout. Two
+  new self-hosted fonts added to `docs/assets/fonts/` (Dancing Script 600,
+  Baloo 2 600 — same no-CDN pattern as the rest).
+- **Clearer picker labels**: About the Pilot · who Aaron is / Career Wins ·
+  the numbers / Fun Facts · off-duty / Wisdom · words to fly by (label +
+  small sub on each button; log tabs use short forms Pilot/Career/Fun/
+  Wisdom; REWARD_META reveal labels updated to match).
+
+**Verified** (headless browser, live state): badge counts 3 after 3 earns
+and survives opening the log; tab chips show per-category counts (2/1);
+unread entries carry `.unseen` + NEW chips and un-light individually on
+click, decrementing the badge; career numbers wrap in `.rm-num` (199/148/
+40/93%); quotes/random reveals compute to Dancing Script/Baloo 2 with both
+fonts confirmed loaded via `document.fonts.check`; NEW chip no longer
+overlaps text (padding fix); picker renders correctly in both themes;
+zero console errors.
 
 **Still pending from Aaron:** Clay table screenshots (AlphaForge gallery),
 poems (Oromugai), eating/fatherhood content (Life). All have marked

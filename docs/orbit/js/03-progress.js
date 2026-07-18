@@ -7,20 +7,22 @@
 
 /* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
 var Progress=(function(){
-  var d={ach:{},visited:{},gold:0,saucers:0,rw:{},rwNew:0};
+  var d={ach:{},visited:{},gold:0,saucers:0,rw:{},rwNew:0,rwSeen:{}};
   try{
     var raw=localStorage.getItem('aa_progress');
     if(raw){
       var saved=JSON.parse(raw);
       // rewards are session-only, same as bounty and the secret planet —
       // never restored from a previous visit, always earned fresh.
-      delete saved.rw; delete saved.rwNew;
+      // rwSeen tracks which earned entries have been clicked/read in the
+      // ◈ LOG (per-item, driving the lit-up "unread" styling + badges).
+      delete saved.rw; delete saved.rwNew; delete saved.rwSeen;
       d=Object.assign(d,saved);
     }
   }catch(e){}
   function save(){
     try{
-      var out=Object.assign({},d); delete out.rw; delete out.rwNew;   // never persisted
+      var out=Object.assign({},d); delete out.rw; delete out.rwNew; delete out.rwSeen;   // never persisted
       localStorage.setItem('aa_progress',JSON.stringify(out));
     }catch(e){}
   }
@@ -70,10 +72,10 @@ function banner(kicker,title,desc){
    d.rwNew counts how many are waiting unviewed, driving both the log
    button's glow and its numeric badge until the log is opened. */
 var REWARD_META={
-  pilot:  {label:'ABOUT THE PILOT',     kicker:'REWARD ◈ PILOT FILE'},
-  career: {label:'CAREER INTEL',        kicker:'REWARD ◈ CAREER FILE'},
-  random: {label:'RANDOM TRANSMISSION', kicker:'REWARD ◈ INTERCEPTED'},
-  quotes: {label:'QUOTE UNLOCKED',      kicker:'REWARD ◈ QUOTE'}
+  pilot:  {label:'ABOUT THE PILOT', kicker:'REWARD ◈ PILOT FILE'},
+  career: {label:'CAREER WINS',     kicker:'REWARD ◈ CAREER FILE'},
+  random: {label:'FUN FACT',        kicker:'REWARD ◈ INTERCEPTED'},
+  quotes: {label:'WISDOM',          kicker:'REWARD ◈ WORDS TO FLY BY'}
 };
 function rewardPool(){ return window.ORBIT_REWARDS||{}; }
 /* Marks one item earned within a single category — unearned pool first,

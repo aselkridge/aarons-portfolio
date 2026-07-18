@@ -104,32 +104,44 @@ document.addEventListener('pointerdown', function(e){
 /* ══════════ REWARDS LOG ══════════ */
 /* The log is the reward collection, nothing else — categorized facts/quotes
    /stats earned through play (see earnFromCategory in 03-progress.js),
-   grouped under one tab per category. The button's dot glows red while
-   there's an un-viewed reward; opening the log clears it. Once opened, the
-   log stays open until explicitly closed via the ✕ — it no longer
-   auto-dismisses on an outside click. */
+   grouped under one tab per category. "New" is tracked PER ENTRY
+   (Progress.d.rwSeen): an earned entry stays lit — bold, bright, NEW chip,
+   counted on the button badge AND on its category tab — until it's actually
+   clicked and read in the log, not merely until the panel is opened. Once
+   opened, the log stays open until explicitly closed via the ✕. */
 var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot', logBadge=$('log-badge');
+function unseenIn(cat){
+  var pool=(rewardPool()[cat])||[], n=0;
+  pool.forEach(function(_,i){ var id=cat+':'+i; if(Progress.d.rw[id]&&!Progress.d.rwSeen[id]) n++; });
+  return n;
+}
+function updateLogButton(){
+  var n=Progress.d.rwNew||0;
+  logBadge.textContent=n?String(n):'';
+  logBtn.classList.toggle('hasnew',n>0);
+}
 function markLogNew(){
-  logBtn.classList.add('hasnew');
-  logBadge.textContent=String(Progress.d.rwNew||0);
+  updateLogButton();
   logBtn.classList.remove('bump'); void logBtn.offsetWidth; logBtn.classList.add('bump');   // re-trigger the bounce
 }
 window.markLogNew=markLogNew;
+var TAB_LABEL={pilot:'Pilot',career:'Career',random:'Fun',quotes:'Wisdom'};
 function renderLog(){
   var R=rewardPool(), tabs=$('log-tabs'), list=$('log-list');
   tabs.innerHTML='';
   Object.keys(REWARD_META).forEach(function(cat){
     var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
+    var fresh=unseenIn(cat);
     var b=document.createElement('button'); b.type='button';
     b.className='log-tab'+(cat===logTab?' on':'');
-    b.innerHTML='<span></span><i>'+got+'/'+pool.length+'</i>';
-    b.querySelector('span').textContent={pilot:'Pilot',career:'Career',random:'Random',quotes:'Quotes'}[cat];
+    b.innerHTML='<span></span><i>'+got+'/'+pool.length+'</i>'+(fresh?'<em class="tab-new">'+fresh+'</em>':'');
+    b.querySelector('span').textContent=TAB_LABEL[cat];
     b.addEventListener('click', function(e){ e.stopPropagation(); logTab=cat; renderLog(); Sound.blip(700); });
     tabs.appendChild(b);
   });
   var pool=R[logTab]||[];
   var earned=[];
-  pool.forEach(function(txt,i){ var t=Progress.d.rw[logTab+':'+i]; if(t) earned.push({txt:txt,t:t}); });
+  pool.forEach(function(txt,i){ var id=logTab+':'+i, t=Progress.d.rw[id]; if(t) earned.push({id:id,txt:txt,t:t}); });
   earned.sort(function(a,b){ return b.t-a.t; });   // newest first
   if(!earned.length){
     list.innerHTML='<div class="log-empty">Nothing collected here yet — crack gold asteroids and down saucers to earn rewards.</div>';
@@ -137,11 +149,17 @@ function renderLog(){
   }
   list.innerHTML='';
   earned.forEach(function(e){
-    var it=document.createElement('div'); it.className='log-item';
-    it.innerHTML='<div class="ld"></div><i class="lex">⤢</i>';
+    var fresh=!Progress.d.rwSeen[e.id];
+    var it=document.createElement('div'); it.className='log-item'+(fresh?' unseen':'');
+    it.innerHTML='<div class="ld"></div>'+(fresh?'<span class="lnew">NEW</span>':'')+'<i class="lex">⤢</i>';
     it.querySelector('.ld').textContent=e.txt;
     it.addEventListener('click', function(){
-      openRewardModal(REWARD_META[logTab].kicker, REWARD_META[logTab].label, e.txt);
+      if(!Progress.d.rwSeen[e.id]){   // reading it un-lights it and drops the counts
+        Progress.d.rwSeen[e.id]=1;
+        Progress.d.rwNew=Math.max(0,(Progress.d.rwNew||0)-1);
+        Progress.save(); updateLogButton(); renderLog();
+      }
+      openRewardModal(REWARD_META[logTab].kicker, REWARD_META[logTab].label, e.txt, logTab);
     });
     list.appendChild(it);
   });
@@ -154,19 +172,36 @@ function renderLog(){
    goes straight to openRewardModal() (view-only, nothing to (re-)earn). */
 var rewardModal=$('rewardmodal'), rmKicker=$('rm-kicker'), rmLabel=$('rm-label'), rmText=$('rm-text'),
     rmPickerGrid=$('rm-picker-grid');
-var CAT_LABEL={pilot:'Pilot',career:'Career',random:'Random',quotes:'Quotes'};
+/* picker labels spell out what each channel actually IS — a first-time
+   player has no idea what "Pilot" vs "Random" means otherwise. */
+var CAT_LABEL={pilot:'About the Pilot',career:'Career Wins',random:'Fun Facts',quotes:'Wisdom'};
+var CAT_SUB={pilot:'who Aaron is',career:'the numbers',random:'off-duty',quotes:'words to fly by'};
 function renderPickerGrid(){
   var R=rewardPool();
   rmPickerGrid.innerHTML='';
   Object.keys(REWARD_META).forEach(function(cat){
     var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
     var b=document.createElement('button'); b.type='button'; b.className='rm-pick';
-    b.innerHTML='<span class="rp-lab"></span><span class="rp-count"></span>';
+    b.innerHTML='<span class="rp-lab"></span><span class="rp-sub"></span><span class="rp-count"></span>';
     b.querySelector('.rp-lab').textContent=CAT_LABEL[cat];
+    b.querySelector('.rp-sub').textContent=CAT_SUB[cat];
     b.querySelector('.rp-count').textContent=got+'/'+pool.length;
     b.addEventListener('click', function(){ revealReward(cat); });
     rmPickerGrid.appendChild(b);
   });
+}
+/* ── per-category character in the reveal ──
+   Each channel gets its own typographic voice (CSS: .rewardmodal.cat-*):
+   quotes = script/wisdom, career = bold with numbers blown up for impact,
+   random = rounded and playful, pilot = technical dossier. Career text is
+   HTML-escaped and its numbers wrapped in .rm-num for the big-stat pop. */
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setRevealBody(cat,text){
+  ['pilot','career','random','quotes'].forEach(function(c){ rewardModal.classList.remove('cat-'+c); });
+  if(cat) rewardModal.classList.add('cat-'+cat);
+  if(cat==='career'){
+    rmText.innerHTML=esc(text).replace(/(₩?\d[\d,.]*(?:%|×|x\b)?)/g,'<b class="rm-num">$1</b>');
+  } else rmText.textContent=text;
 }
 /* While the picker is up you MUST choose a category — it can't be dismissed
    by an accidental click (backdrop, ✕, or Escape all do nothing in picking
@@ -190,12 +225,14 @@ function revealReward(cat){
   var r=earnFromCategory(cat);
   if(!r) return;
   rewardModal.classList.remove('picking');
-  rmKicker.textContent=REWARD_META[cat].kicker; rmLabel.textContent=REWARD_META[cat].label; rmText.textContent=r.txt;
+  rmKicker.textContent=REWARD_META[cat].kicker; rmLabel.textContent=REWARD_META[cat].label;
+  setRevealBody(cat,r.txt);
   Sound.blip(themeId==='sword'?1180:980);
 }
-function openRewardModal(kicker,label,text){   // view an already-earned entry from the log
+function openRewardModal(kicker,label,text,cat){   // view an already-earned entry from the log
   rewardModal.classList.remove('picking');
-  rmKicker.textContent=kicker; rmLabel.textContent=label; rmText.textContent=text;
+  rmKicker.textContent=kicker; rmLabel.textContent=label;
+  setRevealBody(cat,text);
   rewardModal.classList.add('on');
 }
 window.openRewardModal=openRewardModal;
@@ -206,12 +243,10 @@ function isPicking(){ return rewardModal.classList.contains('picking'); }
 $('rm-close').addEventListener('click', function(){ if(!isPicking()) closeRewardModal(); });
 rewardModal.addEventListener('pointerdown', function(e){ if(e.target===rewardModal && !isPicking()) closeRewardModal(); });
 function setLog(on){
-  if(on){
-    renderLog();
-    logBtn.classList.remove('hasnew');
-    logBadge.textContent='';
-    if(Progress.d.rwNew){ Progress.d.rwNew=0; Progress.save(); }
-  }
+  if(on) renderLog();
+  // NOTE: opening the log no longer clears the "new" state wholesale —
+  // each entry stays lit (and counted, on the button badge and its tab)
+  // until it is individually clicked and read. See renderLog's item click.
   logBtn.classList.toggle('on',on); logBtn.setAttribute('aria-expanded',String(on));
   logPanel.classList.toggle('on',on);
 }
