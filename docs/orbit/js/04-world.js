@@ -43,8 +43,10 @@ var RONIN={ id:'ronin', name:'???', tag:'uncharted', color:'#d8b56a', r:15, type
   body:['A world that was not on the charts. Someone walks the ridge out there — sword on his back, headband in the wind, going his own way at his own pace.','Number one is a direction, not a rank.'],
   tags:['uncharted','the long walk','#1'] };
 function unlockRonin(silent){
+  // Session-only: RONIN.el (unset until built, and RONIN is a fresh object
+  // every page load) is the entire guard against unlocking twice — nothing
+  // here persists across a refresh, so it has to be re-earned every visit.
   if(RONIN.el) return;
-  Progress.d.ronin=1; Progress.save();
   STATIONS.push(RONIN); buildPlanet(RONIN, STATIONS.length-1);
   RONIN.num='∅';
   RONIN.oring.style.width=(RONIN.orbit*unit*2)+'px'; RONIN.oring.style.height=(RONIN.orbit*unit*2*0.62)+'px';

@@ -84,7 +84,7 @@ body.t-roci .flare{display:block}
 .sun-orbit{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(239,236,230,.09);transform:translate(-50%,-50%);pointer-events:none}
 body.t-roci .sun-orbit{border-style:solid;border-color:rgba(116,208,255,.10)}
 body.t-roci{--display:'Orbitron','Anton',sans-serif}
-body.t-roci .wordmark{font-family:var(--display);font-weight:800;letter-spacing:-.01em;font-size:clamp(1.15rem,2.2vw,1.7rem)}
+body.t-roci .wordmark{font-family:var(--display);font-weight:800;letter-spacing:-.01em;font-size:clamp(1.32rem,2.5vw,1.95rem)}
 body.t-roci .dock h2,body.t-roci .card h2{font-family:var(--display);font-weight:800;letter-spacing:-.01em;line-height:1.02}
 body.t-roci .bnr .bt,body.t-roci .toast .tt{font-family:var(--display);font-weight:800}
 
@@ -236,7 +236,7 @@ body.t-roci .scancard{display:block}
 .bottom{align-items:flex-end}
 /* brand header + nav */
 .brand{pointer-events:auto}
-.wordmark{font-family:var(--anton);font-size:clamp(1.35rem,2.6vw,2rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
+.wordmark{font-family:var(--anton);font-size:clamp(1.55rem,2.9vw,2.3rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
 .wordmark em{font-style:normal;color:var(--accent);transition:color .5s}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
@@ -250,7 +250,7 @@ body.t-roci .scancard{display:block}
    of fighting over the same corner. */
 .navrow{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:2px 14px;margin-top:10px}
 .stnav{display:flex;flex-wrap:wrap;gap:2px 14px}
-.stnav a{font-family:var(--os);font-weight:600;font-size:clamp(11px,1.25vw,14px);letter-spacing:.16em;text-transform:uppercase;
+.stnav a{font-family:var(--os);font-weight:600;font-size:clamp(12.5px,1.4vw,15.5px);letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:.18s;cursor:pointer;opacity:.82}
 .stnav a:hover,.stnav a.here{color:var(--accent);border-bottom-color:var(--accent);opacity:1;text-shadow:0 0 16px var(--accent)}
 .sun{cursor:pointer;transition:filter .25s}
@@ -475,20 +475,22 @@ body.t-roci .toast{background:rgba(8,22,36,.9);color:#dff4ff;border:1px solid rg
   clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:0 0 22px rgba(116,208,255,.22)}
 body.t-roci .toast .tk{color:#9affea}
 
-/* big center-top banner — MAJOR events only, one at a time */
-#banner{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:52;pointer-events:none;width:min(560px,94vw);
+/* big center-top banner — MAJOR events only, one at a time.
+   Same styling as before (colors/border/glow), just scaled down and
+   flatter/more rectangular — less padding relative to width, smaller type. */
+#banner{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:52;pointer-events:none;width:min(440px,90vw);
   display:flex;justify-content:center}
-.bnr{margin-top:-120px;opacity:0;transition:margin-top .45s cubic-bezier(.2,.9,.3,1),opacity .45s;text-align:center;padding:16px 40px 18px}
-.bnr.show{margin-top:22px;opacity:1}
-.bnr .bk{font-family:var(--mono);font-size:10px;letter-spacing:.34em;text-transform:uppercase;margin-bottom:5px}
-.bnr .bt{font-family:var(--anton);font-size:clamp(1.5rem,3.4vw,2.4rem);letter-spacing:.02em;text-transform:uppercase;line-height:.95}
-.bnr .bd{font-family:var(--os);font-weight:500;font-size:13px;letter-spacing:.06em;margin-top:5px;opacity:.9}
-body.t-sword .bnr{background:#f2e7d2;color:#1c1004;border:3px solid #1c1004;box-shadow:0 10px 0 rgba(0,0,0,.5)}
+.bnr{margin-top:-100px;opacity:0;transition:margin-top .45s cubic-bezier(.2,.9,.3,1),opacity .45s;text-align:center;padding:9px 26px 11px}
+.bnr.show{margin-top:18px;opacity:1}
+.bnr .bk{font-family:var(--mono);font-size:9px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:3px}
+.bnr .bt{font-family:var(--anton);font-size:clamp(1.05rem,2.2vw,1.6rem);letter-spacing:.02em;text-transform:uppercase;line-height:.95}
+.bnr .bd{font-family:var(--os);font-weight:500;font-size:11px;letter-spacing:.05em;margin-top:4px;opacity:.9}
+body.t-sword .bnr{background:#f2e7d2;color:#1c1004;border:2px solid #1c1004;box-shadow:0 6px 0 rgba(0,0,0,.5)}
 body.t-sword .bnr .bk{color:#b8452a}
 body.t-roci .bnr{background:rgba(6,16,28,.92);color:#eaf7ff;border:1px solid #86dcff;backdrop-filter:blur(10px);
-  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));box-shadow:0 0 40px rgba(116,208,255,.4)}
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));box-shadow:0 0 26px rgba(116,208,255,.4)}
 body.t-roci .bnr .bk{color:#9affea}
-@keyframes bnrpulse{0%,100%{box-shadow:0 0 40px rgba(116,208,255,.4)}50%{box-shadow:0 0 64px rgba(116,208,255,.7)}}
+@keyframes bnrpulse{0%,100%{box-shadow:0 0 26px rgba(116,208,255,.4)}50%{box-shadow:0 0 42px rgba(116,208,255,.7)}}
 
 /* ───────── boot ───────── */
 #boot{position:fixed;inset:0;z-index:40;background:#050609;display:grid;place-items:center;transition:opacity .7s ease,visibility .7s}
@@ -666,12 +668,12 @@ body.t-roci .bnr .bk{color:#9affea}
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
 <script src="js/01-config.js?v=10"></script>
 <script src="js/02-sound.js?v=11"></script>
-<script src="js/03-progress.js?v=10"></script>
-<script src="js/04-world.js?v=12"></script>
+<script src="js/03-progress.js?v=11"></script>
+<script src="js/04-world.js?v=13"></script>
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=11"></script>
 <script src="js/07-environments.js?v=10"></script>
 <script src="js/08-ui.js?v=12"></script>
-<script src="js/09-main.js?v=12"></script>
+<script src="js/09-main.js?v=13"></script>
 </body>
 </html>

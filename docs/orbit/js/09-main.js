@@ -269,7 +269,9 @@ addEventListener('load', function(){
   if(s) setTimeout(function(){ system.classList.add('warp'); openStation(s); }, 600);
 });
 applyTheme('sword');
-if(Progress.d.ronin) unlockRonin(true);
+// No boot-time auto-unlock: the hidden planet is a per-session discovery
+// now, re-earned by crossing the bounty threshold in this session, not a
+// permanent flag restored from a past one (see checkBounty).
 
 /* headless test hook */
 window.__orbit = {

@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (contact photo live; "LOCKED" removed + themed lock-on popout added for Expanse)
+Last updated: 2026-07-18 (secret planet re-earned per session; banner shrunk; header text bigger; hangar-bay launch bug diagnosed)
 
 ---
 
@@ -73,39 +73,42 @@ instruction — do not batch-fix these without his go-ahead on each.
 | ~~12b~~ | ~~New/hidden planet has no visual "this is new" treatment~~ **FIXED 2026-07-18** | The hidden planet (Ronin/`RONIN`) rendered through the exact same `buildPlanet()` path as every regular planet — no visual distinction once unlocked. **Fix:** `RONIN` now carries a `secret:true` flag; `buildPlanet()` checks it and adds a `.secret` class plus two new pieces of markup — `.secret-glow` (a soft pulsing radial glow in the planet's own gold color) and `.secret-rings` (two crossed rings at different angles/speeds, gyroscope-style) — all always-on once unlocked, independent of the normal `.live` proximity-hover state everything else uses. **Verified**: unlocked it live and confirmed the `.secret` class and both new elements exist with their animations actually running (`animationName` read back, not just "class present"); screenshotted the result to confirm it visually reads as a distinct, deliberate "this one's different" world rather than another regular planet. | `04-world.js` (`buildPlanet`, `RONIN`), `index.html` (`.secret-glow`/`.secret-rings` CSS) |
 | ~~13~~ | ~~"LOCKED" text shows above the planet in the Expanse theme, not in Bebop~~ **FIXED 2026-07-18** | `setLock()` had a `themeId==='sword'` branch (anime title-card cut-in — never mentions "locked") and an `else` (Expanse) branch that set the on-planet reticle label (`#tgtlab`, in `.tgtbox`, positioned 22px above the target) to `NAME · LOCKED`. That's the theme-specific difference Aaron noticed — Bebop's cut-in never had that word to begin with, it wasn't removed there because it was never added there. **Fix:** the Expanse branch now sets `#tgtlab` to just the station name. The console's own "TGT" readout (top-right NAV·COM panel) still shows "· LOCKED" in both themes — Aaron only asked about the label floating above the planet, not that HUD field, so it was left alone. **Verified**: forced a lock-on in each theme and read back the live text content of both `#tgtlab` and `#target` — Expanse's on-planet label now reads just the name, the console field is unchanged, and the underlying lock-on/dock mechanic itself was untouched (same `setLock`/`positionTgtbox` flow). | `06-flight.js` (`setLock`) |
 | ~~14~~ | ~~Expanse theme has no equivalent of Bebop's hover popout~~ **FIXED 2026-07-18** | Locking onto a planet in Bebop triggers `.titlecard`, a dark anime-style card that slides in from the left with "SESSION ##" + the station name; that element is explicitly hidden in Expanse (`body.t-roci .titlecard{display:none}`) and nothing replaced it, so Expanse had no equivalent moment at all. **Fix:** added `.scancard` — a new themed popout, not a reskin of the anime card: dark glass panel, `backdrop-filter` blur, icy-blue border/glow, and the same cut-corner `clip-path` this theme already uses on its banner and planet tags, so it reads as native to Expanse rather than borrowed. Shows "◈ TARGET ACQUIRED", the station name, and its short tagline; slides in from the left on lock-on and back out after 950ms, same timing as the anime card. **Verified**: forced lock-on in Expanse and read back that `.scancard` gains the `.on` class with the correct kicker/name/tag text, confirmed it auto-hides after the 950ms window, and re-checked Bebop afterward to confirm its title card and this new card don't interfere with each other. | `06-flight.js` (`setLock`), `index.html` (`.scancard` markup/CSS) |
-| — | *(Not a bug — explained, no fix applied pending Aaron's call)* Secret planet appears immediately on load, before reaching ₩20,000 in the current session | `unlockRonin` sets `Progress.d.ronin=1` and saves it to `localStorage` (key `aa_progress`) the first time the ₩20,000 threshold is crossed. `09-main.js` boot code (`if(Progress.d.ronin) unlockRonin(true);`) then silently re-unlocks it on *every future page load*, regardless of that session's current bounty (which always starts back at 0 — `bounty` is a plain in-memory variable, never persisted). So this isn't random: it means Aaron's browser already crossed ₩20,000 at some point in an earlier session (very plausible given how much playtesting has happened today), and the unlock is permanent by design from that point on, like a game achievement rather than a per-session gate. Whether that's the right behavior is a product call, not a bug — flagging it rather than changing it unilaterally. If Aaron wants it to require re-earning every session instead, the fix is small (stop persisting `ronin` in `Progress.d`, or don't call `unlockRonin(true)` at boot). | `03-progress.js` (`checkBounty`), `09-main.js` (boot) |
+| ~~15~~ | ~~Secret planet appears immediately on load, before reaching ₩20,000 in the current session~~ **FIXED 2026-07-18** | Root cause (explained last round): `unlockRonin` persisted `Progress.d.ronin=1` to `localStorage`, and boot code silently re-unlocked it on every future page load regardless of the *current* session's bounty. Confirmed as a real mechanism, not a guess — it meant Aaron's browser had genuinely crossed ₩20,000 in some earlier session. Aaron's call: it should be re-earned every session. **Fix:** removed the persistence entirely — `unlockRonin` no longer writes to `Progress.d`/`localStorage` at all; `RONIN.el` (unset until built, and `RONIN` is a fresh object every page load) is now the only guard against double-unlocking within a session; `checkBounty()`'s gate checks `!RONIN.el` instead of the old persisted flag; the boot-time `if(Progress.d.ronin) unlockRonin(true);` call is gone. The separate `ronin_found` *achievement* badge (a one-time "you did this" record) is untouched and still persists normally — only the planet's visibility resets each session, not the achievement history. **Verified**: simulated a prior session's saved achievement in `localStorage`, reloaded, and confirmed the planet is NOT built (`RONIN.el` falsy) despite that history; then crossed ₩20,000 within the same fresh session and confirmed it unlocks correctly. | `04-world.js` (`unlockRonin`), `03-progress.js` (`checkBounty`, default `d`), `09-main.js` (boot) |
+| ~~16~~ | ~~Achievement/event banners felt too large and invasive~~ **FIXED 2026-07-18** | Aaron liked the banner's existing look (colors/border/glow per theme) but wanted it smaller and flatter — his call on exact sizing was "what do you think is best." **Fix:** kept every color/border/glow/clip-path exactly as-is, scaled down the geometry: max width 560px→440px, title font `clamp(1.5rem,3.4vw,2.4rem)`→`clamp(1.05rem,2.2vw,1.6rem)`, kicker/description shrunk to match, padding `16px 40px 18px`→`9px 26px 11px`, borders/shadows/clip-path corner-cut scaled proportionally down (e.g. Bebop border 3px→2px, Expanse corner-cut 18px→12px) so nothing looks disproportionately heavy at the smaller size. Net effect reads flatter/more rectangular, not just "shrunk." **Verified**: triggered a real banner and measured its actual rendered `getBoundingClientRect()` — meaningfully smaller footprint than before — and screenshotted it next to the header. | `index.html` (`#banner`/`.bnr` CSS) |
+| ~~17~~ | ~~Wanted the "Aaronautics" wordmark + station nav links a bit bigger~~ **FIXED 2026-07-18** | Aaron: profile/branding should stay a clear focus, just "not too big." **Fix:** modest bump (~15%) to both the Bebop and Expanse wordmark font-size clamps and the station nav link clamp — sizing only, no layout/color changes. **Verified**: read back live computed `font-size` at a standard viewport to confirm the increase actually took effect (34.8px wordmark, 15.5px nav links, both at the new clamp ceiling), and screenshotted the header. | `index.html` (`.wordmark`, `body.t-roci .wordmark`, `.stnav a` CSS) |
+| 18 | Ship-swap hangar: doors open on the *outbound* leg but the bay looks empty — no visible "ship flies out" moment (docking/inbound leg works fine) | **Diagnosed, not yet fixed** — confirmed with live measurements, not just reading the source. Three animations race each other on the outbound leg that don't race on the (working) inbound leg: (1) the new ship is never given a moment to sit visibly parked before launching — `ship-in` is removed the instant the ship swap happens and never re-applied; (2) `bay-open` (door reveal, 550ms) and `ship-out` (ship exit, 500ms position + only 300ms opacity) are triggered at the *exact same instant*, with no stagger — contrast the inbound leg, where `bay-open` gets a 260ms head start on `ship-in` and comfortably overlaps it. Measured the actual computed styles through a real run: by the time the doors are only ~56% open (mid-reveal), the ship's opacity has *already reached ~0* — it fully fades before the doors are open enough to see it, so "the bay looks empty" is exactly what a viewer sees, every time. Proposed fix (not yet applied): let the newly-swapped ship stay visibly parked (don't remove `ship-in` immediately), open the doors first and let them get well underway, *then* trigger `ship-out` — mirroring the same stagger pattern the working inbound leg already uses, just in reverse. | `08-ui.js` (`shipSwap`) |
 
 ---
 
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **Contact photo is live.** The Drive-link delivery worked where the direct
-  chat paste couldn't — downloaded and saved to
-  `docs/orbit/assets/aaron.jpg`; the contact card now shows it instead of
-  the "AS" initials placeholder.
-- **Fixed issue #13** ("LOCKED" showing above the planet in Expanse) and
-  **issue #14** (Expanse gets its own themed lock-on popout, styled to
-  match — not a reskin of Bebop's anime card). See the strikethrough
-  entries in §2 for full detail on each.
-- **Explained, not fixed**, the secret-planet-appears-early report: it's
-  `Progress.d.ronin` persisting in `localStorage` from an earlier session
-  where Aaron's own bounty already crossed ₩20,000, then silently
-  re-unlocking on every later page load regardless of the *current*
-  session's bounty. This is a real, confirmed mechanism (not a guess), and
-  it's a product-design fork (permanent unlock vs. re-earn every session),
-  not obviously a bug — flagged in §2 for Aaron's call rather than changed
-  unilaterally.
-- **Verified**: for #13, forced a lock-on in both themes and read back live
-  text content — Expanse's on-planet label now reads just the name, the
-  console's separate "TGT" field (untouched, different element, not what
-  Aaron flagged) still correctly shows "· LOCKED" in both themes. For #14,
-  forced lock-on in Expanse and confirmed `.scancard` gains `.on` with the
-  right kicker/name/tag text, auto-hides after the same 950ms window as the
-  Bebop card, and doesn't interfere with Bebop's own title card when
-  switching back. For the photo, confirmed `naturalWidth` on the loaded
-  `<img>` (not just "no console error") to prove it actually rendered, not
-  just that the file exists.
+- **Fixed issue #15**: secret planet now resets every session instead of
+  persisting forever from the first time it was ever earned — Aaron's
+  explicit call, made after last round's explanation of the mechanism.
+- **Fixed issue #16**: shrunk the achievement/event banner (kept its exact
+  colors/border/glow, just scaled the geometry down and flatter).
+- **Fixed issue #17**: bumped the "Aaronautics" wordmark and station nav
+  link sizes ~15% — kept it modest per Aaron ("not too big").
+- **Diagnosed issue #18** (ship-swap hangar: the outbound leg shows an
+  empty bay, no visible ship launch, though the inbound/docking leg works
+  fine) — root cause confirmed with live measured computed styles, not
+  read from source alone: the ship's opacity fade (300ms) finishes before
+  the door-opening reveal (550ms) is even half done, so it's fully invisible
+  well before there's enough of a gap to see it through. **Not fixed yet**
+  — Aaron asked to see the diagnosis first; proposed fix is in §2's row 18.
+- **Verified**: for #15, simulated a prior session's saved achievement in
+  `localStorage`, reloaded, and confirmed the planet does NOT appear despite
+  that history, then confirmed crossing ₩20,000 fresh in the same session
+  still unlocks it correctly. For #16/#17, read back live computed
+  `getBoundingClientRect()`/`font-size` values (not just "looks smaller/
+  bigger" in a screenshot) to confirm the actual rendered sizes changed as
+  intended, and screenshotted both. For #18, sampled the real ship/door
+  computed styles every 150ms through an actual triggered swap to catch the
+  exact timing mismatch, rather than reasoning about the CSS in the
+  abstract.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
-time): issues #2, #5–8, #10–11, #12a in §2, all still outstanding.
+time): issues #2, #5–8, #10–11, #12a in §2, all still outstanding. Issue
+#18's actual fix is also pending — diagnosis only this round, per Aaron's
+request.

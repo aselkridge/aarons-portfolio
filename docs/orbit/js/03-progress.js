@@ -7,7 +7,7 @@
 
 /* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
 var Progress=(function(){
-  var d={ach:{},visited:{},ronin:0,gold:0,saucers:0};
+  var d={ach:{},visited:{},gold:0,saucers:0};
   try{ var raw=localStorage.getItem('aa_progress'); if(raw) d=Object.assign(d,JSON.parse(raw)); }catch(e){}
   function save(){ try{ localStorage.setItem('aa_progress',JSON.stringify(d)); }catch(e){} }
   return { d:d, save:save,
@@ -53,7 +53,7 @@ function checkBounty(){
   if(Math.floor(bounty/2500)>Math.floor(prevBounty/2500) && !asteroids.some(function(a){return a.gold;})){
     spawnAsteroid(2,undefined,undefined,true);
     banner('◈ SIGNAL DETECTED','GOLD ASTEROID INBOUND','Crack it for a transmission.'); }
-  if(bounty>=20000 && !Progress.d.ronin) unlockRonin(false);
+  if(bounty>=20000 && !RONIN.el) unlockRonin(false);
   prevBounty=bounty;
 }
 
