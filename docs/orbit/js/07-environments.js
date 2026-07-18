@@ -87,10 +87,7 @@ function fillCard(s){
 function selectSec(sec,a){
   var links=$('secs').querySelectorAll('a');
   for(var i=0;i<links.length;i++) links[i].classList.toggle('on', links[i]===a);
-  var b=(sec.body||[]).map(function(p){return '<p>'+p+'</p>';}).join('');
-  if(sec.tags) b+='<div class="list">'+sec.tags.map(function(t){return '<span>'+t+'</span>';}).join('')+'</div>';
-  if(sec.soon) b+='<div class="soon">◇ content in progress — real material lands here next</div>';
-  $('p-body').innerHTML=b;
+  $('p-body').innerHTML=ContentViewer.render(sec);
 }
 /* — environment painters — */
 function ridge(w,h,base,jag,n){ var pts=[]; for(var i=0;i<=n;i++) pts.push({x:w*i/n, y:base+(Math.random()-0.5)*jag}); return pts; }

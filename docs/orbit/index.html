@@ -681,6 +681,22 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 .sec-body .list{margin-top:1em;display:flex;flex-wrap:wrap;gap:7px}
 .sec-body .list span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
 .sec-body .soon{margin-top:1.2em;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+/* ──── content-viewer: poem layout ──── */
+.sec-body .poem-wrap{margin:1.5em 0;text-align:center;padding:1.5em 0}
+.sec-body .poem-visual{width:100%;max-height:240px;object-fit:cover;border-radius:4px;margin-bottom:1.2em;background-size:cover;background-position:center}
+.sec-body .poem-text{font-size:1.1rem;line-height:1.8;color:#e8ebf0;font-style:italic;margin:1.2em 0}
+.sec-body .poem-author{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:1em}
+/* ──── content-viewer: gallery layout ──── */
+.sec-body .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:1.2em 0}
+.sec-body .gallery-item{position:relative;overflow:hidden;border-radius:4px;aspect-ratio:1}
+.sec-body .gallery-item img{width:100%;height:100%;object-fit:cover}
+.sec-body .gallery-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.8),transparent);color:#dcdee6;padding:8px 6px;font-size:10px;line-height:1.3}
+/* ──── content-viewer: table layout ──── */
+.sec-body .table-wrap{overflow-x:auto;margin:1.2em 0;border-radius:4px;border:1px solid var(--line)}
+.sec-body .data-table{width:100%;border-collapse:collapse;font-size:12px}
+.sec-body .data-table th{background:rgba(255,255,255,.06);color:var(--dim);font-weight:600;padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.sec-body .data-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:#dcdee6}
+.sec-body .data-table tr:last-child td{border-bottom:none}
 .close{position:absolute;top:14px;right:16px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--ink);border-radius:999px;width:40px;height:40px;cursor:pointer;font-size:15px;font-family:var(--mono);z-index:3}
 .close:hover{border-color:var(--ink)}
 .backhint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.55);text-transform:uppercase;z-index:2}
@@ -942,6 +958,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/04-world.js?v=15"></script>
 <script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
+<script src="js/10-content-viewer.js"></script>
 <script src="js/07-environments.js?v=11"></script>
 <script src="js/08-ui.js?v=21"></script>
 <script src="js/09-main.js?v=13"></script>
