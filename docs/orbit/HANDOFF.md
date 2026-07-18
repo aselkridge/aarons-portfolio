@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (new: Rocinante-theme thrust plume)
+Last updated: 2026-07-18 (issue #4 — signoff/hint overlap — fixed)
 
 ---
 
@@ -53,7 +53,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 | — | *(Superseded diagnosis, kept for context — the DPR/resize-drift fix from 2026-07-17 below was real but turned out to be treating a symptom, not this root cause)* ~~metrics()/canvas buffers only recalculated on the native `resize` event, which doesn't fire for e.g. dragging a window between displays of different pixel density~~ — fix from that round (the per-frame drift check) is still in place and still correct/useful, it just wasn't sufficient on its own. | `01-config.js` (`metrics`), `09-main.js` (per-frame drift check) |
 | 2 | Planets seem to take "random" hits | Hit detection is a single point-in-circle check once per frame; a fast bullet can register from a position that looks like a near-miss between frames. | `09-main.js` (projectile/collision block) |
 | ~~3~~ | ~~Sun never reacts to being hit~~ **FIXED 2026-07-18** | The sun's hit-check used a made-up radius formula (`min(W,H)*0.052`) that had nothing to do with the sun's real rendered size (`SUN_STATION.r`, already correctly computed elsewhere in `sunMetrics()` from the sun's actual DOM width — just never used here). At a 1200×800 viewport that made-up radius was ~42px while the sun's real radius is 60px, so a shot could fly ~18px *into* the visible disc without registering a hit at all. It also reused the same generic single-color spark burst as everything else, so even when it did register, there was no dedicated "sun" reaction. **Fix:** the hit-check now uses `SUN_STATION.r` (matching the exact pattern planets already use, `S.r+9`), and a hit triggers a purpose-built "sizzle" reaction instead of the generic burst: `sunBurst()` (`05-combat.js`) spawns multi-color hot sparks (white → yellow → orange → red) plus a few slow rising wisps, so it reads as the shot evaporating rather than bouncing off; the sun's own DOM element gets a brief `sizzling` class (`index.html` CSS) that flashes brightness and blooms a warm glow — visually distinct from the cool-blue ring planets get when shielded; and a new `Sound.sizzle()` (`02-sound.js`, filtered noise + descending zap) replaces the generic shield-hit chime. Target readout shows "MISSION · SCORCHED" instead of "· SHIELDED". **Verified**: confirmed `SUN_STATION.r` (60px) vs. the old formula (~42px at a 1200×800 viewport) to prove the mismatch was real; fired a projectile at the sun's real edge and confirmed via the live game state that it's consumed exactly there (not 18px early), the `sizzling` class fires, the target text updates, and the particle burst uses the new warm, multi-color palette (not the old single flat color); screenshotted the sun before/during/after the reaction to confirm the flash is visible but not blown out and fades back to normal within half a second. | `09-main.js` (sun-hit check), `05-combat.js` (`sunBurst`), `02-sound.js` (`Sound.sizzle`), `index.html` (`.sizzle` markup/CSS) |
-| 4 | "See you, space cowboy" overlaps the hint sentence | The signoff is `position:fixed` (pinned to the viewport corner, outside normal page flow) while the hint sentence is positioned in normal flow above it; padding the flow container does nothing because the signoff isn't part of that flow. | `index.html` CSS (`.sign`, `.hint`, `.bl`) |
+| ~~4~~ | ~~"See you, space cowboy" overlaps the hint sentence~~ **FIXED 2026-07-18** | Confirmed by Aaron (who wrote the original code): `.sign` is `position:fixed`, pinned to the viewport's bottom-left corner so it can deliberately bleed off the screen edge — pulling it completely out of normal document flow. `.hint` sat in normal flow in the same `.bl` container. Padding `.bl` (the prior, ineffective attempt) only pushes flow content around; `.sign` ignores that entirely and just paints on top of whatever's physically in that corner. No amount of flow padding could ever have separated them. **Fix:** stopped trying to make the two coexist in that corner. The hint sentence no longer lives in `.bl` at all — it moved to a hidden-by-default popover anchored next to the station nav links (`#stnav`) in the header, revealed by a new "?" button (`#help-btn`) and dismissible via outside-click or Escape. `.sign` is untouched and now has the corner to itself. **Verified**: confirmed the popover is `opacity:0`/non-interactive on load, becomes visible and positioned in the header (not the bottom-left) on click, and closes again on outside-click and on Escape; read back `.sign`'s and the popover's actual `getBoundingClientRect()` values live to confirm they're nowhere near each other (header vs. bottom-left corner); screenshotted the open popover to confirm it reads cleanly next to the nav links with no visual collision anywhere on screen. | `index.html` (markup: `.navrow`/`.help-btn`/`.hint`/`.bl`; CSS same), `08-ui.js` (popover open/close behavior) |
 | 5 | Environments look like squares/circles, colors too dark | Human silhouettes are built from plain rectangles + circles (readable as a figure, but "blocky" up close); the forest's tree layers and background use closely-related dark greens with too little contrast between layers; the ship inside the hangar bay renders at ~40px, too small for detail to read. | `07-environments.js` |
 | 6 | Environments don't visibly change between themes | The theme branch only swaps a handful of colors by one shade and toggles a thin outline — composition/layout/shapes are identical in both themes, so the difference is barely perceptible. | `07-environments.js` (`cel` branches) |
 | 7 | Ship swap: "docks, then just appears by my cursor" | The whole hangar animation happens inside the small console panel; the actual cursor-following ship is simply hidden for the sequence and reappears wherever the cursor is when it ends — there's no connecting motion between "in the console" and "back at the cursor." | `08-ui.js` (`shipSwap`) |
@@ -68,26 +68,23 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **New feature, not a bug fix**: the Rocinante (Expanse) theme's ship now
-  has its own thrust effect. It previously had none at all — the anime
-  speed-lines effect is Swordfish-only, so fast flight in the Expanse theme
-  had no visual feedback whatsoever. Deliberately built as a different kind
-  of effect rather than reusing the speed-lines idea: a continuous
-  blue-white plasma/ion exhaust plume (Epstein-drive-style) trailing from
-  the engine, plus a few embers peeling off and fading. Unlike the anime
-  effect (which only appears above a speed threshold), this is **always
-  on** — a low idle burn even at a dead stop, brightening and lengthening
-  smoothly with speed, since a real drive burns continuously rather than
-  switching on past a cutoff. Color matches the ship's existing blue engine-
-  flame sprite (`#74d0ff`) so it reads as the same drive, just made visible
-  further out.
-- **Verified**: confirmed via live game state that the plume renders even
-  at `shipSpeed≈0` (idle burn present, not gated behind a threshold);
-  screenshotted it both at idle and during fast flight in open space (away
-  from the sun's glare) to visually confirm it's clearly visible in both
-  cases and scales up with speed; confirmed no console errors and no visual
-  regression in the Swordfish theme (speed-lines still Swordfish-only, this
-  new effect is Rocinante-only and doesn't fire there).
+- **Fixed issue #4** (signoff/hint overlap) — see the strikethrough entry in
+  §2 for the full root cause and fix. Short version: the two elements were
+  never going to stop colliding by adjusting padding, because `.sign` is
+  pulled out of document flow entirely (`position:fixed`) while `.hint` was
+  still in it — padding a flow container can't affect an element that
+  ignores that flow. Fixed by removing the hint sentence from that corner
+  altogether: it's now a popover, hidden until a new "?" button next to the
+  station nav links is clicked, dismissible via outside-click or Escape.
+- **Verified**: read back `.sign`'s and the popover's live
+  `getBoundingClientRect()` values to confirm they occupy completely
+  separate regions of the screen (header vs. bottom-left corner — not just
+  "less overlap," no shared space at all); confirmed the popover is
+  genuinely hidden (`opacity:0`, non-interactive) before the button is
+  clicked; confirmed it opens on click and closes again on both
+  outside-click and Escape; screenshotted the open state to visually
+  confirm it reads cleanly next to the nav row with nothing else on screen
+  affected.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
-time): issues #2–12 in §2, all still outstanding.
+time): issues #2, #5–12 in §2, all still outstanding.

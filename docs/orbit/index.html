@@ -211,14 +211,32 @@ body.t-roci .titlecard{display:none}
 .wordmark em{font-style:normal;color:var(--accent);transition:color .5s}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
-.stnav{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:10px}
+/* nav row: the station links + the instructions ("?") button that pops the
+   hint sentence up beside them. The hint used to live permanently in the
+   bottom-left corner, in normal document flow — but the signoff below it
+   (.sign) is pulled OUT of flow via position:fixed so it can bleed off the
+   screen edge, so padding that flow container could never stop the two from
+   overlapping; the fixed signoff just paints on top regardless. Moving the
+   hint up here, hidden until clicked, removes the collision entirely instead
+   of fighting over the same corner. */
+.navrow{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:2px 14px;margin-top:10px}
+.stnav{display:flex;flex-wrap:wrap;gap:2px 14px}
 .stnav a{font-family:var(--os);font-weight:600;font-size:clamp(11px,1.25vw,14px);letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:.18s;cursor:pointer;opacity:.82}
 .stnav a:hover,.stnav a.here{color:var(--accent);border-bottom-color:var(--accent);opacity:1;text-shadow:0 0 16px var(--accent)}
 .sun{cursor:pointer;transition:filter .25s}
 .sun:hover,.sun.hot{filter:brightness(1.16) saturate(1.1)}
-.bl{display:flex;flex-direction:column;gap:10px;padding-bottom:72px}
-.hint{font-size:clamp(10.5px,1.25vw,13px);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.bl{display:flex;flex-direction:column}
+.help-btn{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:transparent;
+  color:var(--dim);font:700 11px var(--mono);line-height:1;cursor:pointer;display:inline-grid;place-items:center;
+  padding:0;opacity:.82;transition:color .18s,border-color .18s,opacity .18s}
+.help-btn:hover,.help-btn.on{color:var(--ink);border-color:var(--accent);opacity:1}
+.hint{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:max-content;max-width:min(300px,80vw);
+  font-size:clamp(10.5px,1.2vw,13px);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  background:rgba(8,9,14,.9);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:10px;
+  padding:11px 14px;box-shadow:0 14px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;translate:0 -4px;
+  transition:opacity .18s,translate .18s}
+.hint.on{opacity:1;pointer-events:auto;translate:0 0}
 .hint b{color:var(--ink);font-weight:600}.hint a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
 .sign{position:fixed;left:-6px;bottom:-10px;z-index:9;pointer-events:none;
   font-family:var(--anton);text-transform:uppercase;line-height:.8;font-size:clamp(1.6rem,4vw,3.4rem);
@@ -466,7 +484,11 @@ body.t-roci .bnr .bk{color:#9affea}
     <div class="brand">
       <div class="wordmark">Aaro<em>nautics</em></div>
       <div class="loc">◈ <span id="loc">SYSTEM MAP</span></div>
-      <nav class="stnav" id="stnav" aria-label="Stations"></nav>
+      <div class="navrow">
+        <nav class="stnav" id="stnav" aria-label="Stations"></nav>
+        <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
+        <div class="hint" id="hint" role="tooltip">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
+      </div>
     </div>
     <div class="console" id="console">
       <div class="chip" id="c-chip">◈ <b id="chip-bounty">₩ 0</b> · <span id="chip-tgt">DRIFTING</span></div>
@@ -495,7 +517,6 @@ body.t-roci .bnr .bk{color:#9affea}
   </div>
   <div class="bottom">
     <div class="bl">
-      <div class="hint" id="hint">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
       <div class="sign">See you,<br>space cowboy…<small>aaronautics · orbit</small></div>
     </div>
     <div class="player" id="player">
@@ -560,7 +581,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=10"></script>
 <script src="js/07-environments.js?v=10"></script>
-<script src="js/08-ui.js?v=10"></script>
+<script src="js/08-ui.js?v=11"></script>
 <script src="js/09-main.js?v=12"></script>
 </body>
 </html>

@@ -61,6 +61,22 @@ setInterval(function(){
   $('chip-bounty').textContent='₩ '+bounty.toLocaleString();
   $('chip-tgt').textContent=$('target').textContent.replace('— ','').replace(' —','');
 },500);
+/* ══════════ INSTRUCTIONS POPOVER ══════════ */
+/* The hint sentence used to sit permanently in the bottom-left corner,
+   colliding with the "See you, space cowboy" signoff (which is
+   position:fixed and ignores that flow entirely). Now it only shows on
+   demand, next to the station nav links. */
+var helpBtn=$('help-btn'), helpPop=$('hint');
+function setHelp(on){
+  helpBtn.classList.toggle('on',on); helpBtn.setAttribute('aria-expanded',String(on));
+  helpPop.classList.toggle('on',on);
+}
+helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(!helpPop.classList.contains('on')); });
+document.addEventListener('pointerdown', function(e){
+  if(helpPop.classList.contains('on') && !e.target.closest('.navrow')) setHelp(false);
+});
+addEventListener('keydown', function(e){ if(e.key==='Escape') setHelp(false); });
+
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });
 if(!fine){
