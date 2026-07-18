@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (issue #1 — diagnostic overlay shipped, root cause not yet confirmed)
+Last updated: 2026-07-18 (issue #1 — shots/thrust/shield offset — root-caused and fixed)
 
 ---
 
@@ -26,7 +26,6 @@ call functions defined in earlier ones):
 | 7 | `07-environments.js` | The station side-panel (sections list) **and every painted planet scene** (Mission/sun, AlphaForge/city, Life/forest, Craft/ocean, Notes/lot, hidden desert) | Anything about what a planet's surface looks like — this is the biggest file, ~360 lines, all drawing code |
 | 8 | `08-ui.js` | Theme/ship switching (incl. the hangar-bay swap animation) + minimize/expand behavior for the console and player | Change how ship-swap or minimize/expand works |
 | 9 | `09-main.js` | The master per-frame loop (ship movement, stars, particles, warp streaks, HUD text updates) + page boot/resize/deep-link + the `window.__orbit` test hook | Ship movement feel, star density, anything that runs "every frame" |
-| 10 | `10-diag.js` | **Temporary.** A diagnostic overlay for issue 1c below — only turns on with `?diag=1` in the URL, invisible otherwise. Delete this file (and its `<script>` tag in `index.html`) once that issue is root-caused. | N/A — not a gameplay file |
 
 Also: `index.html` holds all CSS (organized in the same rough order as the file
 list above, with `/* ─── section ─── */` comment banners) and the page markup.
@@ -50,7 +49,8 @@ instruction — do not batch-fix these without his go-ahead on each.
 |---|-------|------------------------|----------|
 | ~~1a~~ | ~~Shot direction not connected to the ship~~ **FIXED 2026-07-17** | Was: two independent calculations for "forward" that didn't have to agree — the ship's visual rotation (`ra`) is smoothed/eased toward the cursor each frame, but the bullet's old `aimDir()` computed a fresh, unsmoothed bearing straight to the raw cursor position, ignoring `ra` entirely. While turning, those two numbers are rarely equal. **Fix:** `aimDir()` now just returns `noseDir()` — the exact same value that rotates the sprite — so a shot can no longer disagree with where the ship is visibly pointing. Verified numerically: angle between shot direction and nose direction is exactly 0° in settled/still, mid-turn, and continuously-moving tests. | `05-combat.js` (`aimDir`/`spawnProj`) |
 | ~~1b~~ | ~~Speed-line "thrust" effect disconnected from the ship~~ **FIXED 2026-07-17** | Separate bug, found from Aaron's screen recording: the anime speed-line effect (shown when flying fast) deliberately started each line 90–470px *away* from the ship and drew it extending even further away — meaning it was never touching the ship at all, by design. Looked exactly like a disconnected effect because it was. **Fix:** lines now start 14–34px from the ship (right at the hull) and extend a shorter, more modest distance. Verified visually: lines now visibly fan out from the ship's position instead of floating in the background. | `09-main.js` (speed-line block) |
-| 1c | Shots, thrust lines, AND planet shields all appear offset from their real object (ship/ship/planet) by "the exact same amount," only on Aaron's machine — **NOT FIXED, actively being diagnosed** | The DPR/resize-drift fix shipped 2026-07-17 (below, kept for the record) turned out to be real but **incomplete** — Aaron confirmed the problem persists after it shipped. Structural re-analysis (2026-07-18): shots/thrust are pixels painted on the `#fx` canvas at logical coords; the shield check is pure JS math (`hypot(P.x-(S.x+plx), P.y-(S.y+ply))`) using those same logical coords — no rendering involved. Since planets themselves aren't reported as visually mispositioned, the collision math is very likely firing at the mathematically-correct point; what's misaligned is *where the canvas's pixels physically land on screen relative to the DOM*. That single canvas-vs-DOM display offset would explain all three symptoms at once — this matches Aaron's own read of it ("built on a separate layer that's off"). Cannot reproduce locally, so instead of guessing a 4th theory, shipped `10-diag.js` — a live overlay (add `?diag=1` to the URL) that reads `innerWidth/innerHeight`, `devicePixelRatio`, `visualViewport`, the `#fx` canvas's actual rect vs. its buffer size, and — critically — compares the ship's and first planet's **logical** position (`rx,ry` / `s.x+plx,s.y+ply`) against their **actual on-screen** position via `getBoundingClientRect()`. Waiting on Aaron to load it on the affected machine and report the numbers (or click "[copy diagnostic]" and paste them) before touching any fix code. *Old, superseded entry, kept for context:* ~~The real root cause, found once Aaron clarified BOTH effects were offset together, consistently, and only in his real browser (never in a fresh test load): `metrics()` (viewport W/H/center) and the canvas pixel buffers were only ever recalculated once at page load and reactively on the browser's native `resize` event. That event does not reliably fire for every situation that changes effective layout/DPI — the classic case is dragging a browser window between two displays with different pixel density (e.g. a Retina MacBook screen ↔ an external monitor), which can change `devicePixelRatio` with no `resize` event at all.~~ **Fix shipped (confirmed insufficient on its own):** the main loop checks every frame whether `innerWidth`/`innerHeight`/`devicePixelRatio` have drifted from what the canvases were last sized for, and resyncs if so. Verified via CDP to actually catch a DPR change without a `resize` event — but this was evidently not the (or not the only) cause of what Aaron is seeing. | `01-config.js` (`metrics`), `04-world.js` (`sizeCanvases`), `09-main.js` (per-frame drift check), `10-diag.js` (new, temporary) |
+| ~~1c~~ | ~~Shots, thrust lines, AND planet shields all appear offset from their real object (ship/ship/planet) by "the exact same amount," only on Aaron's machine~~ **FIXED 2026-07-18** | Confirmed with real numbers from Aaron's own machine via the `10-diag.js` overlay: his `#fx`/`#stars` canvas elements were rendering at **exactly 2x the size of his actual viewport** (2698×1578 CSS pixels rendered, on a 1349×789 viewport) — and `2 = devicePixelRatio` on his machine. Root cause: `<canvas>` is a "replaced element" in CSS (like `<img>`/`<video>`). `#fx`/`#stars` were styled with only `position:fixed;inset:0` — no explicit CSS `width`/`height`. For an ordinary element that's enough to stretch it to fill the viewport, but for a replaced element with auto width/height, the CSS spec falls back to its *intrinsic* size instead — which for a canvas is its `width`/`height` HTML attributes, i.e. the drawing-buffer size. `sizeCanvases()` deliberately sets that buffer to `W*devicePixelRatio` (bigger than the viewport, for a crisp HiDPI image) and was relying on `inset:0` to downscale it back down via CSS — but that downscale never happens, per the rule above, so the canvas just displays its full buffer 1:1 with screen pixels. Since 1 drawn unit maps to `devicePixelRatio` buffer pixels, everything painted on the canvas (shots, thrust, stars) ends up rendered at `devicePixelRatio`× its intended on-screen position — always pushed away from the top-left corner, i.e. down-and-right, matching Aaron's very first report. The shield-offset symptom wasn't a separate bug at all: the shield's own collision math is plain JS on logical coordinates and fires correctly — it only *looked* wrong because the shot that triggered it was being displayed in the wrong place. This is invisible whenever `devicePixelRatio` is exactly 1 (true of my own test browser the whole time — the reason two prior fix attempts couldn't find it), and affects any real HiDPI/Retina-class display at any non-1 DPR, not just Aaron's machine. **Fix:** `sizeCanvases()` now also sets `c.style.width`/`c.style.height` explicitly to the logical viewport size, forcing the intended CSS downscale to actually happen. **Verified**, not guessed: (1) reproduced Aaron's exact broken numbers by emulating `devicePixelRatio=2` via CDP — confirmed the canvas rect was 2x the viewport before the fix, and exactly equals the viewport after; (2) fired an actual in-game shot under that same dpr=2 emulation and read the canvas's raw pixel data (`getImageData`) at the buffer coordinate corresponding to the shot's logical position — confirmed a fully-opaque drawn pixel exists exactly there, i.e. the shot visually renders exactly where the game logic says it is; (3) re-checked `devicePixelRatio=1` afterward to confirm no regression there. | `04-world.js` (`sizeCanvases`) |
+| — | *(Superseded diagnosis, kept for context — the DPR/resize-drift fix from 2026-07-17 below was real but turned out to be treating a symptom, not this root cause)* ~~metrics()/canvas buffers only recalculated on the native `resize` event, which doesn't fire for e.g. dragging a window between displays of different pixel density~~ — fix from that round (the per-frame drift check) is still in place and still correct/useful, it just wasn't sufficient on its own. | `01-config.js` (`metrics`), `09-main.js` (per-frame drift check) |
 | 2 | Planets seem to take "random" hits | Hit detection is a single point-in-circle check once per frame; a fast bullet can register from a position that looks like a near-miss between frames. | `09-main.js` (projectile/collision block) |
 | 3 | Sun never reacts to being hit | The sun has its own hard-coded, disconnected hit-radius (unrelated to its real measured size) and reuses the same generic spark burst as everything else — no dedicated sun animation exists. | `09-main.js` (sun-hit check) |
 | 4 | "See you, space cowboy" overlaps the hint sentence | The signoff is `position:fixed` (pinned to the viewport corner, outside normal page flow) while the hint sentence is positioned in normal flow above it; padding the flow container does nothing because the signoff isn't part of that flow. | `index.html` CSS (`.sign`, `.hint`, `.bl`) |
@@ -68,44 +68,58 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- Aaron reported the shot/thrust position-offset bug (1c) persists even after
-  the DPR/resize-drift fix shipped last time, and — new information — that
-  planet shields now appear to trigger at a similarly offset distance from
-  the planet, "the exact same amount" as the ship offset. He explicitly asked
-  to diagnose before fixing this time, so **no fix was attempted this
-  shipment.**
-- Re-traced the full coordinate pipeline (DOM ship position, DOM planet
-  position via `#system`'s parallax transform, canvas-drawn shots/thrust,
-  and the shield collision math) to check whether one structural cause could
-  explain all three symptoms together. Conclusion: since planets aren't
-  reported as visually mispositioned, the shield collision math (pure JS,
-  no rendering) is very likely firing at the correct logical point — what's
-  actually misaligned is where the `#fx` canvas's pixels land on screen
-  relative to the DOM. A canvas-vs-DOM display offset would produce all
-  three symptoms at once, which matches Aaron's own read of it ("built on a
-  separate layer that's off"). Full reasoning is in the 1c row of §2.
-- This still can't be reproduced locally, and two prior theories (frame lag;
-  then DPR/resize drift) already turned out wrong or incomplete once Aaron's
-  own testing checked them — so rather than ship a third guess, shipped
-  `10-diag.js`: a live, hidden-by-default overlay (`?diag=1` in the URL) that
-  reads the exact values needed to confirm or kill this theory — comparing
-  the ship's and a planet's *logical* position against their *actual
-  on-screen* position (`getBoundingClientRect()`), plus `devicePixelRatio`,
-  `visualViewport`, and the `#fx` canvas's rect vs. its internal buffer size.
-  Verified the overlay itself works (loads only with `?diag=1`, shows live
-  numbers, has a "copy diagnostic" button) via a headless-browser check —
-  but obviously cannot verify the *bug* itself since it doesn't reproduce
-  here. **Waiting on Aaron to load it on the affected machine and share the
-  numbers before any fix is written.**
+- **Fixed issue #1c for real** (shots/thrust/shields all offset from their
+  real object by the same amount, only on some machines) — see the
+  strikethrough entry in §2 for the full root cause. Short version: `#fx`/
+  `#stars` are `<canvas>` elements styled with only `position:fixed;inset:0`;
+  because canvases are CSS "replaced elements," that combination falls back
+  to the canvas's *intrinsic* size (its drawing-buffer dimensions) instead of
+  stretching to the viewport, the way it would for an ordinary div. The
+  buffer is deliberately sized to `viewport × devicePixelRatio` for a crisp
+  HiDPI image — so on any screen where `devicePixelRatio ≠ 1`, the canvas
+  silently rendered at that larger, wrong CSS size, and everything drawn on
+  it landed at `devicePixelRatio`× its intended position. Invisible at
+  `devicePixelRatio = 1` (my test browser, the whole time), which is why it
+  never showed up here across two earlier fix attempts.
+- Got there this time by asking Aaron to load a temporary diagnostic overlay
+  (`10-diag.js`, `?diag=1` in the URL — now deleted, its job is done) and
+  send back real numbers from his own machine, instead of shipping a third
+  guess. His numbers showed `#fx`'s on-screen box at 2698×1578 pixels on a
+  1349×789 viewport — exactly 2x, exactly his `devicePixelRatio`. That's what
+  led straight to the cause above.
+- **Fix:** `sizeCanvases()` (`04-world.js`) now also sets `c.style.width`/
+  `c.style.height` explicitly to the logical viewport size, so the browser
+  actually downscales the buffer as originally intended.
+- **Verified, not guessed**, using the exact condition that had been hiding
+  this the whole time: emulated `devicePixelRatio=2` via Chrome DevTools
+  Protocol (reproducing Aaron's exact reported numbers first, to confirm the
+  bug — then confirmed the canvas rect now equals the viewport after the
+  fix); fired an actual in-game shot under that same emulation and read the
+  canvas's raw pixel data at the buffer coordinate matching the shot's
+  logical position — confirmed a fully-opaque pixel exists exactly there, so
+  the shot visually renders exactly where the game logic says it is; then
+  re-checked `devicePixelRatio=1` to confirm no regression there either.
+- Also got a second opinion from Aaron pasting in a Microsoft Copilot
+  analysis of the same bug. It hadn't actually found the real code (it read
+  old prototype files, not the live game), so it wasn't a diagnosis of our
+  bug — but its generic short list of "usual suspects" for coordinate-offset
+  bugs did include canvas/devicePixelRatio mismatches, which is the same
+  neighborhood as the actual cause. Treated as a sanity check, not a lead.
+- Confirmed with Aaron up front, before shipping, that this fix is universal
+  (any browser/OS where `devicePixelRatio ≠ 1` — most Retina Macs, most
+  modern phones, many Windows displays with scaling above 100%), not
+  something specific to his machine.
 
-**Explicitly NOT touched this shipment** (per Aaron: work one issue at a time,
-and diagnose 1c before fixing it): issues #2–12 in §2.
+**Explicitly NOT touched this shipment** (per Aaron: work one issue at a
+time): issues #2–12 in §2.
 
-**Process note for whoever picks this up next:** this is the third round on
-issue 1c. Round 1 (frame lag) and round 2 (DPR/resize drift) were each
-verified by *some* method before shipping, but neither method was the right
-one to catch what Aaron was actually seeing — both were disproven by his own
-testing after the fact, not by any check done before shipping. Don't repeat
-that pattern a third time: get real numbers from Aaron's own machine (that's
-what `10-diag.js` is for) before writing a fix, and don't delete/replace this
-overlay until his numbers have actually confirmed a specific cause.
+**Process note for whoever picks this up next:** this took three rounds.
+Round 1 (frame lag) and round 2 (DPR/resize drift) were each verified by
+*some* method before shipping, but neither method actually exercised the
+condition that mattered (a real `devicePixelRatio ≠ 1` display) — both were
+disproven by Aaron's own testing after the fact. What finally broke the
+stalemate was asking for real numbers from the affected machine via a
+throwaway diagnostic overlay, rather than reasoning from source or from a
+test environment that couldn't reproduce it. If a future bug report is
+machine-specific and doesn't reproduce here, reach for that pattern early
+instead of guessing three times first.

@@ -79,7 +79,20 @@ function navHere(id){
 var sc=$('stars'), sctx=sc.getContext('2d');
 var fx=$('fx'), fctx=fx.getContext('2d');
 function sizeCanvases(){
-  [sc,fx].forEach(function(c){ c.width=W*devicePixelRatio; c.height=H*devicePixelRatio; });
+  // A <canvas> is a "replaced element" — position:fixed;inset:0 with no
+  // explicit CSS width/height does NOT stretch it to the viewport the way
+  // it would an ordinary div; it falls back to the canvas's intrinsic size,
+  // which is its width/height attributes (the drawing-buffer size below).
+  // At devicePixelRatio 1 that buffer size equals the viewport size, so the
+  // bug is invisible; at any other DPR (any HiDPI/Retina display) the
+  // canvas silently renders at native size — e.g. literally 2x the screen
+  // at dpr 2 — so everything drawn on it (shots, thrust, stars) lands at
+  // 2x its intended on-screen position. Setting the CSS size explicitly
+  // forces the browser to actually downscale the buffer, as intended.
+  [sc,fx].forEach(function(c){
+    c.width=W*devicePixelRatio; c.height=H*devicePixelRatio;
+    c.style.width=W+'px'; c.style.height=H+'px';
+  });
   sctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
   fctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 }
