@@ -75,7 +75,15 @@ helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(!hel
 document.addEventListener('pointerdown', function(e){
   if(helpPop.classList.contains('on') && !e.target.closest('.navrow')) setHelp(false);
 });
-addEventListener('keydown', function(e){ if(e.key==='Escape') setHelp(false); });
+
+/* ══════════ CONTACT CARD ══════════ */
+var contactWrap=$('contactwrap');
+function setContact(on){ contactWrap.classList.toggle('on',on); }
+$('sign').addEventListener('click', function(){ setContact(true); Sound.blip(themeId==='sword'?440:660); });
+$('contact-close').addEventListener('click', function(){ setContact(false); });
+contactWrap.addEventListener('pointerdown', function(e){ if(e.target===contactWrap) setContact(false); });
+
+addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); } });
 
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });

@@ -238,13 +238,50 @@ body.t-roci .titlecard{display:none}
   transition:opacity .18s,translate .18s}
 .hint.on{opacity:1;pointer-events:auto;translate:0 0}
 .hint b{color:var(--ink);font-weight:600}.hint a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
-.sign{position:fixed;left:-6px;bottom:-10px;z-index:9;pointer-events:none;
+/* the signoff is a real button now — click opens the contact card. The
+   accent-color touch that used to live in the "aaronautics · orbit"
+   subtext (now removed) moves onto a hover/focus color shift instead, so
+   it doubles as the "this is clickable" cue. */
+.sign{position:fixed;left:-6px;bottom:-10px;z-index:9;cursor:pointer;
+  background:none;border:none;padding:0;margin:0;text-align:left;
   font-family:var(--anton);text-transform:uppercase;line-height:.8;font-size:clamp(1.6rem,4vw,3.4rem);
   transform:rotate(-6deg);transform-origin:bottom left;letter-spacing:.005em;
-  color:var(--ink);opacity:.92;text-shadow:0 4px 30px rgba(0,0,0,.7);white-space:nowrap}
-.sign small{display:block;font-family:var(--mono);font-size:.16em;letter-spacing:.34em;color:var(--accent);
-  margin-top:.5em;transform:rotate(0deg);padding-left:.4em}
+  color:var(--ink);opacity:.92;text-shadow:0 4px 30px rgba(0,0,0,.7);white-space:nowrap;
+  transition:color .3s}
+.sign:hover,.sign:focus-visible{color:var(--accent)}
+.sign:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
 @media (max-width:720px){ .sign{font-size:1.7rem} }
+
+/* contact card — opened by clicking the signoff */
+.contactwrap{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  background:rgba(4,5,8,.72);backdrop-filter:blur(6px);opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .25s,visibility .25s;padding:24px}
+.contactwrap.on{opacity:1;visibility:visible;pointer-events:auto}
+.contactcard{position:relative;width:min(360px,92vw);background:rgba(10,11,16,.94);border:1px solid var(--line);
+  border-radius:16px;padding:32px 28px 26px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);
+  transform:translateY(14px);transition:transform .25s}
+.contactwrap.on .contactcard{transform:translateY(0)}
+.contact-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:transparent;color:var(--dim);font-size:14px;cursor:pointer;display:inline-grid;place-items:center;
+  transition:color .18s,border-color .18s}
+.contact-close:hover{color:var(--ink);border-color:var(--accent)}
+.contact-photo{width:96px;height:96px;border-radius:50%;margin:0 auto 18px;overflow:hidden;
+  border:2px solid var(--accent);display:grid;place-items:center;background:rgba(255,255,255,.04)}
+.contact-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.contact-photo .initials{display:none;font-family:var(--anton);font-size:1.7rem;color:var(--accent)}
+.contact-photo.noimg img{display:none}
+.contact-photo.noimg .initials{display:block}
+.contact-name{font-family:var(--anton);text-transform:uppercase;font-size:1.35rem;letter-spacing:.01em;color:var(--ink)}
+.contact-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.contact-links{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.contact-links a{font-family:var(--os);font-weight:600;font-size:13.5px;letter-spacing:.04em;color:var(--ink);
+  text-decoration:none;padding:10px 14px;border:1px solid var(--line);border-radius:9px;
+  transition:color .18s,border-color .18s,background .18s;display:block}
+.contact-links a:hover{color:var(--accent);border-color:var(--accent);background:rgba(255,255,255,.03)}
+.contact-more{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.contact-more-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.contact-more-list{font-family:var(--os);font-size:12.5px;color:var(--dim);margin-top:8px;font-style:italic}
+.contact-more-list a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
 
 /* ───────── CONSOLE (nav center) ───────── */
 .console{pointer-events:auto;width:min(300px,86vw);overflow:hidden;position:relative}
@@ -517,7 +554,7 @@ body.t-roci .bnr .bk{color:#9affea}
   </div>
   <div class="bottom">
     <div class="bl">
-      <div class="sign">See you,<br>space cowboy…<small>aaronautics · orbit</small></div>
+      <button class="sign" id="sign" type="button" aria-haspopup="dialog" aria-controls="contactwrap">See you,<br>space cowboy…</button>
     </div>
     <div class="player" id="player">
       <div class="chip" id="p-chip"><span class="mini-reel"></span><span class="pl-title">—</span><button class="pl-play" aria-label="Play/pause">►</button></div>
@@ -569,6 +606,29 @@ body.t-roci .bnr .bk{color:#9affea}
 <div id="banner" aria-live="assertive"></div>
 <div id="ach" aria-live="polite"></div>
 
+<!-- contact card — opened by clicking "See you, space cowboy…". Photo is a
+     placeholder (falls back to initials) until a real image lands at
+     assets/aaron.jpg — no code changes needed once it does. -->
+<div class="contactwrap" id="contactwrap">
+  <div class="contactcard" role="dialog" aria-modal="true" aria-label="Contact Aaron">
+    <button class="contact-close" id="contact-close" type="button" aria-label="Close">✕</button>
+    <div class="contact-photo" id="contact-photo">
+      <img src="assets/aaron.jpg" alt="Aaron Selkridge" onerror="this.parentElement.classList.add('noimg')">
+      <span class="initials">AS</span>
+    </div>
+    <div class="contact-name">Aaron Selkridge</div>
+    <div class="contact-tag">◈ pilot · builder · space cowboy</div>
+    <div class="contact-links">
+      <a href="mailto:amo.selkridge@gmail.com">✉ amo.selkridge@gmail.com</a>
+      <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
+    </div>
+    <div class="contact-more">
+      <div class="contact-more-label">◈ Other builds</div>
+      <div class="contact-more-list">More coming soon…</div>
+    </div>
+  </div>
+</div>
+
 <audio id="audio" preload="none"></audio>
 <script src="audio/tracks.js?v=10"></script>
 <script src="data/facts.js?v=10"></script>
@@ -581,7 +641,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=10"></script>
 <script src="js/07-environments.js?v=10"></script>
-<script src="js/08-ui.js?v=11"></script>
+<script src="js/08-ui.js?v=12"></script>
 <script src="js/09-main.js?v=12"></script>
 </body>
 </html>

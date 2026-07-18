@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (issue #4 — signoff/hint overlap — fixed)
+Last updated: 2026-07-18 (new: contact card on the signoff)
 
 ---
 
@@ -31,6 +31,14 @@ Also: `index.html` holds all CSS (organized in the same rough order as the file
 list above, with `/* ─── section ─── */` comment banners) and the page markup.
 `audio/tracks.js` and `data/facts.js` are separate small data files you can
 hand-edit directly (documented inline in each).
+
+**Pending content, not a bug**: the contact card (click "See you, space
+cowboy…") expects a photo at `docs/orbit/assets/aaron.jpg` — that file
+doesn't exist yet, so it currently shows an "AS" initials placeholder
+(automatic fallback, no code change needed once the real file is dropped
+in). The "Other builds" section is also a placeholder ("More coming
+soon…") until there are other sites to link — see `.contact-more-list` in
+`index.html`.
 
 **Why this split exists:** the previous single-file version made it impractical
 to find or safely change one system without scrolling past nine others. This
@@ -68,23 +76,27 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **Fixed issue #4** (signoff/hint overlap) — see the strikethrough entry in
-  §2 for the full root cause and fix. Short version: the two elements were
-  never going to stop colliding by adjusting padding, because `.sign` is
-  pulled out of document flow entirely (`position:fixed`) while `.hint` was
-  still in it — padding a flow container can't affect an element that
-  ignores that flow. Fixed by removing the hint sentence from that corner
-  altogether: it's now a popover, hidden until a new "?" button next to the
-  station nav links is clicked, dismissible via outside-click or Escape.
-- **Verified**: read back `.sign`'s and the popover's live
-  `getBoundingClientRect()` values to confirm they occupy completely
-  separate regions of the screen (header vs. bottom-left corner — not just
-  "less overlap," no shared space at all); confirmed the popover is
-  genuinely hidden (`opacity:0`, non-interactive) before the button is
-  clicked; confirmed it opens on click and closes again on both
-  outside-click and Escape; screenshotted the open state to visually
-  confirm it reads cleanly next to the nav row with nothing else on screen
-  affected.
+- **New feature, not a bug fix**: clicking "See you, space cowboy…" now
+  opens a contact card — email, LinkedIn, a photo, and an "other builds"
+  section — styled as a modal matching the rest of the HUD (dark glass
+  panel, same font/color system). Closes via its own "✕", clicking the
+  backdrop, or Escape.
+- Removed the "aaronautics · orbit" subtext that used to sit under the
+  signoff. The accent-color touch that line provided moved onto a
+  hover/focus color shift on the signoff itself (`--ink` → `--accent`,
+  smooth transition) instead, so hovering doubles as the "this is
+  clickable" cue rather than a separate always-on colored line.
+- Photo and "other builds" links are placeholders for now (Aaron doesn't
+  have those yet) — see the note in §1 above for exactly what to drop in
+  and where, with no code changes needed once he does.
+- **Verified**: confirmed the modal is genuinely hidden (`opacity:0`,
+  non-interactive) on load; confirmed hover shifts `.sign`'s color to the
+  theme accent; confirmed clicking opens it with the correct `mailto:` and
+  LinkedIn URLs and the initials-placeholder fallback showing (since no
+  photo file exists yet); confirmed all three close paths (✕ button,
+  backdrop click, Escape) actually settle back to `opacity:0` after their
+  transition finishes, not just fire without checking the end state;
+  screenshotted the open card.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
 time): issues #2, #5–12 in §2, all still outstanding.
