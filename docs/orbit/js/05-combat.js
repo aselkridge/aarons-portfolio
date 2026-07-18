@@ -88,6 +88,20 @@ function burst(x,y,col,n,sp){
   for(var i=0;i<n;i++){ var a=Math.random()*6.28, v=(0.3+Math.random()*0.7)*(sp||160);
     particles.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0.5+Math.random()*0.5,r:1+Math.random()*2.6,col:col}); }
 }
+// The sun doesn't deflect a shot like a planet's shield does — it scorches
+// it. Short-lived, multi-color hot sparks (instead of one flat color) plus a
+// few slow rising wisps read as "evaporating" rather than "bouncing off."
+var SUN_SIZZLE_COLORS=['#fff6d8','#ffe9a8','#ffd36a','#ff9d4e','#ff5f3a'];
+function sunBurst(x,y){
+  var i,a,v;
+  for(i=0;i<24;i++){ a=Math.random()*6.28; v=(0.25+Math.random()*0.65)*130;
+    particles.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-50*Math.random(),
+      life:0.18+Math.random()*0.28,r:1+Math.random()*2.4,
+      col:SUN_SIZZLE_COLORS[Math.floor(Math.random()*SUN_SIZZLE_COLORS.length)]}); }
+  for(i=0;i<9;i++){ a=(Math.random()-0.5)*1.3-Math.PI/2;
+    particles.push({x:x,y:y,vx:Math.cos(a)*22,vy:Math.sin(a)*22-26,
+      life:0.45+Math.random()*0.35,r:1.3+Math.random()*1.7,col:'rgba(255,244,222,.6)'}); }
+}
 function killAsteroid(i){
   var a=asteroids[i]; asteroids.splice(i,1);
   var reward = a.gold?1000 : a.tier===3?500 : a.tier===2?300 : 150;

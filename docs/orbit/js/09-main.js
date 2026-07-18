@@ -162,8 +162,17 @@ function loop(t){
           S.el.classList.remove('shielded'); void S.el.offsetWidth; S.el.classList.add('shielded');
           burst(P.x,P.y,'#9be2ff',6,90); Sound.shieldHit(); dead=true;
           $('target').textContent=S.name.toUpperCase()+' · SHIELDED'; break; } }
-      /* sun */
-      if(!dead&&Math.hypot(P.x-(CX+plx),P.y-(CY+ply))<Math.min(W,H)*0.052){ burst(P.x,P.y,'#ffd36a',5,70); dead=true; }
+      /* sun — uses SUN_STATION.r, the sun's real rendered radius (computed
+         in sunMetrics() from its actual DOM size), instead of the old
+         min(W,H)*0.052 guess that had nothing to do with how big the sun
+         actually draws on screen. Reaction is a dedicated sizzle (the sun
+         scorches/evaporates a shot), not the generic spark burst. */
+      if(!dead&&Math.hypot(P.x-(SUN_STATION.x+plx),P.y-(SUN_STATION.y+ply))<SUN_STATION.r+9){
+        sunBurst(P.x,P.y);
+        SUN_STATION.el.classList.remove('sizzling'); void SUN_STATION.el.offsetWidth; SUN_STATION.el.classList.add('sizzling');
+        Sound.sizzle(); dead=true;
+        $('target').textContent=SUN_STATION.name.toUpperCase()+' · SCORCHED';
+      }
       /* the saucer */
       if(!dead&&saucer&&Math.hypot(P.x-saucer.x,P.y-(saucer.y+Math.sin(gameT*2.2+saucer.ph)*14))<27){
         burst(saucer.x,saucer.y,'#9be2ff',30,300); burst(saucer.x,saucer.y,'#ffd36a',16,200);

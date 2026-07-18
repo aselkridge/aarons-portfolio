@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (issue #1 — shots/thrust/shield offset — root-caused and fixed)
+Last updated: 2026-07-18 (issue #3 — sun never reacts to being hit — fixed)
 
 ---
 
@@ -52,7 +52,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 | ~~1c~~ | ~~Shots, thrust lines, AND planet shields all appear offset from their real object (ship/ship/planet) by "the exact same amount," only on Aaron's machine~~ **FIXED 2026-07-18** | Confirmed with real numbers from Aaron's own machine via the `10-diag.js` overlay: his `#fx`/`#stars` canvas elements were rendering at **exactly 2x the size of his actual viewport** (2698×1578 CSS pixels rendered, on a 1349×789 viewport) — and `2 = devicePixelRatio` on his machine. Root cause: `<canvas>` is a "replaced element" in CSS (like `<img>`/`<video>`). `#fx`/`#stars` were styled with only `position:fixed;inset:0` — no explicit CSS `width`/`height`. For an ordinary element that's enough to stretch it to fill the viewport, but for a replaced element with auto width/height, the CSS spec falls back to its *intrinsic* size instead — which for a canvas is its `width`/`height` HTML attributes, i.e. the drawing-buffer size. `sizeCanvases()` deliberately sets that buffer to `W*devicePixelRatio` (bigger than the viewport, for a crisp HiDPI image) and was relying on `inset:0` to downscale it back down via CSS — but that downscale never happens, per the rule above, so the canvas just displays its full buffer 1:1 with screen pixels. Since 1 drawn unit maps to `devicePixelRatio` buffer pixels, everything painted on the canvas (shots, thrust, stars) ends up rendered at `devicePixelRatio`× its intended on-screen position — always pushed away from the top-left corner, i.e. down-and-right, matching Aaron's very first report. The shield-offset symptom wasn't a separate bug at all: the shield's own collision math is plain JS on logical coordinates and fires correctly — it only *looked* wrong because the shot that triggered it was being displayed in the wrong place. This is invisible whenever `devicePixelRatio` is exactly 1 (true of my own test browser the whole time — the reason two prior fix attempts couldn't find it), and affects any real HiDPI/Retina-class display at any non-1 DPR, not just Aaron's machine. **Fix:** `sizeCanvases()` now also sets `c.style.width`/`c.style.height` explicitly to the logical viewport size, forcing the intended CSS downscale to actually happen. **Verified**, not guessed: (1) reproduced Aaron's exact broken numbers by emulating `devicePixelRatio=2` via CDP — confirmed the canvas rect was 2x the viewport before the fix, and exactly equals the viewport after; (2) fired an actual in-game shot under that same dpr=2 emulation and read the canvas's raw pixel data (`getImageData`) at the buffer coordinate corresponding to the shot's logical position — confirmed a fully-opaque drawn pixel exists exactly there, i.e. the shot visually renders exactly where the game logic says it is; (3) re-checked `devicePixelRatio=1` afterward to confirm no regression there. | `04-world.js` (`sizeCanvases`) |
 | — | *(Superseded diagnosis, kept for context — the DPR/resize-drift fix from 2026-07-17 below was real but turned out to be treating a symptom, not this root cause)* ~~metrics()/canvas buffers only recalculated on the native `resize` event, which doesn't fire for e.g. dragging a window between displays of different pixel density~~ — fix from that round (the per-frame drift check) is still in place and still correct/useful, it just wasn't sufficient on its own. | `01-config.js` (`metrics`), `09-main.js` (per-frame drift check) |
 | 2 | Planets seem to take "random" hits | Hit detection is a single point-in-circle check once per frame; a fast bullet can register from a position that looks like a near-miss between frames. | `09-main.js` (projectile/collision block) |
-| 3 | Sun never reacts to being hit | The sun has its own hard-coded, disconnected hit-radius (unrelated to its real measured size) and reuses the same generic spark burst as everything else — no dedicated sun animation exists. | `09-main.js` (sun-hit check) |
+| ~~3~~ | ~~Sun never reacts to being hit~~ **FIXED 2026-07-18** | The sun's hit-check used a made-up radius formula (`min(W,H)*0.052`) that had nothing to do with the sun's real rendered size (`SUN_STATION.r`, already correctly computed elsewhere in `sunMetrics()` from the sun's actual DOM width — just never used here). At a 1200×800 viewport that made-up radius was ~42px while the sun's real radius is 60px, so a shot could fly ~18px *into* the visible disc without registering a hit at all. It also reused the same generic single-color spark burst as everything else, so even when it did register, there was no dedicated "sun" reaction. **Fix:** the hit-check now uses `SUN_STATION.r` (matching the exact pattern planets already use, `S.r+9`), and a hit triggers a purpose-built "sizzle" reaction instead of the generic burst: `sunBurst()` (`05-combat.js`) spawns multi-color hot sparks (white → yellow → orange → red) plus a few slow rising wisps, so it reads as the shot evaporating rather than bouncing off; the sun's own DOM element gets a brief `sizzling` class (`index.html` CSS) that flashes brightness and blooms a warm glow — visually distinct from the cool-blue ring planets get when shielded; and a new `Sound.sizzle()` (`02-sound.js`, filtered noise + descending zap) replaces the generic shield-hit chime. Target readout shows "MISSION · SCORCHED" instead of "· SHIELDED". **Verified**: confirmed `SUN_STATION.r` (60px) vs. the old formula (~42px at a 1200×800 viewport) to prove the mismatch was real; fired a projectile at the sun's real edge and confirmed via the live game state that it's consumed exactly there (not 18px early), the `sizzling` class fires, the target text updates, and the particle burst uses the new warm, multi-color palette (not the old single flat color); screenshotted the sun before/during/after the reaction to confirm the flash is visible but not blown out and fades back to normal within half a second. | `09-main.js` (sun-hit check), `05-combat.js` (`sunBurst`), `02-sound.js` (`Sound.sizzle`), `index.html` (`.sizzle` markup/CSS) |
 | 4 | "See you, space cowboy" overlaps the hint sentence | The signoff is `position:fixed` (pinned to the viewport corner, outside normal page flow) while the hint sentence is positioned in normal flow above it; padding the flow container does nothing because the signoff isn't part of that flow. | `index.html` CSS (`.sign`, `.hint`, `.bl`) |
 | 5 | Environments look like squares/circles, colors too dark | Human silhouettes are built from plain rectangles + circles (readable as a figure, but "blocky" up close); the forest's tree layers and background use closely-related dark greens with too little contrast between layers; the ship inside the hangar bay renders at ~40px, too small for detail to read. | `07-environments.js` |
 | 6 | Environments don't visibly change between themes | The theme branch only swaps a handful of colors by one shade and toggles a thin outline — composition/layout/shapes are identical in both themes, so the difference is barely perceptible. | `07-environments.js` (`cel` branches) |
@@ -68,58 +68,25 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **Fixed issue #1c for real** (shots/thrust/shields all offset from their
-  real object by the same amount, only on some machines) — see the
-  strikethrough entry in §2 for the full root cause. Short version: `#fx`/
-  `#stars` are `<canvas>` elements styled with only `position:fixed;inset:0`;
-  because canvases are CSS "replaced elements," that combination falls back
-  to the canvas's *intrinsic* size (its drawing-buffer dimensions) instead of
-  stretching to the viewport, the way it would for an ordinary div. The
-  buffer is deliberately sized to `viewport × devicePixelRatio` for a crisp
-  HiDPI image — so on any screen where `devicePixelRatio ≠ 1`, the canvas
-  silently rendered at that larger, wrong CSS size, and everything drawn on
-  it landed at `devicePixelRatio`× its intended position. Invisible at
-  `devicePixelRatio = 1` (my test browser, the whole time), which is why it
-  never showed up here across two earlier fix attempts.
-- Got there this time by asking Aaron to load a temporary diagnostic overlay
-  (`10-diag.js`, `?diag=1` in the URL — now deleted, its job is done) and
-  send back real numbers from his own machine, instead of shipping a third
-  guess. His numbers showed `#fx`'s on-screen box at 2698×1578 pixels on a
-  1349×789 viewport — exactly 2x, exactly his `devicePixelRatio`. That's what
-  led straight to the cause above.
-- **Fix:** `sizeCanvases()` (`04-world.js`) now also sets `c.style.width`/
-  `c.style.height` explicitly to the logical viewport size, so the browser
-  actually downscales the buffer as originally intended.
-- **Verified, not guessed**, using the exact condition that had been hiding
-  this the whole time: emulated `devicePixelRatio=2` via Chrome DevTools
-  Protocol (reproducing Aaron's exact reported numbers first, to confirm the
-  bug — then confirmed the canvas rect now equals the viewport after the
-  fix); fired an actual in-game shot under that same emulation and read the
-  canvas's raw pixel data at the buffer coordinate matching the shot's
-  logical position — confirmed a fully-opaque pixel exists exactly there, so
-  the shot visually renders exactly where the game logic says it is; then
-  re-checked `devicePixelRatio=1` to confirm no regression there either.
-- Also got a second opinion from Aaron pasting in a Microsoft Copilot
-  analysis of the same bug. It hadn't actually found the real code (it read
-  old prototype files, not the live game), so it wasn't a diagnosis of our
-  bug — but its generic short list of "usual suspects" for coordinate-offset
-  bugs did include canvas/devicePixelRatio mismatches, which is the same
-  neighborhood as the actual cause. Treated as a sanity check, not a lead.
-- Confirmed with Aaron up front, before shipping, that this fix is universal
-  (any browser/OS where `devicePixelRatio ≠ 1` — most Retina Macs, most
-  modern phones, many Windows displays with scaling above 100%), not
-  something specific to his machine.
+- **Fixed issue #3** (sun never reacts to being hit) — see the strikethrough
+  entry in §2 for the full root cause and fix. Short version: the sun's hit
+  radius was a made-up formula, not the sun's real measured size, so shots
+  could fly visibly into the sun without registering; and even a registered
+  hit reused the same flat-color spark burst as everything else. Now the
+  hit-check uses the sun's real radius, and a hit triggers a dedicated
+  "sizzle" — multi-color hot particles, a brief warm flash/bloom on the sun
+  itself, and a new crackle/hiss sound — distinct from the cool-blue ring a
+  planet's shield gets.
+- **Verified**, not just "runs without errors": compared the old made-up
+  radius formula against the sun's real radius at a standard viewport to
+  confirm the mismatch was real and sizable (~42px vs. the real 60px, an
+  18px gap where shots would visually enter the sun with no reaction); fired
+  a projectile at the sun's actual edge and read back live game state to
+  confirm it's consumed exactly there, the new `sizzling` class fires, the
+  target readout updates, and the particle burst uses the new warm palette;
+  screenshotted the sun before/during/after the hit to visually confirm the
+  flash reads as a flash (not a blown-out white-out) and fades back to
+  normal within its half-second animation.
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
-time): issues #2–12 in §2.
-
-**Process note for whoever picks this up next:** this took three rounds.
-Round 1 (frame lag) and round 2 (DPR/resize drift) were each verified by
-*some* method before shipping, but neither method actually exercised the
-condition that mattered (a real `devicePixelRatio ≠ 1` display) — both were
-disproven by Aaron's own testing after the fact. What finally broke the
-stalemate was asking for real numbers from the affected machine via a
-throwaway diagnostic overlay, rather than reasoning from source or from a
-test environment that couldn't reproduce it. If a future bug report is
-machine-specific and doesn't reproduce here, reach for that pattern early
-instead of guessing three times first.
+time): issues #2, #4–12 in §2.
