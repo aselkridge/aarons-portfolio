@@ -66,6 +66,26 @@ setInterval(function(){
   $('chip-bounty').textContent='₩ '+bounty.toLocaleString();
   $('chip-tgt').textContent=$('target').textContent.replace('— ','').replace(' —','');
 },500);
+/* ══════════ NEXT-REWARD MILESTONE ══════════ */
+/* Gold asteroids (the main reward trigger) spawn every REWARD_STEP woolongs
+   of bounty, per checkBounty() in 03-progress.js — this just surfaces that
+   same cadence as a visible countdown/progress bar so it's never a mystery
+   when the next reward is coming. */
+var REWARD_STEP=2500, bhHud=$('bounty-hud'), bhLab=$('bh-next-lab'), bhBar=$('bh-bar-fill');
+function updateNextReward(){
+  var goldLive = typeof asteroids!=='undefined' && asteroids.some(function(a){ return a.gold; });
+  if(goldLive){
+    bhLab.textContent='◈ SIGNAL LIVE — crack the gold asteroid';
+    bhBar.style.width='100%';
+    bhHud.classList.add('signal');
+  }else{
+    var into=bounty%REWARD_STEP, remain=REWARD_STEP-into;
+    bhLab.textContent='NEXT SIGNAL · ₩'+remain.toLocaleString()+' TO GO';
+    bhBar.style.width=((into/REWARD_STEP)*100)+'%';
+    bhHud.classList.remove('signal');
+  }
+}
+setInterval(updateNextReward,500);
 /* ══════════ INSTRUCTIONS POPOVER ══════════ */
 /* The hint sentence used to sit permanently in the bottom-left corner,
    colliding with the "See you, space cowboy" signoff (which is
