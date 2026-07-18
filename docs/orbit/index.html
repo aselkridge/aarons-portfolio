@@ -267,6 +267,25 @@ body.t-roci .scancard{display:block}
   transition:opacity .18s,translate .18s}
 .hint.on{opacity:1;pointer-events:auto;translate:0 0}
 .hint b{color:var(--ink);font-weight:600}.hint a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+/* mission log — persistent history of every popup (achievements, facts,
+   major events). Same glass-panel language as the hint popover, but a
+   scrollable list. Data comes from Progress.d.log (localStorage). */
+.help-btn.logbtn{width:auto;border-radius:11px;padding:0 10px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.logpanel{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:min(340px,86vw);
+  background:rgba(8,9,14,.93);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 14px 40px rgba(0,0,0,.55);opacity:0;pointer-events:none;translate:0 -4px;
+  transition:opacity .18s,translate .18s}
+.logpanel.on{opacity:1;pointer-events:auto;translate:0 0}
+.log-head{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
+  padding:11px 14px 9px;border-bottom:1px solid var(--line)}
+.log-list{max-height:min(320px,46vh);overflow-y:auto;padding:6px 0}
+.log-item{padding:8px 14px;border-bottom:1px solid rgba(239,236,230,.05)}
+.log-item:last-child{border-bottom:none}
+.log-item .lk{font-family:var(--mono);font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+.log-item .lt{font-family:var(--os);font-weight:600;font-size:12.5px;letter-spacing:.04em;color:var(--ink);margin-top:1px}
+.log-item .ld{font-family:var(--os);font-size:11px;color:var(--dim);margin-top:1px;line-height:1.35}
+.log-item .lw{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--dim);opacity:.7;margin-top:3px}
+.log-empty{padding:18px 14px;font-family:var(--os);font-size:12px;color:var(--dim);font-style:italic}
 /* the signoff is a real button now — click opens the contact card. The
    accent-color touch that used to live in the "aaronautics · orbit"
    subtext (now removed) moves onto a hover/focus color shift instead, so
@@ -366,7 +385,10 @@ body.t-roci .bay-floor{background:repeating-linear-gradient(45deg,rgba(116,208,2
   transition:bottom .5s cubic-bezier(.5,0,.5,1),opacity .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
 .bay-ship svg{width:100%;height:100%;display:block}
 .console.ship-in .bay-ship{bottom:34%}
-.console.ship-out .bay-ship{bottom:112%;opacity:0}
+/* launch: hold full opacity for most of the climb, fade only near the top —
+   a fade that finishes early is indistinguishable from an empty bay */
+.console.ship-out .bay-ship{bottom:112%;opacity:0;
+  transition:bottom .55s cubic-bezier(.6,.05,.7,.6),opacity .25s ease .3s}
 .bay-door{position:absolute;top:0;bottom:0;width:51%;z-index:3;transition:transform .55s cubic-bezier(.7,0,.3,1);
   background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.3) 0 11px,rgba(255,255,255,.04) 11px 13px)}
 .bay-door.l{left:0}.bay-door.r{right:0}
@@ -556,7 +578,12 @@ body.t-roci .bnr .bk{color:#9affea}
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
         <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
+        <button class="help-btn logbtn" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel">◈ log</button>
         <div class="hint" id="hint" role="tooltip">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
+        <div class="logpanel" id="logpanel" role="dialog" aria-label="Mission log">
+          <div class="log-head">◈ MISSION LOG · everything you've unlocked</div>
+          <div class="log-list" id="log-list"></div>
+        </div>
       </div>
     </div>
     <div class="console" id="console">
@@ -668,12 +695,12 @@ body.t-roci .bnr .bk{color:#9affea}
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
 <script src="js/01-config.js?v=10"></script>
 <script src="js/02-sound.js?v=11"></script>
-<script src="js/03-progress.js?v=11"></script>
+<script src="js/03-progress.js?v=12"></script>
 <script src="js/04-world.js?v=13"></script>
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=11"></script>
 <script src="js/07-environments.js?v=10"></script>
-<script src="js/08-ui.js?v=12"></script>
+<script src="js/08-ui.js?v=13"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

@@ -7,15 +7,26 @@
 
 /* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
 var Progress=(function(){
-  var d={ach:{},visited:{},gold:0,saucers:0};
+  var d={ach:{},visited:{},gold:0,saucers:0,log:[]};
   try{ var raw=localStorage.getItem('aa_progress'); if(raw) d=Object.assign(d,JSON.parse(raw)); }catch(e){}
+  if(!Array.isArray(d.log)) d.log=[];   // older saved profiles predate the log
   function save(){ try{ localStorage.setItem('aa_progress',JSON.stringify(d)); }catch(e){} }
-  return { d:d, save:save,
+  // Persistent history of everything that ever popped up (achievements,
+  // transmissions/facts, major-event banners). Toasts/banners auto-dismiss
+  // in seconds; this is the "go back and see what you've done" record the
+  // LOG panel reads from. Capped so localStorage can't grow unbounded.
+  function logEvent(kind,title,desc){
+    d.log.push({t:Date.now(),k:kind,ti:title,de:desc||''});
+    if(d.log.length>200) d.log=d.log.slice(-200);
+    save();
+  }
+  return { d:d, save:save, logEvent:logEvent,
     award:function(id,title,desc){ if(d.ach[id]) return false;
       d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
 })();
 /* small right-side stack — minor milestones + facts (capped at 3, auto-dismiss) */
 function toast(kicker,title,desc){
+  Progress.logEvent(kicker,title,desc);
   var host=$('ach');
   while(host.children.length>=3) host.removeChild(host.firstChild);
   var el=document.createElement('div'); el.className='toast';
@@ -29,6 +40,7 @@ function toast(kicker,title,desc){
 /* one big center-top banner — MAJOR events only */
 var bannerTimer=null;
 function banner(kicker,title,desc){
+  Progress.logEvent(kicker,title,desc);
   var host=$('banner'); host.innerHTML='';
   var el=document.createElement('div'); el.className='bnr';
   el.innerHTML='<div class="bk">'+kicker+'</div><div class="bt"></div>'+(desc?'<div class="bd"></div>':'');

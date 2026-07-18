@@ -38,10 +38,15 @@ function shipSwap(toId){
   setTimeout(function(){ con.classList.remove('bay-open'); Sound.thump(); },1500); // doors shut over it
   setTimeout(function(){ applyTheme(toId);                               // reskin everything behind closed doors
     con.classList.add('baying');                                        // (applyTheme leaves classes; ensure bay stays)
-    $('bay-ship').innerHTML=shipSVG(toId); con.classList.remove('ship-in'); },1950);
-  setTimeout(function(){ con.classList.add('bay-open','ship-out'); Sound.pew(); },2300); // doors open, new ship launches
+    $('bay-ship').innerHTML=shipSVG(toId); },1950);                     // new ship sits PARKED (ship-in stays on)
+  /* Outbound must mirror the inbound stagger: doors first, THEN the ship
+     moves. The old version fired bay-open and ship-out on the same tick —
+     the ship's fade finished before the doors were even half open, so the
+     bay always looked empty. */
+  setTimeout(function(){ con.classList.add('bay-open'); },2300);         // doors part, revealing the parked ship
+  setTimeout(function(){ con.classList.add('ship-out'); con.classList.remove('ship-in'); Sound.pew(); },2850); // now it launches, in full view
   setTimeout(function(){ con.classList.remove('baying','bay-open','ship-in','ship-out');
-    state='free'; $('c-stat').textContent='● ONLINE'; },3150);
+    state='free'; $('c-stat').textContent='● ONLINE'; },3700);
 }
 $('b-sword').addEventListener('click', function(){ shipSwap('sword'); });
 $('b-roci').addEventListener('click', function(){ shipSwap('roci'); });
@@ -71,10 +76,36 @@ function setHelp(on){
   helpBtn.classList.toggle('on',on); helpBtn.setAttribute('aria-expanded',String(on));
   helpPop.classList.toggle('on',on);
 }
-helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(!helpPop.classList.contains('on')); });
+helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setLog(false); setHelp(!helpPop.classList.contains('on')); });
 document.addEventListener('pointerdown', function(e){
   if(helpPop.classList.contains('on') && !e.target.closest('.navrow')) setHelp(false);
+  if(logPanel.classList.contains('on') && !e.target.closest('.navrow')) setLog(false);
 });
+
+/* ══════════ MISSION LOG ══════════ */
+/* Renders Progress.d.log (the persistent popup history) newest-first.
+   Re-rendered on every open so it's always current. */
+var logBtn=$('log-btn'), logPanel=$('logpanel');
+function renderLog(){
+  var list=$('log-list'), L=Progress.d.log;
+  if(!L.length){ list.innerHTML='<div class="log-empty">Nothing logged yet — crack some asteroids, dock somewhere, make a name for yourself.</div>'; return; }
+  list.innerHTML='';
+  for(var i=L.length-1;i>=0;i--){ var e=L[i];
+    var it=document.createElement('div'); it.className='log-item';
+    it.innerHTML='<div class="lk"></div><div class="lt"></div>'+(e.de?'<div class="ld"></div>':'')+'<div class="lw"></div>';
+    it.querySelector('.lk').textContent=e.k;
+    it.querySelector('.lt').textContent=e.ti;
+    if(e.de) it.querySelector('.ld').textContent=e.de;
+    it.querySelector('.lw').textContent=new Date(e.t).toLocaleString();
+    list.appendChild(it);
+  }
+}
+function setLog(on){
+  if(on) renderLog();
+  logBtn.classList.toggle('on',on); logBtn.setAttribute('aria-expanded',String(on));
+  logPanel.classList.toggle('on',on);
+}
+logBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(false); setLog(!logPanel.classList.contains('on')); });
 
 /* ══════════ CONTACT CARD ══════════ */
 var contactWrap=$('contactwrap');
@@ -83,7 +114,7 @@ $('sign').addEventListener('click', function(){ setContact(true); Sound.blip(the
 $('contact-close').addEventListener('click', function(){ setContact(false); });
 contactWrap.addEventListener('pointerdown', function(e){ if(e.target===contactWrap) setContact(false); });
 
-addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); } });
+addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); } });
 
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });
