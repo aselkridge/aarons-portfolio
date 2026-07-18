@@ -11,14 +11,19 @@ function buildPlanet(s,si){
   var d=s.r*2, extra='';
   if(s.type==='ringed') extra='<div class="pring" style="--pw:'+(d*1.95)+'px;--ph:'+(d*0.6)+'px"></div>';
   if(s.type==='mooned') extra='<div class="moonwrap" style="--md:'+(d*1.75)+'px"><div class="moon"></div></div>';
+  // the secret/hidden world gets its own distinguishing treatment (a pulsing
+  // glow + two crossed rings) once unlocked, so it's unmistakably not just
+  // another planet — see .secret-glow/.secret-rings in index.html.
+  if(s.secret) extra+='<div class="secret-glow"></div><div class="secret-rings">'+
+    '<i class="r1" style="--pw:'+(d*2.1)+'px;--ph:'+(d*0.66)+'px"></i>'+
+    '<i class="r2" style="--pw:'+(d*1.85)+'px;--ph:'+(d*0.78)+'px"></i></div>';
   s.gradCel  = 'radial-gradient(circle at 35% 30%,'+shade(s.color,85)+' 0 24%,'+s.color+' 24.5% 62%,'+shade(s.color,-75)+' 62.5% 100%)';
   s.gradReal = 'radial-gradient(circle at 36% 32%,'+shade(s.color,70)+','+s.color+' 58%,'+shade(s.color,-80)+' 100%)';
   var el=document.createElement('div');
-  el.className='planet'; el.dataset.id=s.id; el.style.setProperty('--pc',s.color);
+  el.className='planet'+(s.secret?' secret':''); el.dataset.id=s.id; el.style.setProperty('--pc',s.color);
   el.innerHTML='<div class="ring"></div><div class="shield"></div><div class="pwrap">'+extra+
     '<div class="orb '+s.type+'" style="width:'+d+'px;height:'+d+'px"></div></div>'+
-    '<div class="tag"><div class="n">'+s.name+'</div><div class="d">'+s.tag+'</div></div>'+
-    '<div class="dock">▶ dock &amp; enter</div>';
+    '<div class="tag"><div class="n">'+s.name+'</div><div class="d">'+s.tag+'</div></div>';
   if(!fine) el.addEventListener('click', function(){ if(state==='free') beginLanding(s); });
   s.el=el; s.orb=el.querySelector('.orb'); s.a=s.a0; s.num='0'+(si+2);
   system.appendChild(el);
@@ -32,7 +37,7 @@ function paintPlanets(){ STATIONS.forEach(function(s){ s.orb.style.background = 
 sizeOrbits(); paintPlanets();
 
 /* the hidden sixth world */
-var RONIN={ id:'ronin', name:'???', tag:'uncharted', color:'#d8b56a', r:15, type:'cratered',
+var RONIN={ id:'ronin', name:'???', tag:'uncharted', color:'#d8b56a', r:15, type:'cratered', secret:true,
   orbit:0.95, speed:0.013, a0:Math.random()*6.28, env:'desert', envlab:'THE DUNES',
   eyebrow:'STATION ∅ · UNCHARTED', title:'The lone road.',
   body:['A world that was not on the charts. Someone walks the ridge out there — sword on his back, headband in the wind, going his own way at his own pace.','Number one is a direction, not a rank.'],

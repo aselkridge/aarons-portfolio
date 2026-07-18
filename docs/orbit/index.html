@@ -119,16 +119,29 @@ body.t-sword .planet .tag{border:1.5px solid var(--pc)}
 body.t-roci .planet .tag{border:1px solid var(--pc);clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
 .planet .tag .n{font-family:var(--os);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(13px,1.5vw,16px);color:var(--ink)}
 .planet .tag .d{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--pc);text-transform:uppercase;margin-top:2px}
-.planet .dock{position:absolute;left:50%;top:calc(100% + 74px);transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;opacity:0;transition:opacity .2s;white-space:nowrap}
 .planet.live .ring{opacity:1;transform:scale(1)}
 .planet.live .tag{opacity:1;translate:0 0}
-.planet.live .dock{opacity:1}
 .planet.live .orb{transform:scale(1.05)}
 /* shield ripple flash (set via class) */
 .planet .shield{position:absolute;inset:-24%;border-radius:50%;border:2px solid rgba(150,230,255,.0);pointer-events:none;transition:none}
 .planet.shielded .shield{animation:shieldup .5s ease-out}
 @keyframes shieldup{0%{border-color:rgba(150,230,255,.9);transform:scale(.92);box-shadow:0 0 24px rgba(120,220,255,.7), inset 0 0 24px rgba(120,220,255,.4)}
   100%{border-color:rgba(150,230,255,0);transform:scale(1.12);box-shadow:none}}
+/* the secret/hidden world (Ronin) — always-on distinguishing treatment so
+   it reads as a genuine discovery, not just another planet: a slow pulsing
+   glow plus two crossed rings, independent of the .live proximity-hover
+   state everything else uses. */
+.secret-glow{position:absolute;inset:-60%;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(216,181,106,.55),transparent 68%);
+  animation:secretpulse 3.2s ease-in-out infinite}
+@keyframes secretpulse{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.1)}}
+.secret-rings{position:absolute;inset:0;pointer-events:none;z-index:1}
+.secret-rings i{position:absolute;left:50%;top:50%;width:var(--pw);height:var(--ph);border-radius:50%;
+  border:1.5px solid rgba(216,181,106,.7);box-shadow:0 0 14px rgba(216,181,106,.55)}
+.secret-rings .r1{animation:secretspin1 18s linear infinite}
+.secret-rings .r2{animation:secretspin2 24s linear infinite}
+@keyframes secretspin1{0%{transform:translate(-50%,-50%) rotate(22deg)}100%{transform:translate(-50%,-50%) rotate(382deg)}}
+@keyframes secretspin2{0%{transform:translate(-50%,-50%) rotate(-38deg)}100%{transform:translate(-50%,-50%) rotate(-398deg)}}
 
 /* ───────── ship cursor (touch flight keeps it on mobile) ───────── */
 .rocket{position:fixed;z-index:8;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
@@ -481,7 +494,7 @@ body.t-roci .bnr .bk{color:#9affea}
   .player,.pl-skin.cassette,.pl-skin.holo{width:100%!important}
   .sign{display:none}
 }
-@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle{animation:none!important} }
+@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i{animation:none!important} }
 </style>
 </head>
 <body class="t-sword">
@@ -637,7 +650,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/01-config.js?v=10"></script>
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=10"></script>
-<script src="js/04-world.js?v=11"></script>
+<script src="js/04-world.js?v=12"></script>
 <script src="js/05-combat.js?v=11"></script>
 <script src="js/06-flight.js?v=10"></script>
 <script src="js/07-environments.js?v=10"></script>
