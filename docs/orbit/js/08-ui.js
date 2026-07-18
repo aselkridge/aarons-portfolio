@@ -82,30 +82,53 @@ document.addEventListener('pointerdown', function(e){
   if(logPanel.classList.contains('on') && !e.target.closest('.navrow')) setLog(false);
 });
 
-/* ══════════ MISSION LOG ══════════ */
-/* Renders Progress.d.log (the persistent popup history) newest-first.
-   Re-rendered on every open so it's always current. */
-var logBtn=$('log-btn'), logPanel=$('logpanel');
+/* ══════════ REWARDS LOG ══════════ */
+/* The log is the reward collection, nothing else — categorized facts/quotes
+   earned through play (see rewardDrop in 03-progress.js), grouped under one
+   tab per category. The button's dot glows red while there's an un-viewed
+   reward; opening the log clears it. */
+var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot';
+function markLogNew(){ logBtn.classList.add('hasnew'); }
+window.markLogNew=markLogNew;
 function renderLog(){
-  var list=$('log-list'), L=Progress.d.log;
-  if(!L.length){ list.innerHTML='<div class="log-empty">Nothing logged yet — crack some asteroids, dock somewhere, make a name for yourself.</div>'; return; }
-  list.innerHTML='';
-  for(var i=L.length-1;i>=0;i--){ var e=L[i];
-    var it=document.createElement('div'); it.className='log-item';
-    it.innerHTML='<div class="lk"></div><div class="lt"></div>'+(e.de?'<div class="ld"></div>':'')+'<div class="lw"></div>';
-    it.querySelector('.lk').textContent=e.k;
-    it.querySelector('.lt').textContent=e.ti;
-    if(e.de) it.querySelector('.ld').textContent=e.de;
-    it.querySelector('.lw').textContent=new Date(e.t).toLocaleString();
-    list.appendChild(it);
+  var R=rewardPool(), tabs=$('log-tabs'), list=$('log-list');
+  tabs.innerHTML='';
+  Object.keys(REWARD_META).forEach(function(cat){
+    var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
+    var b=document.createElement('button'); b.type='button';
+    b.className='log-tab'+(cat===logTab?' on':'');
+    b.innerHTML='<span></span><i>'+got+'/'+pool.length+'</i>';
+    b.querySelector('span').textContent={pilot:'Pilot',career:'Career',random:'Random',quotes:'Quotes'}[cat];
+    b.addEventListener('click', function(e){ e.stopPropagation(); logTab=cat; renderLog(); Sound.blip(700); });
+    tabs.appendChild(b);
+  });
+  var pool=R[logTab]||[];
+  var earned=[];
+  pool.forEach(function(txt,i){ var t=Progress.d.rw[logTab+':'+i]; if(t) earned.push({txt:txt,t:t}); });
+  earned.sort(function(a,b){ return b.t-a.t; });   // newest first
+  if(!earned.length){
+    list.innerHTML='<div class="log-empty">Nothing collected here yet — crack gold asteroids and down saucers to earn rewards.</div>';
+    return;
   }
+  list.innerHTML='';
+  earned.forEach(function(e){
+    var it=document.createElement('div'); it.className='log-item';
+    it.innerHTML='<div class="ld"></div>';
+    it.querySelector('.ld').textContent=e.txt;
+    list.appendChild(it);
+  });
 }
 function setLog(on){
-  if(on) renderLog();
+  if(on){
+    renderLog();
+    logBtn.classList.remove('hasnew');
+    if(Progress.d.rwNew){ Progress.d.rwNew=0; Progress.save(); }
+  }
   logBtn.classList.toggle('on',on); logBtn.setAttribute('aria-expanded',String(on));
   logPanel.classList.toggle('on',on);
 }
 logBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(false); setLog(!logPanel.classList.contains('on')); });
+if(Progress.d.rwNew) markLogNew();   // unseen reward from a previous session
 
 /* ══════════ CONTACT CARD ══════════ */
 var contactWrap=$('contactwrap');

@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (hangar launch fixed; persistent Mission Log added)
+Last updated: 2026-07-18 (Rewards Log redesign + full content pass: real station copy, Oromugai station, categorized reward drops)
 
 ---
 
@@ -82,26 +82,64 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 ## 3. This shipment — what changed / what didn't
 
-**Changed:**
-- **Fixed issue #18** (hangar launch looked like an empty bay): the
-  outbound leg now mirrors the working inbound stagger — new ship stays
-  visibly parked, doors open first and get fully underway, *then* the ship
-  launches, holding full opacity for most of the climb. Verified by
-  re-running the same computed-style sampling that diagnosed the bug:
-  doors ≥87% open with the ship parked and fully visible, then climbing at
-  full opacity — a condition that never once occurred pre-fix.
-- **Fixed issue #10** (no way to see past popups): built the **Mission
-  Log** — every achievement, pilot-fact transmission, and major-event
-  banner is now permanently recorded (localStorage, capped at 200) and
-  browsable via a new "◈ LOG" button in the header nav row, newest-first
-  with timestamps. This history intentionally persists across sessions
-  (unlike the secret planet, which resets by design). Verified including
-  a hard-reload persistence check, not just an in-memory one.
-- Note for the next content pass: Aaron wants inspirational quotes (and
-  more fact categories generally) added alongside the "about the pilot"
-  facts — that's a content change to `data/facts.js` pending his approval
-  of proposed content, and everything that pops will automatically flow
-  into the Mission Log via the `toast()` hook.
+**Changed — the Rewards Log redesign (per Aaron's spec):**
+- The log is now **rewards only** — the previous version recorded every
+  popup (achievements, banners, facts); Aaron wanted only the collectible
+  reward drops. Achievements and banners still toast/banner as before, they
+  just aren't logged anywhere anymore.
+- `data/facts.js` is now `window.ORBIT_REWARDS`: four categories matching
+  the log's four tabs — **Pilot** (17 facts about Aaron), **Career** (15
+  GTM/automation/career facts), **Random** (19 physics/space/anime/music/
+  games/mythology facts), **Quotes** (14 — Aaron's own lines + famous ones).
+  All content follows the privacy rules (no employer name, no family names,
+  nothing financial/psychological). The file is hand-editable; counts
+  update automatically.
+- `rewardDrop()` (03-progress.js) replaces `factDrop()`: each drop (gold
+  asteroid crack, saucer kill — same triggers as before) awards a random
+  **unearned** reward, toasts it with a category kicker, and records it
+  permanently in `Progress.d.rw`. Once everything's earned, drops re-show
+  random earned ones without re-logging.
+- The LOG button now carries a bullet dot that **burns red and pulses**
+  (plus a button glow) whenever there's an un-viewed reward — including
+  across sessions (`Progress.d.rwNew` persists). Opening the log clears it.
+- The log panel has **four tabs** with collected/total counts per category,
+  newest-first entries, and per-tab empty states.
 
-**Explicitly NOT touched this shipment** (per Aaron: work one issue at a
-time): issues #2, #5–8, #11, #12a in §2, all still outstanding.
+**Changed — the approved content pass (all pre-approved by Aaron):**
+- **Mission (sun)**: "The tech is the byproduct. The people are the point."
+  + the should-we-build-this statement + the AI-native-GTM-architect wedge
+  (title only, no company, per Aaron's rule). New sections: The road here,
+  Lantern, Now.
+- **AlphaForge**: the real build story — 199→148→40 numbers, the held send,
+  the deterministic classifier, the fragile-signal thesis. Clay-tables
+  section is a marked placeholder until Aaron sends screenshots.
+- **Life**: multidimensionality hub — Watching (real anime lists from
+  Aaron's Drive doc), Playing (his PS5/Switch library), Listening, Eating
+  (placeholder), Fatherhood+marriage (placeholder, lessons-only per privacy
+  rules), Physics+space, Everything else (birding/Lego/snowboarding/R34).
+- **Craft station is now Oromugai** (nav tab renamed; station id stays
+  `craft` so deep links/env painting don't break): full definition,
+  pronunciation, the four roots with honest coined-word framing (per the
+  Oromugai doc's own accuracy guidance), how-to-write-one steps, and a
+  Poems placeholder until Aaron sends poems.
+- **Notes**: three real essay excerpts adapted from Aaron's AlphaForge
+  writing (Fossil records / The cleaning is the build / The held send),
+  company references removed; On-deck section for what's coming.
+- **Contact card**: tagline now "engineer · artist · space cowboy" + the
+  approved bio line added.
+
+**Verified** (fresh-profile run, all via live state not source-reading):
+4 categories load with correct counts; a drop sets the glow + persists;
+opening clears the glow and `rwNew`; 11 drops = 11 unique rewards, all
+surviving a hard reload with the glow correctly re-shown; per-tab counts
+and items render; achievements/banners add **nothing** to the reward store;
+nav shows "Oromugai"; new Mission title and contact card live; zero
+console errors. Screenshotted the glowing LOG button and the open tabbed
+panel.
+
+**Still pending from Aaron:** Clay table screenshots (AlphaForge gallery),
+poems (Oromugai), eating/fatherhood content (Life). All have marked
+placeholder sections that need no code changes to fill.
+
+**Explicitly NOT touched this shipment**: issues #2, #5–8, #11, #12a in §2,
+all still outstanding.

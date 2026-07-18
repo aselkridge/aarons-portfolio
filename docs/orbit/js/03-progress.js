@@ -7,26 +7,16 @@
 
 /* ══════════ PROGRESS / ACHIEVEMENTS / TOASTS ══════════ */
 var Progress=(function(){
-  var d={ach:{},visited:{},gold:0,saucers:0,log:[]};
+  var d={ach:{},visited:{},gold:0,saucers:0,rw:{},rwNew:0};
   try{ var raw=localStorage.getItem('aa_progress'); if(raw) d=Object.assign(d,JSON.parse(raw)); }catch(e){}
-  if(!Array.isArray(d.log)) d.log=[];   // older saved profiles predate the log
+  if(!d.rw||typeof d.rw!=='object') d.rw={};   // older saved profiles predate rewards
   function save(){ try{ localStorage.setItem('aa_progress',JSON.stringify(d)); }catch(e){} }
-  // Persistent history of everything that ever popped up (achievements,
-  // transmissions/facts, major-event banners). Toasts/banners auto-dismiss
-  // in seconds; this is the "go back and see what you've done" record the
-  // LOG panel reads from. Capped so localStorage can't grow unbounded.
-  function logEvent(kind,title,desc){
-    d.log.push({t:Date.now(),k:kind,ti:title,de:desc||''});
-    if(d.log.length>200) d.log=d.log.slice(-200);
-    save();
-  }
-  return { d:d, save:save, logEvent:logEvent,
+  return { d:d, save:save,
     award:function(id,title,desc){ if(d.ach[id]) return false;
       d.ach[id]=1; save(); toast('ACHIEVEMENT','◈ '+title,desc); Sound.blip(1180); return true; } };
 })();
 /* small right-side stack — minor milestones + facts (capped at 3, auto-dismiss) */
 function toast(kicker,title,desc){
-  Progress.logEvent(kicker,title,desc);
   var host=$('ach');
   while(host.children.length>=3) host.removeChild(host.firstChild);
   var el=document.createElement('div'); el.className='toast';
@@ -40,7 +30,6 @@ function toast(kicker,title,desc){
 /* one big center-top banner — MAJOR events only */
 var bannerTimer=null;
 function banner(kicker,title,desc){
-  Progress.logEvent(kicker,title,desc);
   var host=$('banner'); host.innerHTML='';
   var el=document.createElement('div'); el.className='bnr';
   el.innerHTML='<div class="bk">'+kicker+'</div><div class="bt"></div>'+(desc?'<div class="bd"></div>':'');
@@ -52,10 +41,41 @@ function banner(kicker,title,desc){
     setTimeout(function(){ if(el.parentNode) el.remove(); },500); },3600);
   Sound.blip(themeId==='sword'?659:880);
 }
-function factDrop(){
-  var F=window.ORBIT_FACTS||[]; if(!F.length) return;
-  toast('TRANSMISSION ◈ INCOMING','ABOUT THE PILOT',F[(Math.random()*F.length)|0]);
+/* ══════════ REWARDS ══════════ */
+/* Rewards are the collectible layer: categorized facts/quotes (data/facts.js)
+   earned through play (gold asteroids, saucers). Each drop picks a random
+   reward the player hasn't earned yet, shows it as a toast, and permanently
+   records it in Progress.d.rw so the ◈ LOG panel can display it under its
+   category tab. d.rwNew flags the log button to glow until the log is opened.
+   Once every reward is earned, drops re-show random earned ones (no re-log). */
+var REWARD_META={
+  pilot:  {label:'ABOUT THE PILOT',     kicker:'REWARD ◈ PILOT FILE'},
+  career: {label:'CAREER INTEL',        kicker:'REWARD ◈ CAREER FILE'},
+  random: {label:'RANDOM TRANSMISSION', kicker:'REWARD ◈ INTERCEPTED'},
+  quotes: {label:'QUOTE UNLOCKED',      kicker:'REWARD ◈ QUOTE'}
+};
+function rewardPool(){ return window.ORBIT_REWARDS||{}; }
+function rewardDrop(){
+  var R=rewardPool(), unearned=[], all=[];
+  Object.keys(REWARD_META).forEach(function(cat){
+    (R[cat]||[]).forEach(function(txt,i){
+      var id=cat+':'+i, item={id:id,cat:cat,txt:txt};
+      all.push(item);
+      if(!Progress.d.rw[id]) unearned.push(item);
+    });
+  });
+  if(!all.length) return;
+  var fresh=unearned.length>0;
+  var pick=(fresh?unearned:all)[(Math.random()*(fresh?unearned:all).length)|0];
+  if(fresh){
+    Progress.d.rw[pick.id]=Date.now();
+    Progress.d.rwNew=1;
+    Progress.save();
+    if(window.markLogNew) markLogNew();   // defined in 08-ui.js (glow)
+  }
+  toast(REWARD_META[pick.cat].kicker, REWARD_META[pick.cat].label, pick.txt);
 }
+function factDrop(){ rewardDrop(); }   // legacy call sites (gold/saucer) route here
 var prevBounty=0;
 function checkBounty(){
   if(bounty>=5000) Progress.award('b5k','BOUNTY HEAD ₩5,000','The name starts to circulate.');

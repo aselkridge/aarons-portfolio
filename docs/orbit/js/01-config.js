@@ -25,30 +25,30 @@ function T(){ return THEMES[themeId]; }
 /* The MISSION is the sun — the thing everything else orbits. */
 var SUN_STATION = { id:'mission', name:'Mission', color:'#ffb44a', num:'01', r:60,
   env:'hero', envlab:'UPPER ATMOSPHERE',
-  eyebrow:'THE CORE · EVERYTHING ORBITS THIS', title:'Built to be more than one thing.',
-  body:['This is the flagship — the point of view, not the résumé. Aeronautics engineer by degree, automation builder by trade, poet and father by nature. The through-line isn\'t a job title; it\'s the range itself.','Aaronautics is a place to interface with that range — not a page to scroll. Everything in this system orbits this one idea.'],
-  tags:['point of view','the mission','more than one thing'] };
+  eyebrow:'THE CORE · EVERYTHING ORBITS THIS', title:'The tech is the byproduct. The people are the point.',
+  body:['An engineer and artist from the Bronx who builds technology that serves people — not the other way around.','Speed from paper to product isn\'t progress if nobody asks whether it should ship at all. I want to be the person who asks those questions before the build starts — who challenges ideas, and helps move the best solutions forward.','Lead Automation Analyst · AI-native GTM architect. I design the orchestration layer where agents, iPaaS, enrichment, and CRM come together so a rep sees one tool instead of five.'],
+  tags:['the bronx','engineer + artist','should we build this?'] };
 var STATIONS = [
   { id:'alphaforge', name:'AlphaForge', tag:'the proof', color:'#74d0ff', r:18, type:'ringed', orbit:0.44, speed:0.040, a0:1.1,
     env:'city', envlab:'NEON GRID',
-    eyebrow:'STATION 02 · THE PROOF', title:'Nine GTM builds.',
-    body:['The proof behind the mission — nine go-to-market builds from the Clay-led AlphaForge cohort. Each one: the problem, what got built, and the number that moved.','Wiring in the real Clay tables next — this station will read like a launch manifest, 001 through 009.'],
-    tags:['clay','go-to-market','9 builds','001 – 009'], soon:true },
+    eyebrow:'STATION 02 · THE PROOF', title:'I built the whole machine, then chose not to send yet.',
+    body:['The proof behind the mission — a real go-to-market system built end to end in AlphaForge, Clay\'s GTM engineering cohort: 199 schools sourced, 51 disqualified on real checks, 148 qualified, 40 verified head-of-school contacts at ~93% reachability.','Then, with the entire outbound machine ready, I held the send — because the first email real people ever get from you matters more than a deadline. Judgment over volume. That\'s the whole thesis.'],
+    tags:['clay','199 → 148 → 40','the held send','judgment over volume'] },
   { id:'life', name:'Life', tag:'the human', color:'#7cff9b', r:16, type:'mooned', orbit:0.57, speed:0.031, a0:2.4,
     env:'forest', envlab:'CANOPY',
-    eyebrow:'STATION 03 · THE HUMAN', title:'Reading, watching, listening, eating.',
-    body:['The relatable frequency — anime and hip-hop, the food, the conversation-starters. The stuff that makes a person, not a profile.'],
-    tags:['anime','hip-hop','food','the bronx'], soon:true },
-  { id:'craft', name:'Craft', tag:'no ROI attached', color:'#c9a8ff', r:16, type:'gas', orbit:0.70, speed:0.024, a0:3.5,
-    env:'ocean', envlab:'OPEN WATER',
-    eyebrow:'STATION 04 · THE ARTIST', title:'Made with no ROI attached.',
-    body:['Poetry, drawings, physics for its own sake. The work that exists because it had to, not because it converted.'],
-    tags:['poetry','drawing','physics'], soon:true },
-  { id:'notes', name:'Notes', tag:'writing + video', color:'#ffd36a', r:16, type:'cratered', orbit:0.83, speed:0.018, a0:4.6,
+    eyebrow:'STATION 03 · THE HUMAN', title:'Multidimensional by design.',
+    body:['The relatable frequency — anime and hip-hop, games and grilling, physics and fatherhood. The stuff that makes a person, not a profile.','Tune through the channels: what I\'m watching, playing, listening to, eating, and thinking about.'],
+    tags:['anime','games','music','food','physics'] },
+  { id:'craft', name:'Oromugai', tag:'the infinite living word', color:'#c9a8ff', r:16, type:'gas', orbit:0.70, speed:0.024, a0:3.5,
+    env:'ocean', envlab:'THE LOOP',
+    eyebrow:'STATION 04 · THE FORM', title:'Oromugai. Eight syllables. One line.',
+    body:['An original poetic form: one line, exactly eight syllables, built to hold meaning that feels larger than its size. Pronounced OH-roh-MOO-guy — rhymes with samurai.','A coined word inspired by Òrò (Yorùbá: word, speech), Mugen (Japanese: infinite — yes, also that Mugen), Aiyé (Yorùbá: world, life), and the Ouroboros, the serpent that loops forever. Together: The Infinite Living Word.'],
+    tags:['òrò','mugen','aiyé','ouroboros','8 beats of infinity'] },
+  { id:'notes', name:'Notes', tag:'writing + teaching', color:'#ffd36a', r:16, type:'cratered', orbit:0.83, speed:0.018, a0:4.6,
     env:'graffiti', envlab:'THE LOT',
-    eyebrow:'STATION 05 · THE SIGNAL', title:'Fatherhood, the Bronx, the build.',
-    body:['Writing and video — fatherhood, becoming a husband, renovating a home, and explaining GTM to a community that was never handed the map.'],
-    tags:['fatherhood','the bronx','building a home','gtm for us'], soon:true }
+    eyebrow:'STATION 05 · THE SIGNAL', title:'Essays, lessons, transmissions.',
+    body:['Writing and teaching — systems thinking, GTM for people who were never handed the map, fatherhood, the build. First transmissions are live below; video lessons are on the roadmap.'],
+    tags:['essays','teaching','gtm for us','the build'] }
 ];
 
 /* ══════════ METRICS ══════════ */

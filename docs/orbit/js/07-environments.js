@@ -39,28 +39,35 @@ function sizeEnv(){ envc.width=envc.clientWidth*devicePixelRatio; envc.height=en
 var SECTIONS={
   mission:[
     {k:'Why “Aaronautics”', body:['Aaron + aeronautics — the aerospace degree that started it, bent into a name. The site is a machine you operate, because a list of jobs could never hold the whole picture.']},
-    {k:'Now', body:['Building automations by day, building this world by night. Raising a family in the Bronx. Writing the map for people who were never handed one.'], soon:true}
+    {k:'The road here', body:['Aerospace engineering at the University at Buffalo — orbital dynamics, propulsion, biomimicry research, design thinking. Then nearly five years as an Apple Genius, turning scary black boxes into things people could actually use. Then fintech, then ed-tech, then five years building an automation function from nothing: first hire, three promotions, frameworks that didn\'t exist until they did.','The through-line the whole way: technical depth combined with genuine care for the people on the other side of the build.']},
+    {k:'Lantern', body:['Co-founded Lantern — digital citizenship and AI literacy for PreK–12. Raising kids who can use the tools and still think for themselves. Not fear, not hype — clarity.','Four branches, one standard: AI ethics, digital citizenship, building AI, building automation.']},
+    {k:'Now', body:['Building automations by day, building this world by night. Raising a family in the Bronx. Writing the map for people who were never handed one.']}
   ],
   alphaforge:[
-    {k:'Builds 001–009', body:['Nine go-to-market builds from the Clay-led cohort. Each one gets a manifest line: problem → what got built → the number that moved.'], soon:true},
-    {k:'Numbers', body:['The tangible results, straight up.'], soon:true}
+    {k:'The held send', body:['The final build: a complete outbound system for Lantern — sourcing, cleaning, scoring, segmenting, and a fully assembled 40-email send with three tiers of verified personalization. Every email ready. And I didn\'t hit send.','These were real heads of school in the city I want to build in. The first email they ever get from me matters more than a deadline. So I built the machine carefully, got the experience right on my end first, and chose restraint over speed. The whole system, ready, held on purpose.']},
+    {k:'The classifier', body:['An AI enrichment claimed 30 of my 40 contacts had "public writing" I could reference. Reading closely: only 13 were real external work — the other 17 were welcome letters on the schools\' own homepages. Referencing those would have made the outreach look less researched, not more.','The fix wasn\'t more AI. One deterministic rule — is the piece on their own domain, or an outside one? — separated real thought leadership from homepage blurbs, every time, without wavering. More than half the "personalization" would have been embarrassing. A simple rule caught what the model couldn\'t.']},
+    {k:'Fragile signal', body:['The thesis that kept proving itself across every build: structural data (headcount, domain, industry) tends to be reliable. Inferential data — AI judgments, private signals, confidence self-reports — tends to be sparse or silently wrong. "It ran" tells you nothing.','So: score on what a column actually returns, not what you asked it to return. Keep scoring deterministic; save AI for genuinely ambiguous judgment. And never let AI explain AI without evidence in between.']},
+    {k:'Clay tables', body:['The actual working tables behind all of this — sourcing, enrichment waterfall, scoring columns, segment routing.'], soon:true}
   ],
   life:[
-    {k:'Reading', body:['What’s on the stack right now.'], soon:true},
-    {k:'Watching', body:['Anime and films in rotation.'], soon:true},
-    {k:'Listening', body:['The current rotation — hip-hop first.'], soon:true},
-    {k:'Eating', body:['Bronx spots and home plates worth talking about.'], soon:true}
+    {k:'Watching', body:['All-time hall of fame: Initial D (the one true GOAT), Cowboy Bebop, Samurai Champloo, Afro Samurai, Mob Psycho 100. Style, soul, and mastery over raw power — though the power helps.','Currently caught up on: Solo Leveling, JJK, Bleach TYBW, Kaiju No. 8, Demon Slayer, Hunter x Hunter, Shangri-La Frontier, Wind Breaker, Hell\'s Paradise, Wistoria, Dan Da Dan, MASHLE, and more.','Next up on the must-watch list: Naruto, Death Note, Gintama, Blue Lock, Baki Hanma, Kengan Ashura, Cyberpunk: Edgerunners, Lord of Mysteries, Project K, Noblesse, Re:Zero, Super Cube.']},
+    {k:'Playing', body:['PS5 + Switch 2. Open-world RPGs (Horizon, God of War, Jedi, samurai anything), Pokémon since forever, all things Mario, Zelda, Smash, Mario Kart, Star Fox, Donkey Kong.','Racing games, Ace Combat, Astro Bot, Jak and Daxter, Ratchet & Clank, Spyro, Crash, Hogwarts Legacy, Spider-Man, Cyberpunk, GTA, Watch Dogs, Lego games, Flower — and Journey, which is a religious experience disguised as a video game.']},
+    {k:'Listening', body:['Hip-hop first — then the jazz, funk, and soul it was built from. Sampling lineage is the family tree of modern music, and tracing it is half the fun. House and R&B in heavy rotation too.','Cares about the artists getting paid, not just played.']},
+    {k:'Eating + grilling', body:['Bronx spots and home plates worth talking about. The grill is a laboratory.'], soon:true},
+    {k:'Fatherhood + marriage', body:['Lessons from the two builds that matter most. No shortcuts, no hacks — just what\'s actually working, written down honestly.'], soon:true},
+    {k:'Physics + space', body:['Still studies physics for the love of it — no credit, no curriculum. Orbital mechanics, the strangeness of the universe, and what nature already engineered before we got here (biomimicry never left).']},
+    {k:'Everything else', body:['Backyard birding. Lego builds. Snowboarding. Tennis, football, basketball. A Skyline R34 rebuild that will happen someday. Multidimensional by design.']}
   ],
   craft:[
-    {k:'Poems', body:['Words with no ROI attached.'], soon:true},
-    {k:'Drawings', body:['Lines on paper.'], soon:true},
-    {k:'Physics', body:['The universe, for the love of it.'], soon:true}
+    {k:'How to write one', body:['1. Choose one image, thought, feeling, contradiction, or moment.','2. Write it as one line, and revise until it contains exactly eight syllables.','3. Remove words that explain more than they reveal.','4. Read it aloud in one breath. Check that it carries resonance beyond its literal length.','5. Pair it with a visual, a voice, a beat, or silence.','6. Tag it Oromugai when you share it.']},
+    {k:'The roots', body:['Òrò — Yorùbá inspiration: word, speech, utterance. The power of the spoken.','Mugen — Japanese: infinite, limitless. Also the name of Samurai Champloo\'s wildest swordsman, for those who look closer.','Aiyé — Yorùbá inspiration: world, life, existence. The form stays grounded in the lived.','Ouroboros — the serpent eating its own tail. Cycles, eternity, renewal. Eight syllables, laid on its side: infinity.','Oromugai is a new coined word inspired by these roots — not a literal word in any of these languages. The blend is the point.']},
+    {k:'Poems', body:['First transmissions incoming — a body of Oromugais with original visuals, released in waves.'], soon:true}
   ],
   notes:[
-    {k:'Fatherhood', body:['On becoming and being a dad.'], soon:true},
-    {k:'The Bronx', body:['Where the signal comes from.'], soon:true},
-    {k:'The Build', body:['Renovating a home with our own hands.'], soon:true},
-    {k:'GTM for us', body:['Explaining go-to-market to a community that was never handed the map.'], soon:true}
+    {k:'Fossil records', body:['On reactive systems: a tech stack built panic-by-panic isn\'t architecture — it\'s a fossil record of past panics, and the people using it are the ones living among the bones.','Reacting is natural. Sometimes necessary. The failure isn\'t reacting — it\'s never graduating from it. Structure and proactive design should be the rule; reaction the exception. Most systems have those two backward, and the job almost nobody holds is graduating a team from one to the other.']},
+    {k:'The cleaning is the build', body:['What building a real data pipeline teaches you: the plan assumes clean inputs, and the inputs are never clean. The cleaning isn\'t a prep step before the real work — it IS the work, the layer nobody documents and nobody plans for.','And even after you build the gate, the mess finds a way back in around it. So don\'t build for the data you wish you had. Build for the data that\'s actually going to show up.']},
+    {k:'The held send', body:['Ethics isn\'t a section at the end of the build doc. It\'s the moment you have 40 verified contacts, a finished email, a working system — and you don\'t hit send, because the experience on the other end isn\'t ready yet.','The ethical reflex is a muscle. You build it by using it when it costs you something.']},
+    {k:'On deck', body:['Fatherhood and the build. GTM for people who were never handed the map. Video lessons.'], soon:true}
   ]
 };
 function fillCard(s){
