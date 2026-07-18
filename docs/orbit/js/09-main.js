@@ -98,6 +98,33 @@ function loop(t){
     fctx.globalAlpha=1;
   }
 
+  /* plasma/ion exhaust plume (Expanse theme) — deliberately NOT a fast-flight-
+     only cue like the anime speed lines. A real drive burns continuously, so
+     this is always on at a low idle glow and simply brightens/lengthens with
+     speed, rather than switching on past a threshold. */
+  if(themeId==='roci'&&fine&&state==='free'&&!reduce){
+    var ed={x:-Math.sin(ra),y:Math.cos(ra)};       // opposite of noseDir() — the engine faces aft
+    var eang=Math.atan2(ed.y,ed.x);
+    var ex=rx+ed.x*15, ey=ry+ed.y*15;              // nozzle, just behind the hull
+    var thrustP=Math.min(1,shipSpeed/700);
+    var inten=0.32+0.68*thrustP;                   // idle burn even at rest; brighter/longer in flight
+    var plen=16+inten*58;
+    fctx.save(); fctx.translate(ex,ey); fctx.rotate(eang);
+    var grad=fctx.createLinearGradient(0,0,plen,0);
+    grad.addColorStop(0,'rgba(226,246,255,'+(0.85*inten).toFixed(2)+')');
+    grad.addColorStop(0.4,'rgba(116,208,255,'+(0.55*inten).toFixed(2)+')');
+    grad.addColorStop(1,'rgba(116,208,255,0)');
+    fctx.fillStyle=grad;
+    var pw=5+inten*3;
+    fctx.beginPath(); fctx.moveTo(0,-pw); fctx.lineTo(plen,0); fctx.lineTo(0,pw); fctx.closePath(); fctx.fill();
+    fctx.restore();
+    if(Math.random()<0.55*inten){                  // sparse embers peeling off the plume
+      var jig=eang+(Math.random()-0.5)*0.5, esp=40+70*inten;
+      particles.push({x:ex,y:ey,vx:Math.cos(jig)*esp,vy:Math.sin(jig)*esp,
+        life:0.22+Math.random()*0.28,r:0.8+Math.random()*1.5,col:Math.random()<0.5?'#e2f6ff':'#74d0ff'});
+    }
+  }
+
   if(state==='free'||state==='landing'||state==='landed'){
     /* the saucer — rare, wobbly, extremely shootable */
     gameT+=dt;

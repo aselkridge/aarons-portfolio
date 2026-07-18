@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (issue #3 — sun never reacts to being hit — fixed)
+Last updated: 2026-07-18 (new: Rocinante-theme thrust plume)
 
 ---
 
@@ -68,25 +68,26 @@ instruction — do not batch-fix these without his go-ahead on each.
 ## 3. This shipment — what changed / what didn't
 
 **Changed:**
-- **Fixed issue #3** (sun never reacts to being hit) — see the strikethrough
-  entry in §2 for the full root cause and fix. Short version: the sun's hit
-  radius was a made-up formula, not the sun's real measured size, so shots
-  could fly visibly into the sun without registering; and even a registered
-  hit reused the same flat-color spark burst as everything else. Now the
-  hit-check uses the sun's real radius, and a hit triggers a dedicated
-  "sizzle" — multi-color hot particles, a brief warm flash/bloom on the sun
-  itself, and a new crackle/hiss sound — distinct from the cool-blue ring a
-  planet's shield gets.
-- **Verified**, not just "runs without errors": compared the old made-up
-  radius formula against the sun's real radius at a standard viewport to
-  confirm the mismatch was real and sizable (~42px vs. the real 60px, an
-  18px gap where shots would visually enter the sun with no reaction); fired
-  a projectile at the sun's actual edge and read back live game state to
-  confirm it's consumed exactly there, the new `sizzling` class fires, the
-  target readout updates, and the particle burst uses the new warm palette;
-  screenshotted the sun before/during/after the hit to visually confirm the
-  flash reads as a flash (not a blown-out white-out) and fades back to
-  normal within its half-second animation.
+- **New feature, not a bug fix**: the Rocinante (Expanse) theme's ship now
+  has its own thrust effect. It previously had none at all — the anime
+  speed-lines effect is Swordfish-only, so fast flight in the Expanse theme
+  had no visual feedback whatsoever. Deliberately built as a different kind
+  of effect rather than reusing the speed-lines idea: a continuous
+  blue-white plasma/ion exhaust plume (Epstein-drive-style) trailing from
+  the engine, plus a few embers peeling off and fading. Unlike the anime
+  effect (which only appears above a speed threshold), this is **always
+  on** — a low idle burn even at a dead stop, brightening and lengthening
+  smoothly with speed, since a real drive burns continuously rather than
+  switching on past a cutoff. Color matches the ship's existing blue engine-
+  flame sprite (`#74d0ff`) so it reads as the same drive, just made visible
+  further out.
+- **Verified**: confirmed via live game state that the plume renders even
+  at `shipSpeed≈0` (idle burn present, not gated behind a threshold);
+  screenshotted it both at idle and during fast flight in open space (away
+  from the sun's glare) to visually confirm it's clearly visible in both
+  cases and scales up with speed; confirmed no console errors and no visual
+  regression in the Swordfish theme (speed-lines still Swordfish-only, this
+  new effect is Rocinante-only and doesn't fire there).
 
 **Explicitly NOT touched this shipment** (per Aaron: work one issue at a
-time): issues #2, #4–12 in §2.
+time): issues #2–12 in §2, all still outstanding.
