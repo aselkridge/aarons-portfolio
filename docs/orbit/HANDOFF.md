@@ -101,6 +101,13 @@ before the biggest structural change):
    route (commission / itch.io / Kenney.nl / CraftPix / AI-assisted); scene
    specifics get resolved as that art arrives, not planned in the abstract.
    Can overlap with other phases since it's partly gated on gathering art.
+   **Quality bar + method for this phase: the Oromugai parchment box (built
+   2026-07-18) is the reference standard — Aaron: "this is the quality I want
+   the whole website at." Reuse the hybrid method that made it: CSS/SVG builds
+   the immersive shell, real illustrated art is keyed to transparency and
+   composited in (multiply for paint-on-surface, normal+shadow for raised
+   objects). See CLAUDE.md → "The quality bar." First assets already in
+   `docs/orbit/assets/` (quill.png, wax_seal.png).**
 4. **Ground Control** (the giant): boot screen becomes a real choice —
    **Launch** (today's space experience) vs. **Ground Control**, a
    control-room scene (desk, computer screen, panels) with direct-access

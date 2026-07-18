@@ -19,6 +19,25 @@ Before building ANY visual element, state which medium it needs:
   → STOP and ask Aaron for a real art asset or image-generated art. Describe
   exactly what to source and why. Never over-promise and land back at blocks.
 
+## The quality bar — the Oromugai parchment box
+The poetry station's parchment content box (built 2026-07-18) is the
+REFERENCE STANDARD for the whole site. Aaron: "this is the quality I want the
+whole website at." Every surface — especially the Phase 3 redesign of the
+scenes — should aim there, not at "it works, done."
+
+The METHOD that got there, reuse it everywhere (it's the hybrid, not either
+half alone):
+- CSS/SVG builds the immersive SHELL — frame, paper texture (layered
+  gradients + live fractal-noise), foxing, vignette, type, layout, one
+  restrained accent. This is mine and it can be genuinely beautiful.
+- Real ILLUSTRATED art (Aaron sources it from an image generator) gets keyed
+  to transparency and composited IN: `mix-blend-mode:multiply` for
+  ink/paint-on-paper so it melts into the surface (not a pasted sticker);
+  normal + a soft drop-shadow for raised objects (e.g. the wax seal).
+- Keying tip that worked: flood-fill the background from the image borders so
+  interior highlights aren't punched out; optimize/resize before inlining.
+- Assets live in `docs/orbit/assets/` (quill.png, wax_seal.png so far).
+
 ## Show before it goes live — always
 "Live" = merged to the default branch (GitHub Pages serves `docs/`). The work
 branch is NOT live. For any design change:
