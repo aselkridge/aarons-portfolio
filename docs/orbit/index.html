@@ -453,6 +453,9 @@ body.t-roci .log-tab:hover{color:#dff4ff}
 .rm-picker{display:none}
 .rewardmodal.picking .rm-picker{display:block}
 .rewardmodal.picking .rm-reveal{display:none}
+/* the picker demands a choice — no ✕ to accidentally dismiss it with; the
+   close control only exists on the reveal view. */
+.rewardmodal.picking #rm-close{display:none}
 .rm-picker-lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;
   text-align:center;margin-bottom:16px}
 .rm-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -892,7 +895,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/07-environments.js?v=11"></script>
-<script src="js/08-ui.js?v=18"></script>
+<script src="js/08-ui.js?v=19"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

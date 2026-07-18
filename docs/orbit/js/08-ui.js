@@ -168,13 +168,25 @@ function renderPickerGrid(){
     rmPickerGrid.appendChild(b);
   });
 }
+/* While the picker is up you MUST choose a category — it can't be dismissed
+   by an accidental click (backdrop, ✕, or Escape all do nothing in picking
+   mode). This is because the picker opens the instant a gold asteroid is
+   cracked, right in the middle of a rapid click-to-shoot burst: without
+   this, one of those in-flight clicks lands on the backdrop and dismisses
+   the reward before it's picked, so the crack is wasted. `rewardArmed` adds
+   a short guard so a click landing on the modal the same instant it opens
+   can't auto-resolve it before the player even registers the picker. */
+var rewardArmed=false, armTimer=null;
 function openRewardPicker(){
   renderPickerGrid();
   rewardModal.classList.add('on','picking');
+  rewardArmed=false;
+  clearTimeout(armTimer); armTimer=setTimeout(function(){ rewardArmed=true; },380);
   Sound.blip(themeId==='sword'?880:660);
 }
 window.openRewardPicker=openRewardPicker;
 function revealReward(cat){
+  if(!rewardArmed) return;   // ignore clicks that land before the picker settles
   var r=earnFromCategory(cat);
   if(!r) return;
   rewardModal.classList.remove('picking');
@@ -188,8 +200,11 @@ function openRewardModal(kicker,label,text){   // view an already-earned entry f
 }
 window.openRewardModal=openRewardModal;
 function closeRewardModal(){ rewardModal.classList.remove('on','picking'); }
-$('rm-close').addEventListener('click', closeRewardModal);
-rewardModal.addEventListener('pointerdown', function(e){ if(e.target===rewardModal) closeRewardModal(); });
+/* the ✕ and backdrop only dismiss the REVEAL view — never the picker (which
+   requires an actual category choice). */
+function isPicking(){ return rewardModal.classList.contains('picking'); }
+$('rm-close').addEventListener('click', function(){ if(!isPicking()) closeRewardModal(); });
+rewardModal.addEventListener('pointerdown', function(e){ if(e.target===rewardModal && !isPicking()) closeRewardModal(); });
 function setLog(on){
   if(on){
     renderLog();
@@ -210,7 +225,7 @@ $('sign').addEventListener('click', function(){ setContact(true); Sound.blip(the
 $('contact-close').addEventListener('click', function(){ setContact(false); });
 contactWrap.addEventListener('pointerdown', function(e){ if(e.target===contactWrap) setContact(false); });
 
-addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); closeRewardModal(); } });
+addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); if(!isPicking()) closeRewardModal(); } });
 
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });
