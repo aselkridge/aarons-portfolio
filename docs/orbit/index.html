@@ -33,8 +33,25 @@ canvas{display:block}
 #fx{position:fixed;inset:0;z-index:4;pointer-events:none}
 .system{position:fixed;inset:0;z-index:2;transition:opacity .5s ease}
 .system.warp{opacity:0;pointer-events:none}
-@media (hover:hover){ body{cursor:none} .hud,.hud *{cursor:auto} .panel,.panel *{cursor:auto}
-  .rewardmodal,.rewardmodal *{cursor:auto} .contactwrap,.contactwrap *{cursor:auto} }
+/* ── cursors ──
+   In open space the SHIP is the cursor (cursor:none). Over any interface
+   surface the cursor is the theme planet dot — the same recurring motif as
+   the wordmark tittle (teal on warm / orange on cool) — instead of the OS
+   arrow/I-beam (the I-beam over dossier text was the "glitch"). Real
+   controls keep the system pointer so clickable stays unmistakable.
+   cursor is inherited, so setting it on the containers covers their text. */
+:root{
+  --cur-teal:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAiUlEQVR42mNgGHGAkZACDg6eS+hiP3580SPZQGwGEWMwIyHDdHce1UWXv+xufRmXoUykGoYuju4TRlwGwjS52SEcsOvQJawuRXYlE7GGYePD1CG7konayYa+BqKHGTofG2AhpIAYQ3C6EBZbyOkMHyAYy7gSLynyTPiyEy5N+HIKffIyJaXN4AcAxltPuRe/nHsAAAAASUVORK5CYII=") 10 10;
+  --cur-orange:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAiklEQVR42mNgGHGAkZACDg6eS+hiP3580SPZQGwGEWMwIyHDXswz0EWXl0i6cBmXoUykGoYuju4TRlwGwjTxu7nB5T7u2oXVpciuZCLWMGx8mDpkVzJRO9nQ10D0MEPnYwMshBQQYwhOF8JiCzmd4QMEYxlX4iVFnglfdsKlCV9OoU9epqS0GfwAAAw5T7oGr4yVAAAAAElFTkSuQmCC") 10 10}
+@media (hover:hover){
+  body{cursor:none}
+  body.t-sword .hud,body.t-sword .panel,body.t-sword .rewardmodal,body.t-sword .contactwrap,
+  body.t-sword .hint,body.t-sword .gate{cursor:var(--cur-teal),default}
+  body.t-roci .hud,body.t-roci .panel,body.t-roci .rewardmodal,body.t-roci .contactwrap,
+  body.t-roci .hint,body.t-roci .gate{cursor:var(--cur-orange),default}
+  /* game chrome is not a document — no text selection while strafing */
+  .hud{user-select:none}
+}
 
 .vig{position:fixed;inset:0;z-index:6;pointer-events:none;background:radial-gradient(130% 100% at 50% 45%,transparent 52%,rgba(0,0,0,.72) 100%)}
 .scan{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:var(--scan-o);mix-blend-mode:multiply;transition:opacity .8s;
@@ -1031,7 +1048,9 @@ body.t-sword .nt-body p{font-family:'Special Elite',var(--mono);color:#4a3e2c}
 body.t-roci .nt-body p{font-family:var(--os);font-weight:300;color:#b9c3ce}
 
 /* ───────── Captain's Dossier (Phase 4d / brief T14) ───────── */
-.dossier{margin-top:14px;width:min(300px,84vw);position:relative;overflow:hidden}
+/* dossier + the "?" button share a row so they can never overlap */
+.dz-row{display:flex;align-items:flex-start;gap:8px;margin-top:14px}
+.dossier{width:min(300px,84vw);position:relative;overflow:hidden}
 body.t-sword .dossier{background:rgba(26,18,10,.78);border:1px solid #5a4526;border-radius:8px;backdrop-filter:blur(5px)}
 body.t-roci .dossier{background:rgba(8,20,32,.62);border:1px solid rgba(79,184,232,.4);backdrop-filter:blur(9px);
   clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
@@ -1215,7 +1234,7 @@ body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg
 @keyframes runline{from{background-position:0 0}to{background-position:0 300%}}
 .gate-top{position:absolute;top:clamp(16px,4vh,36px);left:50%;transform:translateX(-50%);text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
-.gate-top img{height:52px;width:52px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(0,0,0,.6))}
+.gate-top img{height:78px;width:78px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(0,0,0,.6))}
 .gt-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:#9a917f;text-transform:uppercase}
 .gate-foot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;
   letter-spacing:.14em;color:#847c6e;text-transform:uppercase;text-align:center;pointer-events:none;max-width:92vw;line-height:1.6}
@@ -1361,7 +1380,8 @@ body.t-roci .bnr .bk{color:#9affea}
   .bottom{flex-direction:column;align-items:stretch;gap:12px}
   .player,.pl-skin.cassette,.pl-skin.holo{width:100%!important}
   .sign{display:none}
-  .dossier{width:100%}
+  .dz-row{width:100%}
+  .dossier{flex:1;width:auto;min-width:0}
 }
 @media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i,.help-btn.logbtn.hasnew .log-dot,.bounty-hud.signal .bh-next-lab,.cp-head,.cp-screen::after,.gate-seam,.lm-eq i{animation:none!important} }
 </style>
@@ -1410,7 +1430,6 @@ body.t-roci .bnr .bk{color:#9affea}
       <div class="loc">◈ <span id="loc">SYSTEM MAP</span></div>
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
-        <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
         <!-- the rewards log panel drops down directly beneath the dossier
              (anchored to .brand); its toggle is the permanent bar on the
              dossier's bottom edge below -->
@@ -1423,7 +1442,9 @@ body.t-roci .bnr .bk{color:#9affea}
       </div>
       <!-- Captain's Dossier (Phase 4d / brief T14): the always-visible
            orientation panel — who this is, one line, two chips, live exits.
-           Clicking the ID block is door 2 to the profile window (T18). -->
+           Clicking the ID block is door 2 to the profile window (T18).
+           The "?" flight-manual button rides at its right shoulder. -->
+      <div class="dz-row">
       <div class="dossier" id="dossier">
         <div class="dz-head"><span class="dz-ti">◆ CAPTAIN'S DOSSIER</span><span class="dz-stat">● DECRYPTED</span>
           <button class="mz dz-mz" id="dz-mz" aria-label="Minimize dossier"><svg viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
@@ -1449,6 +1470,8 @@ body.t-roci .bnr .bk{color:#9affea}
         <button class="dz-log" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel">
           <i class="log-dot"></i> rewards log<span class="log-badge" id="log-badge"></span><span class="dz-log-caret">▾</span>
         </button>
+      </div>
+      <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
       </div>
     </div>
     <div class="console" id="console">
@@ -1722,10 +1745,10 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=17"></script>
 <script src="js/04-world.js?v=16"></script>
-<script src="js/05-combat.js?v=16"></script>
+<script src="js/05-combat.js?v=17"></script>
 <script src="js/06-flight.js?v=13"></script>
 <script src="js/10-content-viewer.js?v=3"></script>
-<script src="js/07-environments.js?v=17"></script>
+<script src="js/07-environments.js?v=18"></script>
 <script src="js/08-ui.js?v=26"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>

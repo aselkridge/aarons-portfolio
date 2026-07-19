@@ -354,16 +354,9 @@ function makeEnv(kind){
       else { var sg=c.createRadialGradient(sx-sr*0.25,sy-sr*0.25,sr*0.1,sx,sy,sr);
         sg.addColorStop(0,'#fff6df'); sg.addColorStop(0.5,'#ffcf7a'); sg.addColorStop(1,'#e07a1e');
         c.fillStyle=sg; c.beginPath(); c.arc(sx,sy,sr,0,7); c.fill(); }
-      // energy streams into the hero's hands
-      var hx=w*0.5, hy=h*0.3;
-      c.lineCap='round';
-      for(var i=0;i<9;i++){ var a=t*2+i, off=(i-4)*10;
-        c.globalAlpha=0.25+0.25*Math.sin(t*4+i); c.strokeStyle=i%2?'#ffd98a':'#fff'; c.lineWidth=1+ (i%3);
-        c.beginPath(); c.moveTo(sx+off,sy-sr*0.5);
-        c.quadraticCurveTo(hx+off*0.5,(hy+sy)/2, hx+(i<4?-16:16),hy-6); c.stroke(); }
-      c.globalAlpha=1;
-      // the hero
-      hero(c,hx,hy,Math.min(w,h)/300,t);
+      // figures removed until real illustrated art lands (Aaron's call —
+      // procedural silhouettes cheapen the scene; Phase 3 brings the art)
+      var i;
       // faint distant clouds
       for(i=0;i<3;i++){ c.globalAlpha=0.08; c.fillStyle='#ffdcae';
         var off2=((t*(5+i*3))%(w+400))-200; c.beginPath(); c.ellipse(off2,h*(0.2+i*0.08),150,10,0,0,7); c.fill(); }
@@ -407,18 +400,8 @@ function makeEnv(kind){
       treeLine(c,w,h*0.62,Math.min(w,h)/120,cel?'#0d2417':'#0c2416',66);          // far trees
       treeLine(c,w,h*0.78,Math.min(w,h)/95,cel?'#081a10':'#07160c',52);
       treeLine(c,w,h*0.98,Math.min(w,h)/70,cel?'#030d07':'#020a05',44);           // near trees
-      // bus stop: shelter + big gentle spirit + kid
-      var bx=w*0.72, by=h*0.9, br=Math.sin(t*0.8)*1.6;
-      c.fillStyle=cel?'#020905':'#010704';
-      c.fillRect(bx+60,by-70,5,70); c.fillRect(bx-20,by-74,90,7);                 // shelter
-      c.beginPath(); c.moveTo(bx-12,by); c.quadraticCurveTo(bx-14,by-52-br,bx+16,by-54-br);
-      c.quadraticCurveTo(bx+46,by-52-br,bx+44,by); c.closePath(); c.fill();       // spirit body (rounded)
-      c.beginPath(); c.moveTo(bx+4,by-52-br); c.lineTo(bx+9,by-70-br); c.lineTo(bx+15,by-53-br); c.closePath(); c.fill();  // ears
-      c.beginPath(); c.moveTo(bx+19,by-53-br); c.lineTo(bx+26,by-71-br); c.lineTo(bx+31,by-52-br); c.closePath(); c.fill();
-      c.fillStyle=cel?'#c8ffb0':'#9fe6b4';                                        // eyes (soft glow)
-      c.globalAlpha=0.6+0.3*Math.sin(t*2); c.beginPath(); c.arc(bx+9,by-34-br,2.4,0,7); c.arc(bx+23,by-34-br,2.4,0,7); c.fill(); c.globalAlpha=1;
-      c.fillStyle=cel?'#020905':'#010704';                                        // the kid
-      c.fillRect(bx-34,by-26,8,26); c.beginPath(); c.arc(bx-30,by-30,5.5,0,7); c.fill();
+      // spirit + kid figures removed until real illustrated art lands
+      // (Aaron's call — Phase 3 brings the art); fireflies keep it alive
       // fireflies
       for(var i=0;i<24;i++){ var fx=(i*151+Math.sin(t+i)*30)%w, fy=h*0.5+((i*97)%Math.floor(h*0.42))+Math.cos(t*0.6+i)*12;
         c.globalAlpha=0.25+0.55*Math.max(0,Math.sin(t*1.6+i)); c.fillStyle='#c8ffb0'; c.beginPath(); c.arc(fx,fy,1.7,0,7); c.fill(); } c.globalAlpha=1;
@@ -471,10 +454,8 @@ function makeEnv(kind){
       for(var k=0;k<3;k++){ var sw=64-k*10, sh=38, yy2=gy2-(k+1)*sh-k*2;
         c.fillStyle='#0c0810'; c.fillRect(sx-sw/2,yy2,sw,sh); if(cel){ c.strokeStyle='#000'; c.lineWidth=2; c.strokeRect(sx-sw/2,yy2,sw,sh); }
         c.fillStyle='#1c1420'; c.beginPath(); c.arc(sx,yy2+sh/2,(sh/2-5)*(1+beat*0.12),0,7); c.fill(); }
-      // DJ (left, arm up), MC with mask (mid-left), crew (right)
-      person(c,w*0.26,gy2,Math.min(w,h)/300,1,t,false);
-      person(c,w*0.4,gy2,Math.min(w,h)/300,2,t,true);
-      for(k=0;k<3;k++) person(c,w*0.66+k*Math.min(w,h)/9,gy2,Math.min(w,h)/300,0,t+k,false);
+      // DJ/MC/crew figures removed until real illustrated art lands
+      // (Aaron's call — Phase 3 brings the art); the speakers + beat stay
       // string lights
       c.strokeStyle='rgba(255,220,150,.25)'; c.lineWidth=1;
       c.beginPath(); c.moveTo(0,wy-30); c.quadraticCurveTo(w*0.5,wy+16,w,wy-36); c.stroke();
@@ -491,18 +472,8 @@ function makeEnv(kind){
     // dunes
     c.fillStyle=cel?'#3a1712':'#2a1210'; c.beginPath(); c.moveTo(0,h);
     for(var x=0;x<=w;x+=30) c.lineTo(x,h*0.72+Math.sin(x*0.006+1)*24); c.lineTo(w,h); c.closePath(); c.fill();
-    // the lone swordsman walking the ridge
-    var sx=((t*10)%(w+140))-70, sy=h*0.72+Math.sin(sx*0.006+1)*24, s=Math.min(w,h)/300, step=Math.sin(t*6);
-    c.save(); c.translate(sx,sy); c.fillStyle='#0d0505';
-    c.beginPath(); c.arc(0,-34*s,5.5*s,0,7); c.fill();
-    c.fillRect(-3.5*s,-30*s,7*s,17*s);
-    c.beginPath(); c.moveTo(-2*s,-13*s); c.lineTo((-2-5*step)*s,0); c.lineTo(-5*step*s,0); c.lineTo(0,-13*s); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(2*s,-13*s); c.lineTo((2+5*step)*s,0); c.lineTo((4+5*step)*s,0); c.lineTo(4*s,-13*s); c.closePath(); c.fill();
-    c.save(); c.translate(0,-28*s); c.rotate(-0.7); c.fillRect(0,-2*s,22*s,3*s); c.fillRect(18*s,-4.5*s,3*s,8*s); c.restore();   // sword
-    for(var k=0;k<2;k++){ c.beginPath(); c.moveTo(-4*s,-37*s);
-      c.quadraticCurveTo((-13-k*4)*s,(-38+Math.sin(t*5+k)*3)*s,(-19-k*5)*s,(-34+Math.sin(t*5+k+1)*3)*s);
-      c.lineTo((-18-k*5)*s,-32*s); c.quadraticCurveTo((-11-k*4)*s,-35*s,-4*s,-34*s); c.closePath(); c.fill(); }
-    c.restore();
+    // the lone swordsman removed until real illustrated art lands (Aaron's
+    // call — Phase 3 brings the art); the empty dunes carry the mood
     c.fillStyle=cel?'#1a0a08':'#140807'; c.beginPath(); c.moveTo(0,h);
     for(x=0;x<=w;x+=30) c.lineTo(x,h*0.86+Math.sin(x*0.008+3)*14); c.lineTo(w,h); c.closePath(); c.fill();
   } };

@@ -9,6 +9,17 @@
 addEventListener('pointermove', function(e){ mx=e.clientX; my=e.clientY; });
 addEventListener('pointerdown', function(e){
   Sound.unlock(); Music.autostart();
+  /* Bare HUD chrome (panel text, padding, borders) is TRANSPARENT to flight
+     input while free-flying with a mouse — firing no longer stutters when
+     the cursor crosses the dossier/console mid-fight. Every real control
+     (buttons, links, chips, the log/hint popovers) still swallows its
+     click exactly as before — this branch only fires when the click hit
+     nothing interactive. */
+  if(fine && state==='free' && e.target.closest('.hud')
+     && !e.target.closest('button,a,input,.chip,.logpanel,.hint')){
+    if(lockStation){ beginLanding(lockStation); } else fire();
+    return;
+  }
   // full-screen overlays (reward signal modal, contact card) sit OUTSIDE
   // .hud/.panel — without these two, a click on the open modal falls through
   // to fire()/beginLanding() and docks the planet behind it.
