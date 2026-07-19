@@ -13,8 +13,13 @@ var ContentViewer=(function(){
     blog:function(sec){ return renderBlog(sec); },
     poem:function(sec){ return renderPoem(sec); },
     gallery:function(sec){ return renderGallery(sec); },
-    table:function(sec){ return renderTable(sec); }
+    table:function(sec){ return renderTable(sec); },
+    patch:function(sec){ return renderPatch(sec); },
+    dispatch:function(sec){ return renderDispatch(sec); }
   };
+  /* Stage 5 artifacts render per-theme (brief §9): warm = analog materials,
+     cool = light + glass. themeId is the shared runtime global. */
+  function cool(){ return typeof themeId!=='undefined' && themeId==='roci'; }
 
   function renderBlog(sec){
     var html='';
@@ -65,6 +70,65 @@ var ContentViewer=(function(){
     return html;
   }
 
+  /* ── MISSION · crew patch (warm) / holo insignia (cool) ──
+     Same markup both themes; CSS (body.t-sword/.t-roci .patch) flips the
+     material — embroidery vs light. The logo mark sits at the center. */
+  function renderPatch(sec){
+    var html='<div class="patch-wrap">';
+    html+='<div class="patch-kick">'+esc(sec.kick||'◆ MISSION · THE THESIS')+'</div>';
+    html+='<div class="patch"><img src="../assets/brand/mark-transparent.png" alt="Aaronautics mark">'+
+          '<div class="pt-nm">'+esc(sec.pname||'MISSION 001')+'</div>'+
+          '<div class="pt-est">'+esc(sec.pest||'EST. THE BRONX')+'</div></div>';
+    html+='<div class="patch-banner">'+esc(sec.banner||'MORE THAN ONE THING')+'</div>';
+    if(sec.meta) html+='<div class="patch-meta">'+esc(sec.meta)+'</div>';
+    html+='</div>';
+    return html;
+  }
+
+  /* ── NOTES · typed telex dispatch (warm) / transmission log (cool) ──
+     One card per essay tab; the perforated telex edge only exists warm. */
+  function renderDispatch(sec){
+    var html='<div class="nt-card">';
+    if(!cool()) html+='<div class="nt-perf"></div>';
+    html+='<div class="nt-in">';
+    html+='<div class="nt-head"><span class="nt-no">'+(cool()?'◆ TRANSMISSION':'◆ FIELD DISPATCH')+' · No. '+esc(sec.n||'01')+'</span><span class="nt-yr">'+esc(sec.yr||'2026')+'</span></div>';
+    html+='<div class="nt-title">'+esc(sec.title||sec.k)+'</div>';
+    html+='<div class="nt-body">'+(sec.body||[]).map(function(p){ return '<p>'+esc(p)+'</p>'; }).join('')+'</div>';
+    html+='</div></div>';
+    if(sec.soon) html+='<div class="soon">◇ more dispatches incoming</div>';
+    return html;
+  }
+
+  /* ── riffled artifact items (blueprint builds / life cards) — one item at a
+     time inside the floating window, driven by the riffle controls in
+     07-environments.js. Returns the HTML for a single item. ── */
+  function renderBuildItem(item,i,total){
+    var pad=function(n){ return ('0'+n).slice(-2); };
+    var html='<div class="bp-card"><div class="bp-in">';
+    html+='<div class="bp-head"><span class="bp-no">BUILD '+pad(i+1)+' / '+pad(total)+'</span>'+
+          '<span class="bp-stamp'+(item.held?' held':'')+'">'+esc(item.stamp||(item.held?'HELD ON PURPOSE':'SHIPPED'))+'</span></div>';
+    html+='<div class="bp-title">'+esc(item.title)+'</div>';
+    html+='<div class="bp-desc">'+esc(item.desc||'')+'</div>';
+    if(item.metrics&&item.metrics.length){
+      html+='<div class="bp-mx">'+item.metrics.map(function(m){ return '<div><b>'+esc(m.v)+'</b><i>'+esc(m.l)+'</i></div>'; }).join('')+'</div>';
+    }
+    if(item.note) html+='<div class="bp-note">'+esc(item.note)+'</div>';
+    html+='</div></div>';
+    return html;
+  }
+  function renderLifeItem(item,i){
+    if(cool()){
+      var bars=[5,10,7,13,8,11,4,9,6,10].map(function(v){ return '<i style="height:'+v*2+'px"></i>'; }).join('');
+      return '<div class="lf-med"><div class="lm-top">'+
+        '<div class="lm-art">'+esc(item.ph||'[ art ]')+'</div>'+
+        '<div><div class="lm-lab">'+esc(item.lab||'NOW PLAYING')+'</div><div class="lm-t">'+esc(item.cap)+'</div><div class="lm-s">'+esc(item.sub||'')+'</div></div>'+
+        '</div><div class="lm-eq">'+bars+'</div></div>';
+    }
+    return '<div class="lf-pol'+(i%2?' alt':'')+'">'+
+      '<div class="lf-ph">'+esc(item.ph||'[ photo ]')+'</div>'+
+      '<div class="lf-cap"><b>'+esc(item.cap)+'</b><span>'+esc(item.sub||'')+'</span></div></div>';
+  }
+
   function renderTable(sec){
     // Data table with headers and rows
     if(!sec.rows || !sec.rows.length) return '';
@@ -100,6 +164,12 @@ var ContentViewer=(function(){
     },
     registerType: function(name,fn){
       renderers[name]=fn;
+    },
+    /* one riffled item (builds/life) — used by the floating-window riffle */
+    renderItem: function(type,item,i,total){
+      if(type==='builds') return renderBuildItem(item,i,total);
+      if(type==='life')   return renderLifeItem(item,i);
+      return '';
     }
   };
 })();

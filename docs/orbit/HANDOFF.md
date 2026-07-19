@@ -5,10 +5,14 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 (roadmap consolidated into one ordered phase list —
-see §3 — folding in the 2026-07-19 redesign brief's decisions alongside the
-2026-07-18 plan. Phase 2 Stages 1-2 shipped [Bebop parchment + Expanse HUD
-tablet windows], palette + type system adopted site-wide; new logo wired in)
+Last updated: 2026-07-19 second shipment (the v3 design brief — "Design Notes
+2.zip", a strict superset/supersede of the first brief — landed and its README
+governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
+screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
+stations' artifact windows, both themes], Phase 4a [doorway], 4b [ship
+picker], 4d [Captain's Dossier], 4e [STAR reward cards], the T15 profile
+window + its T18 doors, the §5 "5F" lockup wordmark, decoded nav, and the
+T17A fixed typewriter signoff.)
 
 ---
 
@@ -134,10 +138,21 @@ screen in Phase 4.
   shoot underneath as normal, reward windows keep popping. Deliberately
   restore-via-handle-only here (not tap-the-scene) since clicks fire your
   weapon while flying; ESC also exits.
-- ⬜ Stage 5 — the **other stations** (Mission, AlphaForge, Life, Notes) get
-  their own rich window treatments, in BOTH themes — right now only
-  Craft/Oromugai has this built out.
-- ⬜ Final polish + mobile pass, real screenshots both themes → Aaron merges.
+- ✅ Stage 5 — shipped 2026-07-19 per the v3 brief's §9 artifact system
+  (warm = analog materials, cool = light + glass; every artifact has a
+  matched twin): **Mission** = embroidered crew patch / holo insignia (the
+  logo mark at center, "MORE THAN ONE THING" banner); **AlphaForge** =
+  riffled blueprint build cards (real build content — held send, classifier,
+  fragile-signal, cohort — with metric chips + SHIPPED/HELD stamps; the full
+  001–009 set drops in when Aaron supplies it); **Life** = riffled polaroids
+  (Dancing Script captions, live photo slots) / now-playing glass widgets
+  with animated EQ; **Notes** = each essay as a typed telex dispatch
+  (Special Elite, perforated edge) / holo transmission log. Narrow artifacts
+  shrink the floating window to hug them (`.cwin.k-*`) so the ✕ perches on
+  the artifact's own corner. Verified: zero overflow, zero console errors,
+  both themes, desktop + mobile screenshots.
+- 🔶 Remaining Phase 2 content: Ronin's window (waits on its content
+  brainstorm), Clay-table gallery (waits on Aaron's screenshots).
 
 ### ⬜ Phase 3 — Visual fidelity
 Real illustrated backgrounds/characters replacing procedural shapes (hangar
@@ -152,28 +167,53 @@ with any other phase since it's gated on gathering art, not on sequence.
 (see cross-cutting items below) is settled.
 
 ### ⬜ Phase 4 — Ground Control (the big structural change)
-Heavily shaped by the 2026-07-19 redesign brief (§4). Ordered sub-parts:
-- **4a. The Doorway** — full-screen diagonal split, LAUNCH vs GROUND CONTROL,
-  modeled on the brief's Turn 4a mockup. Ground Control's door is present but
-  **locked — an "under construction" treatment, unclickable** — Ground
-  Control itself isn't built yet (4c).
-- **4b. The Ship/Theme Picker** — reached only via LAUNCH: a **second
-  full-screen scene, also split diagonally**, Swordfish on one side /
-  Rocinante on the other, each with its theme name + copy. Whichever ship the
-  visitor clicks **flies off the page**, and the screen warps into the main
-  flight view with that theme active. This is a bespoke front-door sequence
-  — distinct from the existing in-game hangar-bay ship-swap animation used
-  later for switching themes mid-session, which stays as-is and is untouched.
+Heavily shaped by the 2026-07-19 redesign briefs (§4). Ordered sub-parts:
+- ✅ **4a. The Doorway** — shipped 2026-07-19: full-screen diagonal split
+  (LAUNCH live; GROUND CONTROL door present but locked with a nudging
+  "⚠ terminal under construction" chip until 4c exists), pulsing teal→orange
+  seam whose angle is computed live so it exactly tracks the clip-path split
+  at any viewport, lockup top-center, exit-guarantee note bottom. On phones
+  the halves STACK (top/bottom, shallow diagonal seam) — the side-by-side
+  split has no horizontal room at 390px and the halves' text collided.
+  Deep links (#station) skip both gates.
+- ✅ **4b. The Ship/Theme Picker** — shipped 2026-07-19: second diagonal
+  split, COWBOY BEBOP/Swordfish II (Archivo Black) vs THE EXPANSE/Rocinante
+  (Chakra Petch); the clicked ship's CSS-silhouette placeholder flies
+  off-screen, the screen flashes, and the flight view opens with that theme.
+  Ship boxes are marked **image slots** — Aaron's real Swordfish/Rocinante
+  renders drop straight in. The in-game hangar-bay swap animation is
+  untouched and still handles mid-session theme switches.
 - **4c. Ground Control itself** (full terminal: identity rail with photo/
   résumé/LinkedIn/email always visible, 4 tabs CAREER/ABOUT/FACTS/QUOTES,
   hidden Pong bottom-right) — **ON HOLD per Aaron, do not build yet.**
-- **4d. Captain's Dossier** (always-visible orientation panel on the system
-  map) — approved, not yet built. Open question: does pressing ◈ LOG surface
-  content in the Dossier instead of/alongside the current Mission Log panel?
-  Waiting on Aaron, who may return with a finished design.
-- **4e. Reward-loop STAR upgrade** (Problem/Move/Dent + hard metrics) for
-  EVERY reward category (Career Wins, About the Pilot, Fun Facts, Wisdom) —
-  approved, waiting on Aaron's completed per-category designs before build.
+- ✅ **4d. Captain's Dossier** — shipped 2026-07-19 per T14: always-visible
+  panel under the brand (avatar + name = door 2 to the profile window, role
+  line, one-liner, SECTORS/STATUS chips, LinkedIn + email exits),
+  minimizable like the console, starts minimized on phones. The LOG-vs-
+  Dossier open question stays open (LOG panel unchanged).
+- ✅ **4e. Reward-loop STAR upgrade** — shipped 2026-07-19 per T13/T2:
+  career entries in `data/facts.js` can now be STAR objects
+  (`{h, role, p, mv, metrics[]}`) rendering as the full metrics-forward
+  card (headline dent → PROBLEM → THE MOVE → metric chips → "full résumé /
+  hail the pilot" route); four REAL stories are live in that shape and
+  plain strings still work. Picker re-prioritized: CAREER is the full-width
+  hero channel; pilot reveals carry ORIGIN/CALLSIGN dossier chips; fun
+  facts get the ghosted ✦; wisdom's quote marks are now the teal live-spark
+  in both themes. Aaron's remaining real stories drop in as data only.
+- ✅ **(new, from v3 brief) T15/T18 profile window + doors** — shipped
+  2026-07-19: the contact card is now the "◆ INCOMING TRANSMISSION" ID
+  badge (avatar in the logo's own orbit-ring + teal planet dot, themed
+  warm slab / holo glass), email + LinkedIn live, résumé as a visibly-
+  pending "· SOON" slot until the PDF lands, OTHER BUILDS row (links the
+  Walkman). Doors: ◆ HAIL PILOT in the console, the Dossier ID block, and
+  the signoff (which keeps contact duty until the T19 Hangar exists).
+- ✅ **(new, from v3 brief) identity pass** — shipped 2026-07-19: the §5
+  "5F" lockup (mark + AARO/NAUTICS wordmark with dotless-i teal tittle) in
+  the header and gate screens; decoded nav (station label + mono subtitle,
+  wording = Aaron's existing tags, brief's proposals pending his call);
+  T17A signoff (Special Elite typewriter, fixed off-white #f4f1ea,
+  identical in both themes — never reskins); console carries pinned
+  LinkedIn + résumé-slot links (brief §4.1) without the full T14 restyle.
 - **4f. Ronin's Ground-Control entry** — wire Ronin into the GC menu once 4c
   is built, unlocked via Pong win OR the existing ₩20,000 bounty (whichever
   happens first, unlocks in both places; both tracks stay live).
@@ -358,3 +398,22 @@ for later mid-session theme switching). See Phase 4b in §3.
 **Standing note:** Aaron has said more design material is coming from this
 same outside source ("look out") — when it arrives, read fully before folding
 in; it may reshape §3 again, the way this brief did.
+
+**v3 brief (Design Notes 2.zip, landed 2026-07-19):** a consolidated v3
+handoff that supersedes v2 where they disagree. New in v3 and now BUILT:
+ship picker (T16), fixed signoff (T17A), profile window + three doors
+(T15/T18), the warm/cool artifact system (T20–24), STAR reward cards
+(T13/T2), Captain's Dossier + HUD kit direction (T14), the 5F lockup (§5).
+Still pending from v3: the T19 **Hangar** easter egg (needs art; signoff
+keeps contact duty until then), full T14 NAV·COM restyle (Aaron chose the
+lighter touch for now), Ground Control 4c (on hold), secret-planet Pong.
+
+**Aaron supplies, drops straight in (no code changes unless noted):**
+- `docs/orbit/assets/resume.pdf` → then swap the three "▤ RÉSUMÉ · SOON"
+  slots (dossier/console/profile) to real links — small code touch.
+- Swordfish II + Rocinante renders → the ship-picker image slots.
+- The 9 AlphaForge builds (001–009) → `SECTIONS.alphaforge` build cards.
+- Life polaroid photos + captions → `SECTIONS.life` "Now playing" items.
+- Real STAR career stories → `data/facts.js` career array (object shape
+  documented inline).
+- Confirm/adjust nav decode wording (currently his own station tags).

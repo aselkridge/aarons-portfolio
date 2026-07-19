@@ -23,7 +23,7 @@ function T(){ return THEMES[themeId]; }
 
 /* ══════════ STATIONS ══════════ */
 /* The MISSION is the sun — the thing everything else orbits. */
-var SUN_STATION = { id:'mission', name:'Mission', color:'#ffb44a', num:'01', r:60,
+var SUN_STATION = { id:'mission', name:'Mission', tag:'the core', color:'#ffb44a', num:'01', r:60,
   env:'hero', envlab:'UPPER ATMOSPHERE',
   eyebrow:'THE CORE · EVERYTHING ORBITS THIS', title:'The tech is the byproduct. The people are the point.',
   body:['An engineer and artist from the Bronx who builds technology that serves people — not the other way around.','Speed from paper to product isn\'t progress if nobody asks whether it should ship at all. I want to be the person who asks those questions before the build starts — who challenges ideas, and helps move the best solutions forward.','Lead Automation Analyst · AI-native GTM architect. I design the orchestration layer where agents, iPaaS, enrichment, and CRM come together so a rep sees one tool instead of five.'],
@@ -36,7 +36,7 @@ var STATIONS = [
     tags:['clay','199 → 148 → 40','the held send','judgment over volume'] },
   { id:'life', name:'Life', tag:'the human', color:'#7cff9b', r:16, type:'mooned', orbit:0.57, speed:0.031, a0:2.4,
     env:'forest', envlab:'CANOPY',
-    eyebrow:'STATION 03 · THE HUMAN', title:'Multidimensional by design.',
+    eyebrow:'STATION 03 · THE HUMAN', title:'Multi­dimensional by design.',
     body:['The relatable frequency — anime and hip-hop, games and grilling, physics and fatherhood. The stuff that makes a person, not a profile.','Tune through the channels: what I\'m watching, playing, listening to, eating, and thinking about.'],
     tags:['anime','games','music','food','physics'] },
   { id:'craft', name:'Oromugai', tag:'the infinite living word', color:'#c9a8ff', r:16, type:'gas', orbit:0.70, speed:0.024, a0:3.5,

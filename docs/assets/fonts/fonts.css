@@ -19,3 +19,5 @@
 @font-face{font-family:'Dancing Script';font-style:normal;font-weight:600;font-display:swap;src:url('./dancing-script-600.woff2') format('woff2')}
 /* Baloo 2 — rounded fun face for the Fun Facts reward reveal */
 @font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url('./baloo2-600.woff2') format('woff2')}
+/* Special Elite — typewriter face: the Notes "typed dispatch" artifact + the fixed signoff */
+@font-face{font-family:'Special Elite';font-style:normal;font-weight:400;font-display:swap;src:url('./special-elite-400.woff2') format('woff2')}

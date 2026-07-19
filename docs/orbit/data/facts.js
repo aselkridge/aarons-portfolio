@@ -28,16 +28,35 @@ window.ORBIT_REWARDS = {
   ],
 
   /* ── CAREER INTEL ──────────────────────────────────────────────── */
+  /* Entries can be a plain string (renders as before) OR a STAR object —
+     { h: headline/the dent, role: mono context line, p: the problem,
+       mv: the move, metrics: [{v,l}, …] } — which renders as the full
+     metrics-forward career card (brief T13/4e). AARON: add your real
+     stories in this shape; strings still work fine alongside. */
   career: [
-    "First-ever automation hire on his team — built the entire automation function from nothing over five years. The frameworks didn't exist until he built them.",
-    "Three promotions in five years: Automation Analyst → Senior → Lead.",
-    "Current rank: Lead Automation Analyst.",
+    { h:"Built the function from nothing.",
+      role:"FIRST AUTOMATION HIRE → LEAD · 5 YEARS",
+      p:"No automation function existed — no frameworks, no playbook, nobody to inherit from.",
+      mv:"Built it from zero: the frameworks, the delivery patterns, the standards. First hire on the team; three promotions on the way.",
+      metrics:[{v:"1st",l:"hire"},{v:"3",l:"promotions"},{v:"Lead",l:"current rank"}] },
     "His wedge: AI-native GTM architect — designing the orchestration layer where agents, iPaaS, enrichment, and CRM come together so a rep sees one tool instead of five.",
-    "One GTM build: 199 schools sourced, 148 qualified, 40 verified head-of-school contacts at ~93% reachability.",
-    "Caught a ~57% false-positive rate in an AI enrichment — then designed a deterministic classifier to fix it. The simple rule beat the model.",
+    { h:"199 sourced. 148 qualified. 40 verified.",
+      role:"ALPHAFORGE · LANTERN OUTBOUND ENGINE",
+      p:"Lantern needed a real outbound motion: the right schools, the right people, personalization that wouldn't embarrass anyone.",
+      mv:"Built the full machine — sourcing, cleaning, scoring, segmenting, three tiers of verified personalization — then held the send until the recipient experience was right.",
+      metrics:[{v:"199",l:"sourced"},{v:"40",l:"verified"},{v:"~93%",l:"reachable"}] },
+    { h:"Caught a 57% false-positive rate.",
+      role:"ALPHAFORGE · THE DETERMINISTIC CLASSIFIER",
+      p:"An AI enrichment claimed 30 of 40 contacts had public writing worth referencing. Only 13 were real — the rest were homepage welcome letters.",
+      mv:"One deterministic rule — is the piece on their own domain, or an outside one? — separated real thought leadership from blurbs, every time, without wavering.",
+      metrics:[{v:"57%",l:"false positives"},{v:"1",l:"simple rule"},{v:"13/30",l:"held up"}] },
     "Built an entire outbound machine, then chose not to hit send — the recipient's experience mattered more than the deadline.",
     "His signature thesis: stable structure vs. fragile signal. Structural data is reliable; AI-judged data is silently wrong more often than anyone admits.",
-    "Rebuilt a business-critical global sales capacity tool, migrating it off legacy infrastructure — pilots that took weeks to launch started launching in days.",
+    { h:"Pilots: weeks → days.",
+      role:"GLOBAL SALES CAPACITY TOOL · REBUILD",
+      p:"A business-critical global sales capacity tool was stuck on legacy infrastructure — pilots took weeks to launch.",
+      mv:"Rebuilt and migrated it end to end off the legacy stack.",
+      metrics:[{v:"wks→days",l:"pilot launch"},{v:"global",l:"scope"},{v:"critical",l:"stakes"}] },
     "Took an AI call-intelligence feature from experiment to production — webhooks, Snowflake SQL, dynamic templates, the whole pipe.",
     "Pioneered a browser extension bringing AI insights directly into seller workflows — self-taught the tooling, then coached a teammate into JavaScript.",
     "Delivered 10+ automation projects across enterprise iPaaS and CRM platforms in his first two years alone.",

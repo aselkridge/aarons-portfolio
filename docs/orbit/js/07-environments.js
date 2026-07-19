@@ -54,18 +54,53 @@ function sizeEnv(){ envc.width=envc.clientWidth*devicePixelRatio; envc.height=en
   ectx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
 var SECTIONS={
   mission:[
+    /* Stage 5 artifact — the crew patch (warm) / holo insignia (cool) */
+    {k:'The patch', type:'patch', kick:'◆ MISSION · THE THESIS', banner:'MORE THAN ONE THING',
+     meta:'built to be more than one thing · the crew patch every station flies under',
+     desc:'The crew patch — one mission, more than one thing.'},
     {k:'Why “Aaronautics”', body:['Aaron + aeronautics — the aerospace degree that started it, bent into a name. The site is a machine you operate, because a list of jobs could never hold the whole picture.']},
     {k:'The road here', body:['Aerospace engineering at the University at Buffalo — orbital dynamics, propulsion, biomimicry research, design thinking. Then nearly five years as an Apple Genius, turning scary black boxes into things people could actually use. Then fintech, then ed-tech, then five years building an automation function from nothing: first hire, three promotions, frameworks that didn\'t exist until they did.','The through-line the whole way: technical depth combined with genuine care for the people on the other side of the build.']},
     {k:'Lantern', body:['Co-founded Lantern — digital citizenship and AI literacy for PreK–12. Raising kids who can use the tools and still think for themselves. Not fear, not hype — clarity.','Four branches, one standard: AI ethics, digital citizenship, building AI, building automation.']},
     {k:'Now', body:['Building automations by day, building this world by night. Raising a family in the Bronx. Writing the map for people who were never handed one.']}
   ],
   alphaforge:[
+    /* Stage 5 artifact — blueprint build cards, riffled one at a time.
+       AARON: these are summaries of the real builds below; the full set of
+       9 AlphaForge builds (001–009) drops in here when you supply them. */
+    {k:'Build cards', type:'builds',
+     desc:'The proof, stamped — riffle through the build blueprints.',
+     items:[
+       {title:'Outbound engine for Lantern', held:true,
+        desc:'Sourcing, cleaning, scoring, segmenting — and a fully assembled 40-email send with three tiers of verified personalization. Built the whole machine, then held the send on purpose.',
+        metrics:[{v:'199',l:'schools sourced'},{v:'148',l:'qualified'},{v:'40',l:'verified'}],
+        note:'≈93% reachability · the first email real people get matters more than a deadline'},
+       {title:'The deterministic classifier',
+        desc:'An AI enrichment claimed 30 of 40 contacts had public writing — only 13 were real. One deterministic rule (own domain, or outside?) caught what the model couldn’t, every time.',
+        metrics:[{v:'57%',l:'false positives'},{v:'1',l:'simple rule'},{v:'13/30',l:'held up'}]},
+       {title:'Fragile signal, stable structure',
+        desc:'The thesis every build kept proving: structural data is reliable; AI-judged data is silently wrong more often than anyone admits. Score on what a column actually returns.',
+        metrics:[{v:'0',l:'blind AI scores'},{v:'100%',l:'evidence between'}],
+        note:'never let AI explain AI without evidence in between'},
+       {title:'AlphaForge, complete',
+        desc:'Clay’s GTM engineering cohort — every build shipped, warm-up through the final wedge. The full 001–009 launch-sequence lands here as each build gets written up.',
+        metrics:[{v:'△',l:'every build shipped'},{v:'001–009',l:'sequence incoming'}]}
+     ]},
     {k:'The held send', body:['The final build: a complete outbound system for Lantern — sourcing, cleaning, scoring, segmenting, and a fully assembled 40-email send with three tiers of verified personalization. Every email ready. And I didn\'t hit send.','These were real heads of school in the city I want to build in. The first email they ever get from me matters more than a deadline. So I built the machine carefully, got the experience right on my end first, and chose restraint over speed. The whole system, ready, held on purpose.']},
     {k:'The classifier', body:['An AI enrichment claimed 30 of my 40 contacts had "public writing" I could reference. Reading closely: only 13 were real external work — the other 17 were welcome letters on the schools\' own homepages. Referencing those would have made the outreach look less researched, not more.','The fix wasn\'t more AI. One deterministic rule — is the piece on their own domain, or an outside one? — separated real thought leadership from homepage blurbs, every time, without wavering. More than half the "personalization" would have been embarrassing. A simple rule caught what the model couldn\'t.']},
     {k:'Fragile signal', body:['The thesis that kept proving itself across every build: structural data (headcount, domain, industry) tends to be reliable. Inferential data — AI judgments, private signals, confidence self-reports — tends to be sparse or silently wrong. "It ran" tells you nothing.','So: score on what a column actually returns, not what you asked it to return. Keep scoring deterministic; save AI for genuinely ambiguous judgment. And never let AI explain AI without evidence in between.']},
     {k:'Clay tables', body:['The actual working tables behind all of this — sourcing, enrichment waterfall, scoring columns, segment routing.'], soon:true}
   ],
   life:[
+    /* Stage 5 artifact — polaroids (warm) / now-playing widgets (cool).
+       AARON: photo slots are live — drop real images + captions in anytime. */
+    {k:'Now playing', type:'life',
+     desc:'Polaroids from off duty — what’s on rotation right now.',
+     items:[
+       {cap:'Hip-hop first, always', sub:'then the jazz, funk & soul it was built from', ph:'[ photo ]'},
+       {cap:'The grill is a laboratory', sub:'Bronx plates · side A', ph:'[ photo ]'},
+       {cap:'Journey, on the big screen', sub:'a religious experience · PS5', ph:'[ photo ]'},
+       {cap:'Eurobeat runs in the veins', sub:'Initial D · the one true GOAT', ph:'[ photo ]'}
+     ]},
     {k:'Watching', body:['All-time hall of fame: Initial D (the one true GOAT), Cowboy Bebop, Samurai Champloo, Afro Samurai, Mob Psycho 100. Style, soul, and mastery over raw power — though the power helps.','Currently caught up on: Solo Leveling, JJK, Bleach TYBW, Kaiju No. 8, Demon Slayer, Hunter x Hunter, Shangri-La Frontier, Wind Breaker, Hell\'s Paradise, Wistoria, Dan Da Dan, MASHLE, and more.','Next up on the must-watch list: Naruto, Death Note, Gintama, Blue Lock, Baki Hanma, Kengan Ashura, Cyberpunk: Edgerunners, Lord of Mysteries, Project K, Noblesse, Re:Zero, Super Cube.']},
     {k:'Playing', body:['PS5 + Switch 2. Open-world RPGs (Horizon, God of War, Jedi, samurai anything), Pokémon since forever, all things Mario, Zelda, Smash, Mario Kart, Star Fox, Donkey Kong.','Racing games, Ace Combat, Astro Bot, Jak and Daxter, Ratchet & Clank, Spyro, Crash, Hogwarts Legacy, Spider-Man, Cyberpunk, GTA, Watch Dogs, Lego games, Flower — and Journey, which is a religious experience disguised as a video game.']},
     {k:'Listening', body:['Hip-hop first — then the jazz, funk, and soul it was built from. Sampling lineage is the family tree of modern music, and tracing it is half the fun. House and R&B in heavy rotation too.','Cares about the artists getting paid, not just played.']},
@@ -86,9 +121,14 @@ var SECTIONS={
      ]}
   ],
   notes:[
-    {k:'Fossil records', body:['On reactive systems: a tech stack built panic-by-panic isn\'t architecture — it\'s a fossil record of past panics, and the people using it are the ones living among the bones.','Reacting is natural. Sometimes necessary. The failure isn\'t reacting — it\'s never graduating from it. Structure and proactive design should be the rule; reaction the exception. Most systems have those two backward, and the job almost nobody holds is graduating a team from one to the other.']},
-    {k:'The cleaning is the build', body:['What building a real data pipeline teaches you: the plan assumes clean inputs, and the inputs are never clean. The cleaning isn\'t a prep step before the real work — it IS the work, the layer nobody documents and nobody plans for.','And even after you build the gate, the mess finds a way back in around it. So don\'t build for the data you wish you had. Build for the data that\'s actually going to show up.']},
-    {k:'The held send', body:['Ethics isn\'t a section at the end of the build doc. It\'s the moment you have 40 verified contacts, a finished email, a working system — and you don\'t hit send, because the experience on the other end isn\'t ready yet.','The ethical reflex is a muscle. You build it by using it when it costs you something.']},
+    /* Stage 5 artifact — each essay ships as a typed telex dispatch (warm) /
+       transmission log (cool). Same words, opposite materials. */
+    {k:'Fossil records', type:'dispatch', n:'01', title:'Fossil records',
+     body:['On reactive systems: a tech stack built panic-by-panic isn\'t architecture — it\'s a fossil record of past panics, and the people using it are the ones living among the bones.','Reacting is natural. Sometimes necessary. The failure isn\'t reacting — it\'s never graduating from it. Structure and proactive design should be the rule; reaction the exception. Most systems have those two backward, and the job almost nobody holds is graduating a team from one to the other.']},
+    {k:'The cleaning is the build', type:'dispatch', n:'02', title:'The cleaning is the build',
+     body:['What building a real data pipeline teaches you: the plan assumes clean inputs, and the inputs are never clean. The cleaning isn\'t a prep step before the real work — it IS the work, the layer nobody documents and nobody plans for.','And even after you build the gate, the mess finds a way back in around it. So don\'t build for the data you wish you had. Build for the data that\'s actually going to show up.']},
+    {k:'The held send', type:'dispatch', n:'03', title:'The held send',
+     body:['Ethics isn\'t a section at the end of the build doc. It\'s the moment you have 40 verified contacts, a finished email, a working system — and you don\'t hit send, because the experience on the other end isn\'t ready yet.','The ethical reflex is a muscle. You build it by using it when it costs you something.']},
     {k:'On deck', body:['Fatherhood and the build. GTM for people who were never handed the map. Video lessons.'], soon:true}
   ]
 };
@@ -115,11 +155,14 @@ function briefOf(sec){
     return escH(t.length>96?t.slice(0,94)+'…':t); }
   return '';
 }
-/* ── the floating content window: one poem at a time (riffle) or a prose card ── */
-var winPoems=null, winIdx=0;
+/* ── the floating content window ──
+   Riffled types (poem / builds / life) show ONE item at a time with the
+   prev/dots/next controls; single-artifact types (patch / dispatch) render
+   bare over the scene; everything else gets the themed prose card. */
+var winItems=null, winIdx=0, winKind='';
 var PW_OURO='<svg class="pw-emblem" viewBox="0 0 120 60" fill="none" aria-hidden="true"><path d="M60 30 C60 9 90 9 90 30 C90 51 60 51 60 30 C60 9 30 9 30 30 C30 51 60 51 60 30 Z" stroke="#8fe0ff" stroke-width="2.6" vector-effect="non-scaling-stroke"/><circle cx="31" cy="24" r="3" fill="#8fe0ff"/></svg>';
 function renderPoemOne(){
-  var p=winPoems[winIdx], num=p.n||('#'+('0'+(winIdx+1)).slice(-2)),
+  var p=winItems[winIdx], num=p.n||('#'+('0'+(winIdx+1)).slice(-2)),
       meta=escH(p.meta||'8 syllables · one breath'), line=escH(p.line||'');
   if(themeId==='roci'){
     // Expanse HUD future-tablet: a decoded transmission
@@ -146,24 +189,48 @@ function renderPoemOne(){
       '<span class="poem-meta">'+meta+'</span></div>'+
       '<img class="poem-quill" src="assets/quill.png" alt="" aria-hidden="true"></figure>';
   }
-  $('cwin-dots').innerHTML=winPoems.map(function(_,i){return '<i class="'+(i===winIdx?'on':'')+'"></i>';}).join('');
-  $('cwin-count').textContent=(winIdx+1)+' / '+winPoems.length;
+  drawRiffle();
+}
+function drawRiffle(){
+  $('cwin-dots').innerHTML=winItems.map(function(_,i){return '<i class="'+(i===winIdx?'on':'')+'"></i>';}).join('');
+  $('cwin-count').textContent=(winIdx+1)+' / '+winItems.length;
+}
+/* narrow artifacts shrink the window to hug them (see .cwin.k-* CSS) */
+function setWinKind(kind){
+  var cw=$('cwin');
+  ['k-patch','k-builds','k-life','k-dispatch'].forEach(function(c){ cw.classList.remove(c); });
+  if(kind) cw.classList.add('k-'+kind);
+}
+function renderWinItem(){
+  if(winKind==='poem'){ renderPoemOne(); return; }   // poems keep their bespoke per-theme builds
+  $('p-body').className='cwin-body';
+  $('p-body').innerHTML=ContentViewer.renderItem(winKind,winItems[winIdx],winIdx,winItems.length);
+  drawRiffle();
 }
 function selectSec(sec,a){
   var links=$('secs').querySelectorAll('a');
   for(var i=0;i<links.length;i++) links[i].classList.toggle('on', links[i]===a);
   $('rail-desc').innerHTML='<b>'+escH(sec.k)+'</b> · '+briefOf(sec);
-  if(sec.type==='poem' && sec.poems && sec.poems.length){
-    winPoems=sec.poems; winIdx=0; renderPoemOne(); $('cwin-riffle').classList.remove('hidden');
+  var items = sec.type==='poem' ? sec.poems : (sec.type==='builds'||sec.type==='life') ? sec.items : null;
+  if(items && items.length){
+    winKind=sec.type; winItems=items; winIdx=0;
+    setWinKind(sec.type==='poem'?null:sec.type);
+    renderWinItem(); $('cwin-riffle').classList.remove('hidden');
   } else {
-    winPoems=null; $('p-body').className='cwin-body sec-body cwin-card';
+    winItems=null;
+    if(sec.type==='patch'||sec.type==='dispatch'){
+      // single artifacts float bare over the scene — no prose-card chrome
+      $('p-body').className='cwin-body'; setWinKind(sec.type);
+    } else {
+      $('p-body').className='cwin-body sec-body cwin-card'; setWinKind(null);
+    }
     $('p-body').innerHTML=ContentViewer.render(sec); $('cwin-riffle').classList.add('hidden');
   }
   $('cwin').classList.add('show');
 }
 $('cwin-close').addEventListener('click', hideWindow);
-$('cwin-prev').addEventListener('click', function(){ if(!winPoems)return; winIdx=(winIdx-1+winPoems.length)%winPoems.length; renderPoemOne(); Sound.blip(620); });
-$('cwin-next').addEventListener('click', function(){ if(!winPoems)return; winIdx=(winIdx+1)%winPoems.length; renderPoemOne(); Sound.blip(720); });
+$('cwin-prev').addEventListener('click', function(){ if(!winItems)return; winIdx=(winIdx-1+winItems.length)%winItems.length; renderWinItem(); Sound.blip(620); });
+$('cwin-next').addEventListener('click', function(){ if(!winItems)return; winIdx=(winIdx+1)%winItems.length; renderWinItem(); Sound.blip(720); });
 /* — environment painters — */
 function ridge(w,h,base,jag,n){ var pts=[]; for(var i=0;i<=n;i++) pts.push({x:w*i/n, y:base+(Math.random()-0.5)*jag}); return pts; }
 function drawRidge(c,pts,h,col){ c.fillStyle=col; c.beginPath(); c.moveTo(-10,h+10);

@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://aselkridge.github.io/aarons-portfolio/docs/assets/brand/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="../assets/fonts/fonts.css?v=3">
+<link rel="stylesheet" href="../assets/fonts/fonts.css?v=4">
 <style>
 :root{
   --ink:#efece6; --dim:#8b93a6; --line:rgba(239,236,230,.14);
@@ -271,8 +271,18 @@ body.t-roci .scancard{display:block}
 .bottom{align-items:flex-end}
 /* brand header + nav */
 .brand{pointer-events:auto}
-.wordmark{font-family:var(--anton);font-size:clamp(1.55rem,2.9vw,2.3rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
+/* the "5F" lockup (brief §5): the mark leads as an icon, the wordmark rides
+   beside it as a quiet nameplate — AARO cream, NAUTICS in the theme accent,
+   and the planet-i wears a teal tittle: the one rare "live spark" teal is
+   allowed to touch outside truly-alive UI. */
+.lockup{display:flex;align-items:center;gap:12px}
+.lk-mark{width:clamp(38px,4.4vw,52px);height:clamp(38px,4.4vw,52px);object-fit:contain;flex:none;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.55))}
+.wordmark{font-family:var(--anton);font-size:clamp(1.4rem,2.6vw,2.05rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
 .wordmark em{font-style:normal;color:var(--accent);transition:color .5s}
+.pi{position:relative;display:inline-block}
+.pi::after{content:'';position:absolute;left:50%;top:-.2em;transform:translateX(-50%);
+  width:.2em;height:.2em;border-radius:50%;background:#35c1d1;box-shadow:0 0 6px rgba(53,193,209,.85)}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
 /* nav row: the station links + the instructions ("?") button that pops the
@@ -288,6 +298,10 @@ body.t-roci .scancard{display:block}
 .stnav a{font-family:var(--os);font-weight:600;font-size:clamp(12.5px,1.4vw,15.5px);letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:.18s;cursor:pointer;opacity:.82}
 .stnav a:hover,.stnav a.here{color:var(--accent);border-bottom-color:var(--accent);opacity:1;text-shadow:0 0 16px var(--accent)}
+/* decoded nav (brief §4.2, settled): station label + a small mono decode
+   subtitle underneath. Wording = Aaron's own station tags. */
+.stnav a i{display:block;font-style:normal;font-family:var(--mono);font-size:8px;letter-spacing:.12em;
+  color:var(--accent);opacity:.7;margin-top:1px;text-transform:uppercase;text-shadow:none;font-weight:400}
 .sun{cursor:pointer;transition:filter .25s}
 .sun:hover,.sun.hot{filter:brightness(1.16) saturate(1.1)}
 .bl{display:flex;flex-direction:column}
@@ -412,13 +426,17 @@ body.t-roci .log-item.unseen .ld{text-shadow:0 0 16px rgba(79,184,232,.55)}
    accent-color touch that used to live in the "aaronautics · orbit"
    subtext (now removed) moves onto a hover/focus color shift instead, so
    it doubles as the "this is clickable" cue. */
-.sign{position:fixed;left:-6px;bottom:-10px;z-index:9;cursor:pointer;
+/* T17A: the authentic Bebop end-card — typewriter face, fixed off-white
+   #f4f1ea, IDENTICAL in both themes. This is the one element that never
+   reskins (brief §6). Still opens the contact card until the Hangar
+   easter egg exists to take this door over. */
+.sign{position:fixed;left:22px;bottom:18px;z-index:9;cursor:pointer;
   background:none;border:none;padding:0;margin:0;text-align:left;
-  font-family:var(--anton);text-transform:uppercase;line-height:.8;font-size:clamp(1.6rem,4vw,3.4rem);
-  transform:rotate(-6deg);transform-origin:bottom left;letter-spacing:.005em;
-  color:var(--ink);opacity:.92;text-shadow:0 4px 30px rgba(0,0,0,.7);white-space:nowrap;
-  transition:color .3s}
-.sign:hover,.sign:focus-visible{color:var(--accent)}
+  font-family:'Special Elite',var(--mono);text-transform:uppercase;line-height:1.08;
+  font-size:clamp(1.15rem,2.2vw,1.8rem);letter-spacing:.01em;
+  color:#f4f1ea;opacity:.9;text-shadow:0 4px 30px rgba(0,0,0,.8);white-space:nowrap;
+  transition:opacity .3s,text-shadow .3s}
+.sign:hover,.sign:focus-visible{opacity:1;text-shadow:0 0 26px rgba(244,241,234,.45)}
 .sign:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
 @media (max-width:720px){ .sign{font-size:1.7rem} }
 
@@ -427,32 +445,33 @@ body.t-roci .log-item.unseen .ld{text-shadow:0 0 16px rgba(79,184,232,.55)}
   background:rgba(4,5,8,.72);backdrop-filter:blur(6px);opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .25s,visibility .25s;padding:24px}
 .contactwrap.on{opacity:1;visibility:visible;pointer-events:auto}
-.contactcard{position:relative;width:min(360px,92vw);background:rgba(10,11,16,.94);border:1px solid var(--line);
-  border-radius:16px;padding:32px 28px 26px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);
-  transform:translateY(14px);transition:transform .25s}
+/* the card itself — brief T15's "incoming transmission" ID badge, themed:
+   warm = amber console slab w/ scanlines; cool = cut-corner holo glass */
+.contactcard{position:relative;width:min(420px,94vw);overflow:hidden;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(14px);transition:transform .25s}
+body.t-sword .contactcard{background:linear-gradient(180deg,#1c1408,#100b05);border:1px solid #5a4526;border-radius:12px}
+body.t-sword .contactcard::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
+body.t-roci .contactcard{background:rgba(7,17,28,.94);border:1px solid rgba(79,184,232,.45);backdrop-filter:blur(12px);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 40px rgba(79,184,232,.18)}
+body.t-roci .contactcard::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(79,184,232,.04) 0 1px,transparent 1px 3px)}
+.contactcard>*{position:relative;z-index:1}
 .contactwrap.on .contactcard{transform:translateY(0)}
-.contact-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
-  background:transparent;color:var(--dim);font-size:14px;cursor:pointer;display:inline-grid;place-items:center;
-  transition:color .18s,border-color .18s}
+.contact-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:transparent;color:var(--dim);font-size:13px;cursor:pointer;display:inline-grid;place-items:center;
+  padding:0;transition:color .18s,border-color .18s}
 .contact-close:hover{color:var(--ink);border-color:var(--accent)}
-.contact-photo{width:96px;height:96px;border-radius:50%;margin:0 auto 18px;overflow:hidden;
-  border:2px solid var(--accent);display:grid;place-items:center;background:rgba(255,255,255,.04)}
-.contact-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.contact-photo .initials{display:none;font-family:var(--anton);font-size:1.7rem;color:var(--accent)}
-.contact-photo.noimg img{display:none}
-.contact-photo.noimg .initials{display:block}
-.contact-name{font-family:var(--anton);text-transform:uppercase;font-size:1.35rem;letter-spacing:.01em;color:var(--ink)}
-.contact-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:6px}
-.contact-bio{font-family:var(--os);font-size:12.5px;line-height:1.5;color:var(--dim);margin-top:12px}
-.contact-links{display:flex;flex-direction:column;gap:10px;margin-top:22px}
-.contact-links a{font-family:var(--os);font-weight:600;font-size:13.5px;letter-spacing:.04em;color:var(--ink);
-  text-decoration:none;padding:10px 14px;border:1px solid var(--line);border-radius:9px;
-  transition:color .18s,border-color .18s,background .18s;display:block}
-.contact-links a:hover{color:var(--accent);border-color:var(--accent);background:rgba(255,255,255,.03)}
-.contact-more{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.contact-more-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
-.contact-more-list{font-family:var(--os);font-size:12.5px;color:var(--dim);margin-top:8px;font-style:italic}
-.contact-more-list a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
+.contact-name{font-family:var(--display);text-transform:uppercase;font-size:clamp(1.5rem,3vw,1.8rem);line-height:1;letter-spacing:.01em;color:var(--ink)}
+.contact-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;margin-top:9px}
+body.t-sword .contact-tag{color:#f0a63c}body.t-roci .contact-tag{color:#4fb8e8}
+.contact-bio{font-family:var(--os);font-weight:300;font-size:15px;line-height:1.5;color:#c9c2b4;margin:14px auto 20px;max-width:320px}
+.contact-links{margin-top:4px}
+.contact-more{margin-top:20px;padding-top:16px}
+body.t-sword .contact-more{border-top:1px dashed #5a4526}
+body.t-roci .contact-more{border-top:1px solid rgba(79,184,232,.25)}
+.contact-more-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
 
 /* reward signal modal — every reward-earning moment (gold asteroid crack,
    saucer kill) opens straight to the picker below; a clicked ◈ LOG entry
@@ -500,15 +519,16 @@ body.t-roci .rm-pick:hover{background:rgba(79,184,232,.16);color:#dff4ff;border-
    line under the frame (built by setRevealBody in 08-ui.js, which strips
    the plain quote marks out of the text so they don't stack with these). */
 .rm-quote{display:block}
+/* the decorative marks are TEAL in both themes (brief T13): wisdom is one of
+   the rare "alive" moments the single live-spark color is reserved for */
 .rm-quote::before{content:'“';display:block;font-size:2.2em;line-height:.5;margin:.2em auto .25em;
-  color:var(--accent2);opacity:.85;text-shadow:0 0 18px rgba(255,211,106,.4)}
+  color:#35c1d1;opacity:.9;text-shadow:0 0 18px rgba(53,193,209,.45)}
 .rm-quote::after{content:'”';display:block;font-size:2.2em;line-height:.5;margin:.35em auto 0;
-  color:var(--accent2);opacity:.85;text-shadow:0 0 18px rgba(255,211,106,.4)}
+  color:#35c1d1;opacity:.9;text-shadow:0 0 18px rgba(53,193,209,.45)}
 .rm-attr{display:block;margin-top:1.1em;font-family:var(--os);font-weight:500;font-size:clamp(.85rem,1.2vw,1rem);
   letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-shadow:none}
 .rm-attr::before{content:'— '}
 body.t-roci .rewardmodal.cat-quotes .rm-text{color:#e7f6ff;text-shadow:0 0 24px rgba(154,255,234,.3)}
-body.t-roci .rm-quote::before,body.t-roci .rm-quote::after{color:#9affea;text-shadow:0 0 18px rgba(154,255,234,.4)}
 .rewardmodal.cat-career .rm-text{font-weight:700;font-size:clamp(1.05rem,1.7vw,1.25rem);line-height:1.7;color:#fff}
 .rm-num{font-family:var(--anton);font-weight:400;font-size:1.65em;line-height:1;padding:0 3px;
   color:var(--accent2);text-shadow:0 0 20px var(--accent);white-space:nowrap}
@@ -529,6 +549,16 @@ body.t-roci .rewardmodal.cat-random .rm-text{color:#dff4ff}
 .c-row .lab{font-family:var(--mono);font-size:9px;letter-spacing:.24em;align-self:center;width:34px;flex:none}
 .c-row button{flex:1;border:0;cursor:pointer;font-family:var(--os);font-weight:600;font-size:11.5px;letter-spacing:.14em;
   text-transform:uppercase;padding:7px 4px 6px;transition:.15s;position:relative;background:transparent}
+/* pinned career exits — résumé/LinkedIn ride in the console (brief §4.1) */
+.c-links{display:flex;gap:6px;padding:2px 10px 8px}
+.c-links a,.c-links .c-resume{flex:1;text-align:center;font-family:var(--mono);font-weight:700;font-size:9.5px;
+  letter-spacing:.08em;text-transform:uppercase;padding:8px 4px;border-radius:4px;text-decoration:none;transition:.15s}
+body.t-sword .c-links a{background:#f0a63c;color:#1c0e04}
+body.t-sword .c-links a:hover{box-shadow:0 0 14px rgba(240,166,60,.5)}
+body.t-sword .c-links .c-resume{border:1px dashed rgba(240,166,60,.4);color:#9a7a48;cursor:help}
+body.t-roci .c-links a{background:rgba(79,184,232,.85);color:#06121e}
+body.t-roci .c-links a:hover{box-shadow:0 0 14px rgba(79,184,232,.5)}
+body.t-roci .c-links .c-resume{border:1px dashed rgba(79,184,232,.35);color:#5b7d99;cursor:help}
 .c-data{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;padding:8px 12px 11px;font-family:var(--mono);font-size:10px;letter-spacing:.08em}
 .c-data .k{opacity:.62}
 .c-data b{font-weight:700;font-variant-numeric:tabular-nums}
@@ -581,7 +611,7 @@ body.t-roci .c-data{color:#9cc8e4}
 /* ── ship-exchange bay (inside the console) ── */
 .bay{position:absolute;inset:0;z-index:8;display:none;overflow:hidden}
 .console.baying .bay{display:block}
-.console.baying .c-row,.console.baying .c-data{visibility:hidden}
+.console.baying .c-row,.console.baying .c-data,.console.baying .c-links{visibility:hidden}
 .bay::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 2px,transparent 2px 24px)}
 body.t-sword .bay{background:radial-gradient(120% 95% at 50% 18%,#2e2216 0%,#140b04 78%)}
@@ -670,7 +700,10 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
   border-right:1px solid rgba(79,184,232,.2)}
 .dock .envlab{font-family:var(--mono);font-size:9px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
 .dock .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--pc,var(--accent))}
-.dock h2{font-family:var(--anton);text-transform:uppercase;font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.15;letter-spacing:.02em;margin:.3em 0 .7em}
+/* hyphens/break-word: Archivo Black runs wider than the old Anton — long
+   single words (MULTIDIMENSIONAL, TRANSMISSIONS) must wrap inside the rail,
+   not run off its edge into the scene */
+.dock h2{font-family:var(--anton);text-transform:uppercase;font-size:clamp(1.3rem,2.5vw,1.85rem);line-height:1.15;letter-spacing:.02em;margin:.3em 0 .7em;overflow-wrap:break-word;hyphens:auto}
 .secs{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
 .secs a{font-family:var(--os);font-weight:500;font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--dim);cursor:pointer;padding:9px 12px;border-left:2px solid transparent;transition:.16s;text-decoration:none}
@@ -761,6 +794,13 @@ body.t-sword .cwin-card{background:rgba(20,13,8,.88);border:1px solid rgba(240,1
 body.t-roci .cwin-card{background:rgba(8,20,33,.84);border:1px solid rgba(79,184,232,.3);backdrop-filter:blur(12px);box-shadow:0 26px 60px -22px rgba(0,0,0,.8);
   clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
 .cwin-card .p-eye{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--pc,var(--accent));margin-bottom:12px}
+/* artifact-fitted window: narrow artifacts shrink the window to hug them so
+   the ✕ perches on the artifact's own corner instead of floating in space */
+.cwin.k-patch{width:min(340px,88vw)}
+.cwin.k-builds{width:min(444px,92vw)}
+.cwin.k-life{width:min(364px,88vw)}
+.cwin.k-dispatch{width:min(424px,92vw)}
+.cwin.k-patch .cwin-close,.cwin.k-builds .cwin-close,.cwin.k-life .cwin-close,.cwin.k-dispatch .cwin-close{top:-10px;right:-10px}
 /* riffle controls (poem tabs) */
 .cwin-riffle{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:14px;flex:none}
 .cwin-riffle.hidden{display:none}
@@ -820,6 +860,322 @@ body.t-sword .cwin-arrow{border:1px solid rgba(240,166,60,.4)}body.t-roci .cwin-
 .pw-meta b{color:#bfe6ff;font-weight:400}
 /* roci prose card gets a faint HUD grid so it matches the tablet family */
 body.t-roci .cwin-card{background-image:linear-gradient(rgba(79,184,232,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(79,184,232,.05) 1px,transparent 1px);background-size:26px 26px}
+
+/* ───────── Stage 5 artifacts (brief §9) ─────────
+   One tactile object per content type, in matched warm-analog / cool-digital
+   twins: warm = paper, wax, embroidery, film; cool = light + glass. All ride
+   inside the existing floating window (#cwin). */
+/* ── MISSION · embroidered crew patch (warm) / holo insignia (cool) ── */
+.patch-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 4px}
+.patch-kick{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;margin-bottom:18px}
+body.t-sword .patch-kick{color:#f0a63c}body.t-roci .patch-kick{color:#4fb8e8}
+.patch{position:relative;width:min(250px,62vw);aspect-ratio:1;border-radius:50%;flex:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+body.t-sword .patch{background:radial-gradient(circle at 45% 38%,#2a1c0d,#140d06 72%);border:5px solid #6b4e1a;
+  box-shadow:0 24px 50px rgba(0,0,0,.55),inset 0 0 0 2px #0a0805}
+body.t-sword .patch::before{content:'';position:absolute;inset:9px;border-radius:50%;border:2px dashed rgba(240,166,60,.5)}
+body.t-sword .patch::after{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(1px 1px at 30% 26%,rgba(255,255,255,.38) 0,transparent 100%),
+    radial-gradient(1px 1px at 72% 34%,rgba(255,255,255,.3) 0,transparent 100%),
+    radial-gradient(1px 1px at 58% 70%,rgba(255,255,255,.25) 0,transparent 100%)}
+body.t-roci .patch{background:radial-gradient(circle at 45% 40%,rgba(20,44,66,.9),rgba(8,20,34,.95) 72%);border:1px solid #4fb8e8;
+  box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 40px rgba(79,184,232,.2),inset 0 0 20px rgba(79,184,232,.12)}
+body.t-roci .patch::before{content:'';position:absolute;inset:13px;border-radius:50%;border:1px solid rgba(79,184,232,.4)}
+body.t-roci .patch::after{content:'';position:absolute;inset:29px;border-radius:50%;border:1px dashed rgba(79,184,232,.25)}
+.patch img{width:76px;height:76px;object-fit:contain;margin-bottom:7px;position:relative;z-index:1}
+body.t-roci .patch img{filter:drop-shadow(0 0 6px rgba(79,184,232,.5))}
+.pt-nm{position:relative;z-index:1;font-family:var(--display);font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+body.t-sword .pt-nm{color:#f0d9b0}
+body.t-roci .pt-nm{color:#eaf6ff;text-shadow:0 0 10px rgba(79,184,232,.6)}
+.pt-est{position:relative;z-index:1;font-family:var(--mono);font-size:8px;letter-spacing:.28em;margin-top:3px;text-transform:uppercase}
+body.t-sword .pt-est{color:#c9a96a}body.t-roci .pt-est{color:#7f94a4}
+.patch-banner{margin-top:-15px;position:relative;z-index:2;white-space:nowrap;padding:8px 20px;border-radius:3px;
+  font-family:var(--display);font-size:13px;letter-spacing:.03em;text-transform:uppercase}
+body.t-sword .patch-banner{transform:rotate(-2deg);background:#f0a63c;color:#1a1206;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+body.t-roci .patch-banner{border:1px solid #4fb8e8;color:#4fb8e8;background:rgba(9,20,32,.88);box-shadow:0 0 16px rgba(79,184,232,.25)}
+.patch-meta{margin-top:18px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:#f0e6d2;text-shadow:0 1px 10px rgba(15,8,3,.9),0 0 20px rgba(15,8,3,.7);text-align:center;line-height:1.7;max-width:34ch}
+body.t-roci .patch-meta{color:#d8ecf8;text-shadow:0 1px 10px rgba(3,8,15,.9),0 0 20px rgba(3,8,15,.7)}
+/* ── ALPHAFORGE · blueprint build cards (riffled) ── */
+.bp-card{position:relative;overflow:hidden;border-radius:12px;margin:0 auto;max-width:420px}
+body.t-sword .bp-card{background:#1d1408;border:1px solid #5a4526;--bp-grid:rgba(240,166,60,.09);box-shadow:0 30px 60px -18px rgba(0,0,0,.7)}
+body.t-roci .bp-card{background:#0d1f30;border:1px solid #2b5a7a;--bp-grid:rgba(79,184,232,.08);box-shadow:0 30px 60px -18px rgba(0,0,0,.7),0 0 34px rgba(79,184,232,.12)}
+.bp-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--bp-grid) 1px,transparent 1px),linear-gradient(90deg,var(--bp-grid) 1px,transparent 1px);background-size:26px 26px}
+.bp-in{position:relative;padding:22px}
+.bp-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono)}
+.bp-no{font-size:10px;letter-spacing:.2em}
+body.t-sword .bp-no{color:#f0a63c}body.t-roci .bp-no{color:#4fb8e8}
+.bp-stamp{font-size:9px;letter-spacing:.14em;border-radius:3px;padding:3px 8px;font-weight:700;text-transform:uppercase}
+body.t-sword .bp-stamp{background:#f0a63c;color:#12100c}
+body.t-roci .bp-stamp{background:#4fb8e8;color:#12100c}
+.bp-stamp.held{background:transparent!important;border:1px dashed currentColor}
+body.t-sword .bp-stamp.held{color:#ffd36a}body.t-roci .bp-stamp.held{color:#9affea}
+.bp-title{font-family:var(--display);font-size:21px;line-height:1.08;margin:14px 0 6px}
+body.t-sword .bp-title{color:#f2e7d2}body.t-roci .bp-title{color:#eef2f6}
+.bp-desc{font-family:var(--os);font-weight:300;font-size:14px;line-height:1.5;margin-bottom:16px}
+body.t-sword .bp-desc{color:#cbb78d}body.t-roci .bp-desc{color:#b9c3ce}
+.bp-mx{display:flex;gap:8px}
+.bp-mx>div{flex:1;border-radius:5px;padding:9px 5px;text-align:center;border:1px solid}
+body.t-sword .bp-mx>div{border-color:#4a3a20}body.t-roci .bp-mx>div{border-color:#2b5a7a}
+.bp-mx b{display:block;font-family:var(--display);font-size:18px;line-height:1.1}
+body.t-sword .bp-mx b{color:#f0a63c}body.t-roci .bp-mx b{color:#4fb8e8}
+.bp-mx i{display:block;font-style:normal;font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--dim);margin-top:3px;text-transform:uppercase}
+.bp-note{margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);line-height:1.6}
+/* ── LIFE · polaroid (warm) / now-playing widget (cool) ── */
+.lf-pol{width:min(266px,72vw);margin:0 auto;background:#f4f1ea;border-radius:4px;
+  box-shadow:0 34px 60px -14px rgba(0,0,0,.65);padding:14px 14px 0;transform:rotate(-2.2deg)}
+.lf-pol.alt{transform:rotate(1.6deg)}
+.lf-ph{height:205px;background-color:#20242b;background-image:repeating-linear-gradient(135deg,#2a2f37 0 1px,transparent 1px 11px);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:#7d8791;letter-spacing:.1em}
+.lf-cap{padding:14px 4px 20px}
+.lf-cap b{display:block;font-family:'Dancing Script',cursive;font-weight:600;font-size:23px;color:#2a2018;line-height:1.12}
+.lf-cap span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:#8a8272;margin-top:8px;text-transform:uppercase}
+.lf-med{width:min(330px,78vw);margin:0 auto;border-radius:14px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(16,34,52,.92),rgba(8,20,34,.94));border:1px solid #4fb8e8;
+  box-shadow:0 30px 60px -14px rgba(0,0,0,.65),0 0 40px rgba(79,184,232,.14)}
+.lm-top{display:flex;gap:14px;padding:18px}
+.lm-art{width:78px;height:78px;flex:none;border-radius:8px;background-color:#0e2233;
+  background-image:repeating-linear-gradient(135deg,#153048 0 1px,transparent 1px 9px);
+  box-shadow:0 0 16px rgba(79,184,232,.25);display:grid;place-items:center;font-family:var(--mono);font-size:8px;color:#5b7d99;letter-spacing:.08em}
+.lm-lab{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:#4fb8e8;text-transform:uppercase}
+.lm-t{font-family:var(--display);font-size:19px;color:#eaf6ff;margin-top:4px;line-height:1.12}
+.lm-s{font-family:var(--mono);font-size:10px;color:#7f94a4;margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+.lm-eq{display:flex;align-items:flex-end;gap:3px;height:26px;padding:0 18px 14px}
+.lm-eq i{width:4px;background:#4fb8e8;transform-origin:bottom;animation:lmeq 1.05s ease-in-out infinite alternate}
+.lm-eq i:nth-child(2n){animation-duration:.85s}.lm-eq i:nth-child(3n){animation-duration:1.3s}.lm-eq i:nth-child(5n){animation-duration:.7s}
+@keyframes lmeq{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+/* ── NOTES · typed telex dispatch (warm) / transmission log (cool) ── */
+.nt-card{width:min(400px,84vw);margin:0 auto;position:relative;overflow:hidden}
+body.t-sword .nt-card{background:#e9e1cf;border-radius:3px;box-shadow:0 30px 60px -14px rgba(0,0,0,.65);transform:rotate(.8deg)}
+body.t-roci .nt-card{background:linear-gradient(135deg,rgba(16,34,52,.94),rgba(8,20,34,.96));border:1px solid #4fb8e8;border-radius:12px;
+  box-shadow:0 30px 60px -14px rgba(0,0,0,.65),0 0 40px rgba(79,184,232,.14)}
+body.t-roci .nt-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(79,184,232,.05) 0 1px,transparent 1px 3px)}
+.nt-perf{height:6px;background-image:radial-gradient(circle at 6px 3px,#e9e1cf 3px,transparent 3px);background-size:12px 6px;background-color:#0a0805}
+body.t-roci .nt-perf{display:none}
+.nt-in{position:relative;padding:20px 22px 22px}
+.nt-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;margin-bottom:14px;font-family:var(--mono)}
+body.t-sword .nt-head{border-bottom:1px solid #c7bda3}
+body.t-roci .nt-head{border-bottom:1px solid #2b5a7a}
+.nt-no{font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+body.t-sword .nt-no{color:#8a6a3a}body.t-roci .nt-no{color:#4fb8e8}
+.nt-yr{font-size:9px}
+body.t-sword .nt-yr{color:#a98f63}body.t-roci .nt-yr{color:#7f94a4}
+.nt-title{margin-bottom:10px}
+body.t-sword .nt-title{font-family:'Special Elite',var(--mono);font-size:22px;line-height:1.15;color:#2a2018}
+body.t-roci .nt-title{font-family:var(--display);font-size:20px;line-height:1.15;color:#eaf6ff}
+.nt-body p{line-height:1.55;font-size:13px;margin:0}
+.nt-body p+p{margin-top:.85em}
+body.t-sword .nt-body p{font-family:'Special Elite',var(--mono);color:#4a3e2c}
+body.t-roci .nt-body p{font-family:var(--os);font-weight:300;color:#b9c3ce}
+
+/* ───────── Captain's Dossier (Phase 4d / brief T14) ───────── */
+.dossier{margin-top:14px;width:min(300px,84vw);position:relative;overflow:hidden}
+body.t-sword .dossier{background:rgba(26,18,10,.78);border:1px solid #5a4526;border-radius:8px;backdrop-filter:blur(5px)}
+body.t-roci .dossier{background:rgba(8,20,32,.62);border:1px solid rgba(79,184,232,.4);backdrop-filter:blur(9px);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.dz-head{display:flex;align-items:center;gap:8px;padding:9px 12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase}
+body.t-sword .dz-head{border-bottom:1px dashed #5a4526}
+body.t-roci .dz-head{border-bottom:1px solid rgba(79,184,232,.25)}
+.dossier.min .dz-head{border-bottom:none}
+.dz-ti{flex:1}
+body.t-sword .dz-ti{color:#f0a63c}body.t-roci .dz-ti{color:#4fb8e8}
+.dz-stat{color:#7fce8a;font-size:8.5px;letter-spacing:.14em;padding-right:36px}
+.dz-mz{top:6px;right:8px}
+.dossier.min .dz-bd{display:none}
+.dz-bd{padding:12px 13px 13px}
+.dz-id{display:flex;gap:11px;align-items:center;width:100%;text-align:left;cursor:pointer;
+  border-radius:8px;padding:7px;transition:.16s;background:transparent;border:1px solid transparent}
+body.t-sword .dz-id:hover,body.t-sword .dz-id:focus-visible{border-color:#f0a63c;background:rgba(240,166,60,.08)}
+body.t-roci .dz-id:hover,body.t-roci .dz-id:focus-visible{border-color:#4fb8e8;background:rgba(79,184,232,.1)}
+.dz-ava{width:46px;height:46px;flex:none;border-radius:8px;overflow:hidden;position:relative;display:grid;place-items:center}
+body.t-sword .dz-ava{border:1px solid #6b4e1a;background:#191207}
+body.t-roci .dz-ava{border:1px solid #2b5a7a;background:#0c1a29}
+.dz-ava img{width:100%;height:100%;object-fit:cover;display:block}
+.dz-ava i{display:none;font-style:normal;font-family:var(--display);font-size:15px;color:var(--accent)}
+.dz-ava.noimg img{display:none}.dz-ava.noimg i{display:block}
+.dz-nm{min-width:0}
+.dz-nm b{display:block;font-family:var(--display);font-size:15.5px;line-height:1;color:var(--ink);letter-spacing:.01em;text-transform:uppercase}
+.dz-nm span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.1em;margin-top:4px;text-transform:uppercase}
+body.t-sword .dz-nm span{color:#f0a63c}body.t-roci .dz-nm span{color:#4fb8e8}
+.dz-nm em{display:block;font-style:normal;font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--dim);margin-top:3px;text-transform:uppercase}
+.dz-line{font-family:var(--os);font-weight:300;font-size:13px;line-height:1.45;color:#c9c2b4;margin:11px 2px}
+.dz-chips{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px}
+.dz-chips>div{border:1px solid;border-radius:4px;padding:7px 9px;min-width:0}
+body.t-sword .dz-chips>div{border-color:#3a2f1c}body.t-roci .dz-chips>div{border-color:rgba(79,184,232,.25)}
+.dz-chips i{display:block;font-style:normal;font-family:var(--mono);font-size:7.5px;color:var(--dim);letter-spacing:.08em}
+.dz-chips b{display:block;font-family:var(--display);font-size:11.5px;margin-top:3px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase}
+.dz-chips b.ok{color:#7fce8a}
+.dz-cta{display:flex;gap:7px}
+.dz-cta a{flex:1;text-align:center;padding:10px 4px;border-radius:4px;font-family:var(--mono);font-weight:700;font-size:10.5px;
+  letter-spacing:.05em;text-decoration:none;text-transform:uppercase;transition:.15s}
+body.t-sword .dz-cta a.pri{background:#f0a63c;color:#12100c}
+body.t-sword .dz-cta a.pri:hover{box-shadow:0 0 14px rgba(240,166,60,.5)}
+body.t-sword .dz-cta a.sec{border:1px solid #5a4526;color:#e8e2d6}
+body.t-sword .dz-cta a.sec:hover{border-color:#f0a63c;color:#f0a63c}
+body.t-roci .dz-cta a.pri{background:rgba(79,184,232,.85);color:#06121e}
+body.t-roci .dz-cta a.pri:hover{box-shadow:0 0 14px rgba(79,184,232,.5)}
+body.t-roci .dz-cta a.sec{border:1px solid rgba(79,184,232,.4);color:#dff4ff}
+body.t-roci .dz-cta a.sec:hover{border-color:#4fb8e8;color:#4fb8e8}
+
+/* ───────── profile window redesign (brief T15) ───────── */
+.cc-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase}
+body.t-sword .cc-head{border-bottom:1px dashed #5a4526;color:#f0a63c}
+body.t-roci .cc-head{border-bottom:1px solid rgba(79,184,232,.3);color:#4fb8e8}
+.cc-r{display:flex;align-items:center;gap:12px}
+.cc-live{color:#7fce8a;font-size:9px;letter-spacing:.14em}
+.cc-bd{padding:24px 26px 26px;text-align:center;position:relative}
+/* avatar wears the logo's own orbit ring + teal planet dot */
+.contact-photo{width:118px;height:118px;position:relative;margin:0 auto 16px;border-radius:0;overflow:visible;background:none;border:none;display:block}
+.cc-ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--accent);transform:rotate(-18deg);opacity:.65}
+.cc-dot{position:absolute;top:5%;right:3%;width:11px;height:11px;border-radius:50%;background:#35c1d1;box-shadow:0 0 8px rgba(53,193,209,.8)}
+.cc-pic{position:absolute;inset:11px;border-radius:50%;overflow:hidden;display:grid;place-items:center}
+body.t-sword .cc-pic{border:1px solid #6b4e1a;background:#191207}
+body.t-roci .cc-pic{border:1px solid #2b5a7a;background:#0c1a29}
+.cc-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.contact-photo .initials{display:none;font-family:var(--display);font-size:1.7rem;color:var(--accent)}
+.contact-photo.noimg img{display:none}
+.contact-photo.noimg .initials{display:block}
+.cl-pri{display:block;font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:.05em;text-decoration:none;
+  padding:13px;border-radius:6px;transition:.15s}
+body.t-sword .cl-pri{background:#f0a63c;color:#12100c}
+body.t-sword .cl-pri:hover{box-shadow:0 0 18px rgba(240,166,60,.5)}
+body.t-roci .cl-pri{background:rgba(79,184,232,.88);color:#06121e}
+body.t-roci .cl-pri:hover{box-shadow:0 0 18px rgba(79,184,232,.5)}
+.cl-row{display:flex;gap:10px;margin-top:10px}
+.cl-row a,.cl-row .cl-soon{flex:1;text-align:center;padding:12px 6px;border-radius:6px;font-family:var(--mono);font-weight:700;
+  font-size:11.5px;letter-spacing:.05em;text-decoration:none;text-transform:uppercase;transition:.15s}
+body.t-sword .cl-row a{border:1px solid #5a4526;color:#e8e2d6}
+body.t-sword .cl-row a:hover{border-color:#f0a63c;color:#f0a63c}
+body.t-sword .cl-soon{border:1px dashed rgba(240,166,60,.35);color:#9a7a48;cursor:help}
+body.t-roci .cl-row a{border:1px solid rgba(79,184,232,.4);color:#dff4ff}
+body.t-roci .cl-row a:hover{border-color:#4fb8e8;color:#4fb8e8}
+body.t-roci .cl-soon{border:1px dashed rgba(79,184,232,.3);color:#5b7d99;cursor:help}
+.cc-chip{display:inline-block;border-radius:20px;padding:6px 14px;font-family:var(--mono);font-size:11px;
+  text-decoration:none;letter-spacing:.04em;transition:.15s}
+body.t-sword .cc-chip{border:1px solid #3a2f1c;color:#c9c2b4}
+body.t-sword a.cc-chip:hover{border-color:#f0a63c;color:#f0a63c}
+body.t-roci .cc-chip{border:1px solid rgba(79,184,232,.3);color:#b9c3ce}
+body.t-roci a.cc-chip:hover{border-color:#4fb8e8;color:#4fb8e8}
+.cc-chip.dim{color:var(--dim)}
+.contact-more-list{display:flex;gap:8px;justify-content:center;font-style:normal}
+
+/* ───────── reward STAR cards + per-category dress (brief T13/T2) ───────── */
+.rm-role{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);margin-top:6px;text-transform:uppercase}
+.rm-hline{font-family:var(--display);font-size:clamp(1.25rem,2.6vw,1.65rem);line-height:1.05;margin-top:.5em;color:var(--ink);text-transform:uppercase}
+.rm-star{margin-top:14px}
+.rm-star .rs-k{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;color:var(--accent);margin-bottom:4px;text-transform:uppercase}
+.rm-star p{font-family:var(--os);font-weight:300;font-size:.98rem;line-height:1.55;color:#e8e6df;margin:0}
+.rm-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.rm-metrics>div{border:1px solid;border-radius:5px;padding:10px 4px;text-align:center;min-width:0}
+body.t-sword .rm-metrics>div{border-color:#4a3a20}body.t-roci .rm-metrics>div{border-color:#2b5a7a}
+.rm-metrics b{display:block;font-family:var(--display);font-size:17px;line-height:1;color:var(--accent);white-space:nowrap}
+.rm-metrics i{display:block;font-style:normal;font-family:var(--mono);font-size:7px;letter-spacing:.06em;color:var(--dim);margin-top:4px;text-transform:uppercase}
+.rm-cta{width:100%;margin-top:16px;padding:12px;background:transparent;border:1px solid var(--accent);color:var(--accent);
+  border-radius:5px;font-family:var(--mono);font-weight:700;font-size:11.5px;letter-spacing:.06em;cursor:pointer;transition:.15s;text-transform:uppercase}
+.rm-cta:hover{background:var(--accent);color:#12100c}
+.rm-chips{display:flex;gap:10px;margin-top:16px}
+.rm-chips>div{flex:1;border:1px solid;border-radius:5px;padding:9px 11px;text-align:left}
+body.t-sword .rm-chips>div{border-color:#4a3a20}body.t-roci .rm-chips>div{border-color:#2b5a7a}
+.rm-chips i{display:block;font-style:normal;font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.1em}
+.rm-chips b{display:block;font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:4px;letter-spacing:.06em}
+.rm-reveal{position:relative}
+.rewardmodal.cat-random .rm-reveal::before{content:'✦';position:absolute;right:-16px;top:2px;font-size:120px;line-height:1;
+  font-family:var(--display);color:var(--accent);opacity:.07;pointer-events:none}
+.rm-pick.hero{grid-column:1/-1;padding:18px 12px 14px}
+body.t-sword .rm-pick.hero{border-color:#f0a63c;background:linear-gradient(180deg,rgba(240,166,60,.16),rgba(240,166,60,.04));color:#f0c27a}
+body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg,rgba(79,184,232,.14),rgba(79,184,232,.03));color:#bfe8ff}
+.rm-pick.hero .rp-lab{font-size:15px}
+
+/* ───────── the front door: doorway (4a) + ship picker (4b) ───────── */
+.gate{position:fixed;inset:0;z-index:36;background:#07060a;overflow:hidden;transition:opacity .6s ease,visibility .6s}
+.gate.gone{opacity:0;visibility:hidden;pointer-events:none}
+#shipsel{opacity:0;visibility:hidden;pointer-events:none;z-index:35}
+#shipsel.show{opacity:1;visibility:visible;pointer-events:auto}
+.gate-stars{position:absolute;inset:0;background-image:
+  radial-gradient(1px 1px at 18% 24%,rgba(255,255,255,.33) 0,transparent 100%),
+  radial-gradient(1px 1px at 40% 70%,rgba(255,255,255,.27) 0,transparent 100%),
+  radial-gradient(1px 1px at 72% 30%,rgba(255,255,255,.33) 0,transparent 100%),
+  radial-gradient(1px 1px at 88% 60%,rgba(255,255,255,.27) 0,transparent 100%),
+  radial-gradient(1px 1px at 30% 44%,rgba(255,255,255,.2) 0,transparent 100%),
+  radial-gradient(1px 1px at 62% 82%,rgba(255,255,255,.27) 0,transparent 100%),
+  radial-gradient(1px 1px at 55% 12%,rgba(255,255,255,.27) 0,transparent 100%),
+  radial-gradient(1px 1px at 8% 82%,rgba(255,255,255,.22) 0,transparent 100%)}
+.gate-half{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
+.gate-half.gl{clip-path:polygon(0 0,58% 0,42% 100%,0 100%);align-items:flex-start;
+  padding-left:clamp(22px,7vw,90px);background:radial-gradient(80% 90% at 25% 55%,rgba(240,166,60,.16),transparent 70%)}
+.gate-half.gr{clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%);align-items:flex-end;text-align:right;
+  padding-right:clamp(22px,7vw,90px)}
+#doorway .gr{background:radial-gradient(80% 90% at 78% 50%,rgba(150,170,190,.12),transparent 70%);cursor:default}
+#shipsel .gr{background:radial-gradient(80% 90% at 72% 50%,rgba(79,184,232,.16),transparent 72%)}
+.gh-k{font-family:var(--mono);font-size:clamp(10px,1.2vw,12px);letter-spacing:.32em;margin-bottom:12px;text-transform:uppercase}
+.gh-k.warm{color:#f0a63c}.gh-k.steel{color:#a9c0d4}.gh-k.cold{color:#4fb8e8}
+.gh-t{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(1.8rem,4.6vw,2.85rem);line-height:.97;
+  letter-spacing:-.01em;color:#e8e2d6;text-transform:uppercase}
+.gh-t.cool{color:#eef2f6}
+.gh-t.chak{font-family:'Chakra Petch',sans-serif;font-weight:700;line-height:.99;color:#eef2f6}
+.gh-d{font-family:var(--os);font-weight:300;font-size:clamp(13px,1.4vw,15px);color:#c9c2b4;margin-top:14px;line-height:1.4;max-width:310px}
+.gr .gh-d{color:#b9c3ce}
+.gh-f{font-family:var(--mono);font-size:10px;letter-spacing:.14em;margin-top:16px;color:#9a8f7a;text-transform:uppercase}
+.gh-f.warm{color:#f0a63c}.gh-f.cold{color:#4fb8e8}
+.gh-sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:#9a8f7a;margin-top:6px;text-transform:uppercase}
+.gr .gh-sub{color:#7f94a4}
+#door-launch:hover .gh-t{text-shadow:0 0 34px rgba(240,166,60,.55)}
+#pick-sword:hover .gh-t{text-shadow:0 0 34px rgba(240,166,60,.55)}
+#pick-roci:hover .gh-t{text-shadow:0 0 34px rgba(79,184,232,.55)}
+.gate-lock{display:inline-flex;align-items:center;gap:8px;margin-top:16px;border:1px dashed #5a6a78;border-radius:4px;
+  padding:7px 12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:#8fa2b3;text-transform:uppercase}
+.gate-lock.nudge{animation:gnudge .5s}
+@keyframes gnudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}60%{transform:translateX(4px)}}
+.gate-seam{position:absolute;top:-10%;left:50%;width:2px;height:120%;transform:translateX(-50%) rotate(9deg);pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,#35c1d1 22%,#f0a63c 50%,#35c1d1 78%,transparent 100%);
+  background-size:100% 300%;box-shadow:0 0 22px rgba(240,166,60,.45);animation:runline 3.5s linear infinite}
+@keyframes runline{from{background-position:0 0}to{background-position:0 300%}}
+.gate-top{position:absolute;top:clamp(16px,4vh,36px);left:50%;transform:translateX(-50%);text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.gate-top img{height:52px;width:52px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(0,0,0,.6))}
+.gt-sub{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:#8a8272;text-transform:uppercase}
+.gate-foot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.14em;color:#6b6459;text-transform:uppercase;text-align:center;pointer-events:none;max-width:92vw;line-height:1.6}
+.gs-slot{width:min(300px,64vw);height:min(150px,28vw);border:1px dashed;border-radius:8px;position:relative;
+  display:flex;align-items:center;justify-content:center;margin-top:22px}
+#pick-sword .gs-slot{border-color:#6b4e1a;background:rgba(240,166,60,.04)}
+#pick-roci .gs-slot{border-color:#2b5a7a;background:rgba(79,184,232,.04)}
+.gs-ship{width:min(150px,32vw);height:44px;transition:transform .8s cubic-bezier(.6,-.08,.9,.6),opacity .7s ease .15s}
+#pick-sword .gs-ship{background:rgba(240,166,60,.5);clip-path:polygon(0 50%,55% 20%,100% 42%,100% 58%,55% 80%);
+  box-shadow:0 0 26px rgba(240,166,60,.4)}
+#pick-roci .gs-ship{height:52px;background:rgba(79,184,232,.5);clip-path:polygon(0 42%,78% 12%,100% 44%,100% 56%,78% 88%,0 58%);
+  box-shadow:0 0 26px rgba(79,184,232,.4)}
+.gs-note{position:absolute;bottom:8px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:#8a7c64;text-transform:uppercase}
+#pick-roci .gs-note{color:#6f8496}
+.gate-half.chosen .gs-ship{transform:translateX(96vw);opacity:0}
+.gate-flash{position:absolute;inset:0;background:#eef4ff;opacity:0;pointer-events:none}
+#shipsel.launching .gate-flash{animation:gflash 1s ease .5s both}
+@keyframes gflash{0%{opacity:0}45%{opacity:.92}100%{opacity:0}}
+#shipsel.launching .gate-half{pointer-events:none}
+/* phones: the side-by-side diagonal has no horizontal room — the halves'
+   text collides across the seam. Stack them instead: LAUNCH on top, the
+   other half below, with a shallow diagonal boundary (58% → 42%, the same
+   16% drop as desktop, laid on its side). */
+@media (max-width:640px){
+  .gh-d{display:none}
+  .gate-half.gl{clip-path:polygon(0 0,100% 0,100% 42%,0 58%);align-items:flex-start;justify-content:flex-start;
+    padding:16vh 22px 0}
+  .gate-half.gr{clip-path:polygon(0 58%,100% 42%,100% 100%,0 100%);align-items:flex-end;justify-content:flex-end;
+    padding:0 22px 12vh}
+  #doorway .gr{background:radial-gradient(90% 60% at 50% 85%,rgba(150,170,190,.12),transparent 70%)}
+  #shipsel .gr{background:radial-gradient(90% 60% at 50% 85%,rgba(79,184,232,.16),transparent 72%)}
+  .gate-half.gl{background:radial-gradient(90% 60% at 50% 25%,rgba(240,166,60,.16),transparent 70%)}
+  .gate-seam{left:-10%;top:50%;width:120%;height:2px;
+    background:linear-gradient(90deg,transparent 0%,#35c1d1 22%,#f0a63c 50%,#35c1d1 78%,transparent 100%);
+    background-size:300% 100%;animation:runlineX 3.5s linear infinite}
+  .gs-slot{margin-top:14px}
+  .gh-f{margin-top:10px}
+  .gate-foot{font-size:8px}
+}
+@keyframes runlineX{from{background-position:0 0}to{background-position:300% 0}}
 
 /* ───────── immersive / clear mode (Phase 2 Stage 3 station + Stage 4 flight) ─────────
    Stage 3: hides the rail+window while docked, leaving just the painted scene
@@ -908,7 +1264,7 @@ body.t-roci .bnr .bk{color:#9affea}
 
 /* ───────── boot ───────── */
 #boot{position:fixed;inset:0;z-index:40;background:#050609;display:grid;place-items:center;transition:opacity .7s ease,visibility .7s}
-#boot.gone{opacity:0;visibility:hidden}
+#boot.gone{opacity:0;visibility:hidden;pointer-events:none}
 #boot .b{font-family:var(--mono);font-size:clamp(11px,1.4vw,14px);letter-spacing:.34em;color:var(--accent);text-transform:uppercase;text-align:center;line-height:2.4}
 #boot .b b{color:var(--ink);font-weight:400}
 #boot .big{font-family:var(--anton);font-size:clamp(2.4rem,9vw,6rem);letter-spacing:.02em;color:transparent;-webkit-text-stroke:1.4px rgba(239,236,230,.55);display:block;margin:.1em 0}
@@ -925,8 +1281,9 @@ body.t-roci .bnr .bk{color:#9affea}
   .bottom{flex-direction:column;align-items:stretch;gap:12px}
   .player,.pl-skin.cassette,.pl-skin.holo{width:100%!important}
   .sign{display:none}
+  .dossier{width:100%}
 }
-@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i,.help-btn.logbtn.hasnew .log-dot,.bounty-hud.signal .bh-next-lab,.cp-head,.cp-screen::after{animation:none!important} }
+@media (prefers-reduced-motion:reduce){ .grain,.moonwrap,.sun::before,.reel,.hp-eq i,.sun.sizzling,.sun.sizzling .sizzle,.secret-glow,.secret-rings i,.help-btn.logbtn.hasnew .log-dot,.bounty-hud.signal .bh-next-lab,.cp-head,.cp-screen::after,.gate-seam,.lm-eq i{animation:none!important} }
 </style>
 </head>
 <body class="t-sword">
@@ -965,7 +1322,9 @@ body.t-roci .bnr .bk{color:#9affea}
 <div class="hud">
   <div class="top">
     <div class="brand">
-      <div class="wordmark">Aaro<em>nautics</em></div>
+      <!-- the "5F" lockup — mark leads as icon, wordmark rides beside it as the
+           nameplate; the planet-i wears the teal tittle (brief §5) -->
+      <div class="lockup"><img class="lk-mark" src="../assets/brand/mark-transparent.png" alt="Aaronautics mark"><div class="wordmark">Aaro<em>naut<span class="pi">i</span>cs</em></div></div>
       <div class="loc">◈ <span id="loc">SYSTEM MAP</span></div>
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
@@ -978,6 +1337,28 @@ body.t-roci .bnr .bk{color:#9affea}
             <button class="cp-close" id="log-close" type="button" aria-label="Close log">✕</button></div>
           <div class="log-tabs" id="log-tabs"></div>
           <div class="log-list cp-screen" id="log-list"></div>
+        </div>
+      </div>
+      <!-- Captain's Dossier (Phase 4d / brief T14): the always-visible
+           orientation panel — who this is, one line, two chips, live exits.
+           Clicking the ID block is door 2 to the profile window (T18). -->
+      <div class="dossier" id="dossier">
+        <div class="dz-head"><span class="dz-ti">◆ CAPTAIN'S DOSSIER</span><span class="dz-stat">● DECRYPTED</span>
+          <button class="mz dz-mz" id="dz-mz" aria-label="Minimize dossier"><svg viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="dz-bd">
+          <button class="dz-id" id="dz-id" type="button" aria-haspopup="dialog" aria-controls="contactwrap">
+            <span class="dz-ava"><img src="assets/aaron.jpg" alt="" onerror="this.parentElement.classList.add('noimg')"><i>AS</i></span>
+            <span class="dz-nm"><b>Aaron Selkridge</b><span>Lead Automation Analyst · GTM Engineer</span><em>▸ opens transmission</em></span>
+          </button>
+          <p class="dz-line">Bronx-born, aerospace by degree — an engineer and artist who builds technology that serves people.</p>
+          <div class="dz-chips">
+            <div><i>SECTORS</i><b>GTM · AI</b></div>
+            <div><i>STATUS</i><b class="ok">Open to crew</b></div>
+          </div>
+          <div class="dz-cta">
+            <a class="pri" href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
+            <a class="sec" href="mailto:amo.selkridge@gmail.com">✉ · Hail</a>
+          </div>
         </div>
       </div>
     </div>
@@ -997,6 +1378,14 @@ body.t-roci .bnr .bk{color:#9affea}
           <button id="b-sword" class="on">Swordfish</button><button id="b-roci">Rocinante</button></div>
         <div class="c-row"><span class="lab">WPN</span>
           <button id="w-cannon" class="on">Cannon</button><button id="w-pdc">PDC ×3</button></div>
+        <!-- door 1 to the profile window (brief T18) + the always-pinned
+             career exits (brief's governing rule: guarantee the exit) -->
+        <div class="c-row"><span class="lab">COM</span>
+          <button id="b-hail">◆ Hail pilot</button></div>
+        <div class="c-links">
+          <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
+          <span class="c-resume" title="Résumé PDF incoming — drops straight in once Aaron supplies it">▤ Résumé · soon</span>
+        </div>
         <div class="c-data">
           <span><span class="k">POS</span> <b id="coords">+0.00 / +0.00</b></span>
           <span><span class="k">VEL</span> <b id="vel">0.00 AU/s</b></span>
@@ -1074,6 +1463,53 @@ body.t-roci .bnr .bk{color:#9affea}
 
 <button id="fireb" aria-label="Fire weapon">⦿ FIRE</button>
 
+<!-- ═══ THE FRONT DOOR (Phase 4a + 4b) ═══
+     Doorway: diagonal split — LAUNCH (live) vs GROUND CONTROL (present but
+     locked/under-construction until 4c is built, per Aaron). Then the ship
+     picker: a SECOND diagonal split, Swordfish vs Rocinante; the clicked
+     ship launches off-screen and we warp into that system. Ship art =
+     image slots (CSS silhouettes stand in until Aaron sources renders).
+     Deep links (#station) skip both gates — see 08-ui.js. -->
+<div class="gate" id="doorway" aria-label="Choose your approach">
+  <div class="gate-stars"></div>
+  <div class="gate-half gl" id="door-launch" role="button" tabindex="0">
+    <div class="gh-k warm">◆ LAUNCH</div>
+    <div class="gh-t">ENTER THE<br>SYSTEM</div>
+    <div class="gh-d">Fly the ship. Shoot signals. Unlock the whole story — career, poems, the personal stuff.</div>
+    <div class="gh-f">FOR THE CURIOUS →</div>
+  </div>
+  <div class="gate-half gr" id="door-gc" aria-disabled="true">
+    <div class="gh-k steel">◆ GROUND CONTROL</div>
+    <div class="gh-t cool">I'M HERE<br>TO HIRE</div>
+    <div class="gh-d">Sit at the terminal. Straight to the career case — experience, wins, résumé &amp; LinkedIn.</div>
+    <div class="gate-lock" id="gc-lock">⚠ terminal under construction</div>
+  </div>
+  <div class="gate-seam"></div>
+  <div class="gate-top"><img src="../assets/brand/mark-transparent.png" alt="Aaronautics"><div class="gt-sub">Choose your approach vector</div></div>
+  <div class="gate-foot">résumé &amp; linkedin ride in the captain's dossier the whole flight — nobody gets stranded</div>
+</div>
+<div class="gate" id="shipsel" aria-label="Choose your ship">
+  <div class="gate-stars"></div>
+  <div class="gate-half gl" id="pick-sword" role="button" tabindex="0">
+    <div class="gh-k warm">◆ WARM SYSTEM</div>
+    <div class="gh-t">COWBOY<br>BEBOP</div>
+    <div class="gh-sub">SHIP · SWORDFISH II</div>
+    <div class="gs-slot"><div class="gs-ship"></div><div class="gs-note">[ Swordfish II · render drops in ]</div></div>
+    <div class="gh-f warm">▸ CLICK TO LAUNCH</div>
+  </div>
+  <div class="gate-half gr" id="pick-roci" role="button" tabindex="0">
+    <div class="gh-k cold">COOL SYSTEM ◆</div>
+    <div class="gh-t chak">THE<br>EXPANSE</div>
+    <div class="gh-sub">SHIP · ROCINANTE</div>
+    <div class="gs-slot"><div class="gs-ship"></div><div class="gs-note">[ Rocinante · render drops in ]</div></div>
+    <div class="gh-f cold">LAUNCH TO WARP ◂</div>
+  </div>
+  <div class="gate-seam"></div>
+  <div class="gate-top"><img src="../assets/brand/mark-transparent.png" alt="Aaronautics"><div class="gt-sub">Aesthetic select · choose your ship</div></div>
+  <div class="gate-foot">click a ship — it launches, and we warp to its system</div>
+  <div class="gate-flash"></div>
+</div>
+
 <div id="boot"><div class="b">◈ Aaronautics<span class="big">NAV SYSTEMS</span><b>online</b> <span class="cur"></span></div></div>
 
 <div id="banner" aria-live="assertive"></div>
@@ -1120,40 +1556,51 @@ body.t-roci .bnr .bk{color:#9affea}
      placeholder (falls back to initials) until a real image lands at
      assets/aaron.jpg — no code changes needed once it does. -->
 <div class="contactwrap" id="contactwrap">
+  <!-- the profile window, redesigned per brief T15: an "incoming transmission"
+       ID badge. Avatar wears the logo's own orbit-ring + teal planet dot.
+       Doors in (T18): ◆ HAIL in the console, the Dossier ID block, and the
+       signoff (which keeps this until the Hangar easter egg exists). -->
   <div class="contactcard" role="dialog" aria-modal="true" aria-label="Contact Aaron">
-    <button class="contact-close" id="contact-close" type="button" aria-label="Close">✕</button>
-    <div class="contact-photo" id="contact-photo">
-      <img src="assets/aaron.jpg" alt="Aaron Selkridge" onerror="this.parentElement.classList.add('noimg')">
-      <span class="initials">AS</span>
-    </div>
-    <div class="contact-name">Aaron Selkridge</div>
-    <div class="contact-tag">◈ engineer · artist · space cowboy</div>
-    <div class="contact-bio">An engineer and artist from the Bronx who builds technology that serves people — not the other way around.</div>
-    <div class="contact-links">
-      <a href="mailto:amo.selkridge@gmail.com">✉ amo.selkridge@gmail.com</a>
-      <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
-    </div>
-    <div class="contact-more">
-      <div class="contact-more-label">◈ Other builds</div>
-      <div class="contact-more-list">More coming soon…</div>
+    <div class="cc-head"><span class="cc-ti">◆ INCOMING TRANSMISSION</span>
+      <span class="cc-r"><span class="cc-live">● LIVE</span>
+      <button class="contact-close" id="contact-close" type="button" aria-label="Close">✕</button></span></div>
+    <div class="cc-bd">
+      <div class="contact-photo" id="contact-photo">
+        <span class="cc-ring"></span><span class="cc-dot"></span>
+        <span class="cc-pic"><img src="assets/aaron.jpg" alt="Aaron Selkridge" onerror="this.parentElement.parentElement.classList.add('noimg')"><span class="initials">AS</span></span>
+      </div>
+      <div class="contact-name">Aaron Selkridge</div>
+      <div class="contact-tag">◆ engineer · artist · space cowboy</div>
+      <div class="contact-bio">An engineer and artist from the Bronx who builds technology that serves people — not the other way around.</div>
+      <div class="contact-links">
+        <a class="cl-pri" href="mailto:amo.selkridge@gmail.com">✉ amo.selkridge@gmail.com</a>
+        <div class="cl-row">
+          <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
+          <span class="cl-soon" title="Résumé PDF incoming — drops straight in once Aaron supplies it">▤ Résumé · soon</span>
+        </div>
+      </div>
+      <div class="contact-more">
+        <div class="contact-more-label">◆ Other builds</div>
+        <div class="contact-more-list"><a class="cc-chip" href="../">↗ The Walkman</a><span class="cc-chip dim">more soon</span></div>
+      </div>
     </div>
   </div>
 </div>
 
 <audio id="audio" preload="none"></audio>
 <script src="audio/tracks.js?v=10"></script>
-<script src="data/facts.js?v=11"></script>
+<script src="data/facts.js?v=12"></script>
 <!-- Orbit engine, split into labeled files (each owns one visible system) — load order matters. -->
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
-<script src="js/01-config.js?v=11"></script>
+<script src="js/01-config.js?v=12"></script>
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=17"></script>
-<script src="js/04-world.js?v=15"></script>
-<script src="js/05-combat.js?v=13"></script>
+<script src="js/04-world.js?v=16"></script>
+<script src="js/05-combat.js?v=14"></script>
 <script src="js/06-flight.js?v=12"></script>
-<script src="js/10-content-viewer.js?v=2"></script>
-<script src="js/07-environments.js?v=15"></script>
-<script src="js/08-ui.js?v=23"></script>
+<script src="js/10-content-viewer.js?v=3"></script>
+<script src="js/07-environments.js?v=16"></script>
+<script src="js/08-ui.js?v=24"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

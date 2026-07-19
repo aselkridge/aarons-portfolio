@@ -76,6 +76,8 @@ $('sun').addEventListener('click', function(){ if(state!=='free') return;
   ALL.forEach(function(s){
     var a=document.createElement('a');
     a.textContent=s.name; a.dataset.id=s.id;
+    /* decoded nav (brief §4.2, settled): label + small mono decode under it */
+    if(s.tag){ var dec=document.createElement('i'); dec.textContent=s.tag; a.appendChild(dec); }
     a.addEventListener('click', function(){ if(state==='free') beginWarp(s); });
     a.addEventListener('mouseenter', function(){ if(s.el) s.el.classList.add('live'); });
     a.addEventListener('mouseleave', function(){ if(s.el&&lockId!==s.id) s.el.classList.remove('live'); });

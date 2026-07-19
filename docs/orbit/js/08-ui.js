@@ -136,7 +136,9 @@ document.addEventListener('pointerdown', function(e){
    counted on the button badge AND on its category tab — until it's actually
    clicked and read in the log, not merely until the panel is opened. Once
    opened, the log stays open until explicitly closed via the ✕. */
-var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='pilot', logBadge=$('log-badge');
+var logBtn=$('log-btn'), logPanel=$('logpanel'), logTab='career', logBadge=$('log-badge');
+/* career leads everywhere (brief T2A: the career channel is the hero payoff) */
+var CAT_ORDER=['career','pilot','random','quotes'];
 function unseenIn(cat){
   var pool=(rewardPool()[cat])||[], n=0;
   pool.forEach(function(_,i){ var id=cat+':'+i; if(Progress.d.rw[id]&&!Progress.d.rwSeen[id]) n++; });
@@ -171,7 +173,7 @@ function renderLog(){
     Progress.save(); updateLogButton();
   }
   tabs.innerHTML='';
-  Object.keys(REWARD_META).forEach(function(cat){
+  CAT_ORDER.forEach(function(cat){
     var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
     var fresh=unseenIn(cat);   // active tab was just cleared above, so its chip is gone
     var b=document.createElement('button'); b.type='button';
@@ -194,7 +196,7 @@ function renderLog(){
     var fresh=!!freshIds[e.id];   // lit on this first view only
     var it=document.createElement('div'); it.className='log-item'+(fresh?' unseen':'');
     it.innerHTML='<div class="ld"></div>'+(fresh?'<span class="lnew">NEW</span>':'')+'<i class="lex">⤢</i>';
-    it.querySelector('.ld').textContent=e.txt;
+    it.querySelector('.ld').textContent=rewardText(e.txt);
     it.addEventListener('click', function(){
       openRewardModal(REWARD_META[logTab].kicker, REWARD_META[logTab].label, e.txt, logTab);
     });
@@ -216,9 +218,10 @@ var CAT_SUB={pilot:'who Aaron is',career:'the numbers',random:'off-duty',quotes:
 function renderPickerGrid(){
   var R=rewardPool();
   rmPickerGrid.innerHTML='';
-  Object.keys(REWARD_META).forEach(function(cat){
+  CAT_ORDER.forEach(function(cat){
     var pool=R[cat]||[], got=pool.filter(function(_,i){ return Progress.d.rw[cat+':'+i]; }).length;
-    var b=document.createElement('button'); b.type='button'; b.className='rm-pick';
+    var b=document.createElement('button'); b.type='button';
+    b.className='rm-pick'+(cat==='career'?' hero':'');   // career promoted to the hero slot (T2A)
     b.innerHTML='<span class="rp-lab"></span><span class="rp-sub"></span><span class="rp-count"></span>';
     b.querySelector('.rp-lab').textContent=CAT_LABEL[cat];
     b.querySelector('.rp-sub').textContent=CAT_SUB[cat];
@@ -233,11 +236,31 @@ function renderPickerGrid(){
    random = rounded and playful, pilot = technical dossier. Career text is
    HTML-escaped and its numbers wrapped in .rm-num for the big-stat pop. */
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+/* a career entry may be a STAR object (data/facts.js) — its headline stands
+   in wherever the reward needs to read as one line (the ◈ LOG list). */
+function rewardText(item){ return (item&&typeof item==='object')? item.h : item; }
+window.rewardText=rewardText;
 function setRevealBody(cat,text){
   ['pilot','career','random','quotes'].forEach(function(c){ rewardModal.classList.remove('cat-'+c); });
   if(cat) rewardModal.classList.add('cat-'+cat);
   if(cat==='career'){
-    rmText.innerHTML=esc(text).replace(/(₩?\d[\d,.]*(?:%|×|x\b)?)/g,'<b class="rm-num">$1</b>');
+    if(text&&typeof text==='object'){
+      /* the full STAR card (brief T13/4e): headline = the dent, then
+         PROBLEM / THE MOVE, hard-metric chips, and the résumé route. */
+      var mHTML=(text.metrics||[]).map(function(m){ return '<div><b>'+esc(m.v)+'</b><i>'+esc(m.l)+'</i></div>'; }).join('');
+      rmText.innerHTML='<div class="rm-hline"></div>'+(text.role?'<div class="rm-role"></div>':'')+
+        '<div class="rm-star"><span class="rs-k">◆ Problem</span><p class="sp"></p></div>'+
+        '<div class="rm-star"><span class="rs-k">◆ The move</span><p class="sm"></p></div>'+
+        (mHTML?'<div class="rm-metrics">'+mHTML+'</div>':'')+
+        '<button class="rm-cta" type="button">▤ The full résumé · hail the pilot</button>';
+      rmText.querySelector('.rm-hline').textContent=text.h||'';
+      if(text.role) rmText.querySelector('.rm-role').textContent=text.role;
+      rmText.querySelector('.sp').textContent=text.p||'';
+      rmText.querySelector('.sm').textContent=text.mv||'';
+      rmText.querySelector('.rm-cta').addEventListener('click', function(){ closeRewardModal(); setContact(true); });
+    } else {
+      rmText.innerHTML=esc(text).replace(/(₩?\d[\d,.]*(?:%|×|x\b)?)/g,'<b class="rm-num">$1</b>');
+    }
   } else if(cat==='quotes'){
     /* Frame the quote with a matched PAIR of decorative marks (CSS ::before/
        ::after on .rm-quote) and move the attribution onto its own quiet
@@ -249,6 +272,12 @@ function setRevealBody(cat,text){
     rmText.innerHTML='<span class="rm-quote"></span>'+(a?'<span class="rm-attr"></span>':'');
     rmText.querySelector('.rm-quote').textContent=q;
     if(a) rmText.querySelector('.rm-attr').textContent=a;
+  } else if(cat==='pilot'){
+    /* pilot file reads as an ID badge — the dossier chips ride under it */
+    rmText.textContent=text;
+    var chips=document.createElement('div'); chips.className='rm-chips';
+    chips.innerHTML='<div><i>ORIGIN</i><b>THE BRONX</b></div><div><i>CALLSIGN</i><b>AARONAUT</b></div>';
+    rmText.appendChild(chips);
   } else rmText.textContent=text;
 }
 /* While the picker is up you MUST choose a category — it can't be dismissed
@@ -301,12 +330,58 @@ function setLog(on){
 logBtn.addEventListener('click', function(e){ e.stopPropagation(); setHelp(false); setLog(!logPanel.classList.contains('on')); });
 $('log-close').addEventListener('click', function(){ setLog(false); });
 
-/* ══════════ CONTACT CARD ══════════ */
+/* ══════════ PROFILE / CONTACT WINDOW + ITS DOORS (brief T15/T18) ══════════
+   Three doors in: ◆ HAIL PILOT in the console (door 1), the Captain's
+   Dossier ID block (door 2), and the signoff (door 3 — keeps this until
+   the Hangar easter egg exists to take it over). */
 var contactWrap=$('contactwrap');
 function setContact(on){ contactWrap.classList.toggle('on',on); }
+window.setContact=setContact;
 $('sign').addEventListener('click', function(){ setContact(true); Sound.blip(themeId==='sword'?440:660); });
+$('b-hail').addEventListener('click', function(){ setContact(true); Sound.blip(themeId==='sword'?560:760); });
+$('dz-id').addEventListener('click', function(){ setContact(true); Sound.blip(themeId==='sword'?560:760); });
 $('contact-close').addEventListener('click', function(){ setContact(false); });
 contactWrap.addEventListener('pointerdown', function(e){ if(e.target===contactWrap) setContact(false); });
+
+/* ══════════ CAPTAIN'S DOSSIER (Phase 4d) ══════════ */
+$('dz-mz').addEventListener('click', function(e){ e.stopPropagation(); toggleMin($('dossier')); });
+
+/* ══════════ THE FRONT DOOR (Phase 4a doorway + 4b ship picker) ══════════
+   Shown on every fresh visit, above the already-running game. LAUNCH →
+   the ship picker; the clicked ship flies off, the screen flashes, and we
+   drop into that system. GROUND CONTROL's door is present but locked
+   (under construction) until 4c is built — per Aaron. Deep links
+   (#station) skip both gates so a shared link still lands directly. */
+var doorway=$('doorway'), shipsel=$('shipsel'), gatePicked=false;
+if(location.hash.length>1) doorway.classList.add('gone');
+/* the seam must track the clip-path split exactly (58% → 42%, a 16% drop);
+   a fixed rotation only matches one aspect ratio, so compute it live. On
+   phones the halves stack (see the ≤640px CSS) and the seam lies down. */
+function seamAngle(){
+  var mob=innerWidth<=640, a, tf;
+  if(mob){ a=-Math.atan2(innerHeight*0.16,innerWidth)*180/Math.PI; tf='rotate('+a.toFixed(2)+'deg)'; }
+  else   { a= Math.atan2(innerWidth*0.16,innerHeight)*180/Math.PI; tf='translateX(-50%) rotate('+a.toFixed(2)+'deg)'; }
+  var seams=document.querySelectorAll('.gate-seam');
+  for(var i=0;i<seams.length;i++) seams[i].style.transform=tf;
+}
+seamAngle(); addEventListener('resize',seamAngle);
+$('door-launch').addEventListener('click', function(){
+  doorway.classList.add('gone'); shipsel.classList.add('show');
+  Sound.blip(720);
+});
+$('door-gc').addEventListener('click', function(){
+  var l=$('gc-lock'); l.classList.remove('nudge'); void l.offsetWidth; l.classList.add('nudge');
+  Sound.blip(300);
+});
+function pickShip(id,el){
+  if(gatePicked) return; gatePicked=true;
+  el.classList.add('chosen'); shipsel.classList.add('launching');
+  Sound.warp();
+  setTimeout(function(){ applyTheme(id); },560);          // swap behind the flash peak
+  setTimeout(function(){ shipsel.classList.remove('show'); shipsel.classList.add('gone'); },1080);
+}
+$('pick-sword').addEventListener('click', function(){ pickShip('sword',this); });
+$('pick-roci').addEventListener('click', function(){ pickShip('roci',this); });
 
 addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); if(!isPicking()) closeRewardModal(); } });
 
@@ -315,5 +390,5 @@ $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Soun
 if(!fine){
   $('hint').innerHTML='◐ <b>Drag to fly</b> · FIRE shoots · tap a planet to dock · <a href="../">Walkman ↗</a>';
 }
-if(!fine||innerWidth<720){ $('console').classList.add('min'); $('player').classList.add('min'); }
+if(!fine||innerWidth<720){ $('console').classList.add('min'); $('player').classList.add('min'); $('dossier').classList.add('min'); }
 
