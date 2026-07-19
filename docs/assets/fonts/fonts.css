@@ -6,9 +6,15 @@
 @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('./oswald-700.woff2') format('woff2')}
 @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./space-mono-400.woff2') format('woff2')}
 @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./space-mono-700.woff2') format('woff2')}
-/* Orbitron — technical display for the Rocinante (Expanse) theme */
+/* Orbitron — retired as of the redesign palette pass (kept on disk, unused) */
 @font-face{font-family:'Orbitron';font-style:normal;font-weight:500;font-display:swap;src:url('./orbitron-500.woff2') format('woff2')}
 @font-face{font-family:'Orbitron';font-style:normal;font-weight:800;font-display:swap;src:url('./orbitron-800.woff2') format('woff2')}
+/* Archivo Black — Bebop (warm) display face, replaces Anton */
+@font-face{font-family:'Archivo Black';font-style:normal;font-weight:400;font-display:swap;src:url('./archivo-black-400.woff2') format('woff2')}
+/* Chakra Petch — Expanse (cool) display AND body face, replaces Orbitron + the shared Oswald body on that theme */
+@font-face{font-family:'Chakra Petch';font-style:normal;font-weight:400;font-display:swap;src:url('./chakra-petch-400.woff2') format('woff2')}
+@font-face{font-family:'Chakra Petch';font-style:normal;font-weight:500;font-display:swap;src:url('./chakra-petch-500.woff2') format('woff2')}
+@font-face{font-family:'Chakra Petch';font-style:normal;font-weight:700;font-display:swap;src:url('./chakra-petch-700.woff2') format('woff2')}
 /* Dancing Script — script face for the Wisdom (quotes) reward reveal */
 @font-face{font-family:'Dancing Script';font-style:normal;font-weight:600;font-display:swap;src:url('./dancing-script-600.woff2') format('woff2')}
 /* Baloo 2 — rounded fun face for the Fun Facts reward reveal */

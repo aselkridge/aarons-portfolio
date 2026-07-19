@@ -115,7 +115,7 @@ function renderPoemOne(){
     // Expanse HUD future-tablet: a decoded transmission
     var wave='<div class="pw-wave">'+[5,10,4,13,7,9,3,11,6,8].map(function(v){return '<i style="height:'+v+'px"></i>';}).join('')+'</div>';
     var gauge='<svg class="pw-gauge" viewBox="0 0 62 62" fill="none"><circle cx="31" cy="31" r="25" stroke="rgba(116,208,255,.22)" stroke-width="1"/>'+
-      '<circle cx="31" cy="31" r="25" stroke="#74d0ff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="80 200" transform="rotate(-90 31 31)"/>'+
+      '<circle cx="31" cy="31" r="25" stroke="#4fb8e8" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="80 200" transform="rotate(-90 31 31)"/>'+
       '<g class="pw-gspin"><circle cx="31" cy="31" r="18" stroke="rgba(116,208,255,.4)" stroke-width="1" stroke-dasharray="3 6"/></g><circle cx="31" cy="31" r="3.2" fill="#8fe0ff"/></svg>';
     $('p-body').className='cwin-body';
     $('p-body').innerHTML='<div class="pw-device"><div class="pw-screen">'+

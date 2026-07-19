@@ -11,12 +11,12 @@ var $ = function(id){ return document.getElementById(id); };
 
 /* ══════════ THEMES ══════════ */
 var THEMES = {
-  sword:{ cls:'t-sword', accent:'#ff7a3c', accent2:'#ffd36a', star:'#ffe9cf', starDensity:6500,
+  sword:{ cls:'t-sword', accent:'#f0a63c', accent2:'#ffd36a', star:'#ffe9cf', starDensity:6500,
           bg:['#1a1310','#110b08','#080605'], grain:.09, scan:.30, mood:'jazz',   wpn:'cannon',
-          bolt:'#ffb44a', rockFill:'#7a7061', rockLine:'#241c12' },
-  roci:{ cls:'t-roci', accent:'#74d0ff', accent2:'#9affea', star:'#dbeeff', starDensity:4200,
+          bolt:'#f0a63c', rockFill:'#7a7061', rockLine:'#241c12' },
+  roci:{ cls:'t-roci', accent:'#4fb8e8', accent2:'#9affea', star:'#dbeeff', starDensity:4200,
           bg:['#081019','#060b14','#04070d'], grain:.04, scan:.12, mood:'ambient', wpn:'pdc',
-          bolt:'#86dcff', rockFill:'#8b939e', rockLine:'#1a1f26' }
+          bolt:'#4fb8e8', rockFill:'#8b939e', rockLine:'#1a1f26' }
 };
 var themeId = 'sword';
 function T(){ return THEMES[themeId]; }
