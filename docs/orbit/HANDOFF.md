@@ -5,10 +5,10 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 (Phase 2: floating content windows shipped [Bebop
-parchment + Expanse HUD tablet]; new logo wired in; redesign-brief palette +
-type system adopted site-wide — see §4 for the full decision set from the
-2026-07-19 redesign brief)
+Last updated: 2026-07-19 (roadmap consolidated into one ordered phase list —
+see §3 — folding in the 2026-07-19 redesign brief's decisions alongside the
+2026-07-18 plan. Phase 2 Stages 1-2 shipped [Bebop parchment + Expanse HUD
+tablet windows], palette + type system adopted site-wide; new logo wired in)
 
 ---
 
@@ -86,119 +86,138 @@ instruction — do not batch-fix these without his go-ahead on each.
 
 ---
 
-## 3. The roadmap (agreed with Aaron, 2026-07-18)
+## 3. The roadmap — consolidated phase order (rewritten 2026-07-19)
 
-A much bigger backlog got planned out this session, in five phases,
-ordered smallest/easiest → biggest, with the tutorial deliberately last
-(it needs to teach the *final* shape of the site, so it can't be built
-before the biggest structural change):
+> This section is **rewritten, not appended to**, whenever the plan changes
+> shape — it's the current, authoritative phase list. It now folds in both
+> the original 2026-07-18 roadmap AND the 2026-07-19 redesign-brief decisions
+> into one ordered set of phases. Historical shipment logs for already-shipped
+> phases live in §3.1+ below; the redesign brief's provenance/governing rule
+> is in §4.
 
-1. **Quick wins** (this shipment — see §3.1): planet approach glow, log
-   button prominence, session-only rewards, redesigned "?" button.
-2. **Content windows** (was "content-viewer panel"). **ARCHITECTURE DECIDED
-   (Aaron approved 2026-07-18, via the interactive concept mockup):**
-   - The old left **dock-holds-the-content** model is REPLACED by **floating
-     content windows over the scene.** The left rail becomes lightweight — just
-     the station name, the tabs, and a **brief one-line description** of the
-     current tab. The actual content **pops up as a panel centered in the
-     available area over the planet scene**, sized so the scene still shows
-     around it; you **riffle/scroll** items inside it and can **close** it to
-     just watch the scenery.
-   - **Every window** works this way, with a **theme- + type-specific treatment**
-     (NOT one re-skinned shell): parchment for Bebop poems, cold **blue-HUD**
-     frame for the Expanse counterpart (Aaron's reference image 1), a glass card
-     for prose, etc. Two themes × multiple stations = many windows to design.
-   - **Immersive / "clear" mode** (like TikTok/IG): a control hides ALL chrome →
-     pure scene. Getting back: **tap anywhere restores** + a persistent low-key
-     "tap for controls" handle so it's never a dead end. **Also wanted on the
-     MAIN space-flight view** (Aaron 2026-07-18): an immersive mode where you can
-     still fly around and destroy things, the woolong/bounty counter stays in a
-     corner, a small music play/stop button sits bottom-right, reward windows
-     still pop — but everything else is hidden. Same tap-to-restore.
-   - **NOTE:** the dock-based parchment integration currently on the branch
-     (commit 3d2bdcf) is SUPERSEDED by this floating model — it will be rebuilt
-     as a floating window, not merged as-is. The parchment *treatment* itself
-     (paper/seal/quill) is kept; only its container changes.
-   - Still built reusably so it doubles as the Ground-Control computer screen in
-     Phase 4. Immediate next build: the **Expanse HUD window** mockup within this
-     model (green-lit).
-3. **Visual fidelity collaboration**: real illustrated backgrounds/
-   characters replacing procedural shapes (hangar ship size, forest
-   contrast, blocky silhouettes, themes not visibly differing — see the
-   still-open issues #5/#6 in §2). Aaron supplies art or picks a sourcing
-   route (commission / itch.io / Kenney.nl / CraftPix / AI-assisted); scene
-   specifics get resolved as that art arrives, not planned in the abstract.
-   Can overlap with other phases since it's partly gated on gathering art.
-   **Quality bar + method for this phase: the Oromugai parchment box (built
-   2026-07-18) is the reference standard — Aaron: "this is the quality I want
-   the whole website at." Reuse the hybrid method that made it: CSS/SVG builds
-   the immersive shell, real illustrated art is keyed to transparency and
-   composited in (multiply for paint-on-surface, normal+shadow for raised
-   objects). See CLAUDE.md → "The quality bar." First assets already in
-   `docs/orbit/assets/` (quill.png, wax_seal.png).**
-4. **Ground Control** (the giant): boot screen becomes a real choice —
-   **Launch** (today's space experience) vs. **Ground Control**, a
-   control-room scene (desk, computer screen, panels) with direct-access
-   station navigation, an always-visible facts/stats browse list (separate
-   from the earned-only ◈ LOG), a Pong mini-game, and a themed "Ronin"
-   entry that appears in the station menu once unlocked. Ronin unlocks via
-   *either* winning Pong on the ground OR the existing ₩20,000 bounty in
-   space — whichever happens first in a session unlocks it in both places,
-   and both tracks stay live simultaneously so a player can chase either.
-   Launch button on the desk → space; a Return Home button in space → back
-   to the control room. **Entry flow addition (per Aaron): after choosing a
-   mode, the player picks their theme/ship (Swordfish vs. Rocinante) BEFORE
-   entering — both for Launch and for Ground Control.**
-5. **In-site tutorial** (built once everything above is final): teaches
-   *visitors* how to *operate* the site, likely living in/around the Ground
-   Control entry flow. NOTE: this is the on-site walkthrough for users — NOT
-   the build manual in Phase 6 below.
-6. **The DIY build manual** (THE FINAL PHASE — after everything, no matter
-   what): a personal learning walkthrough FOR AARON on how this site was
-   actually built. Not a user tutorial — a teach-yourself manual. Covers: the
-   coding languages/tools recommended and why, where to learn each, the
-   concepts that actually matter, and the real lessons + mistakes from this
-   build. Constraints (Aaron's, honor them): plain English, no jargon; taught
-   through concrete EXAMPLES and VISUALS (he learns by seeing/doing); honest
-   about what went wrong, not just what worked. Deliverable is a "DIY learning
-   manual." Must be last so it can teach the *final* shape of the site.
+> **Standing note:** Aaron has said more design material is coming from the
+> same outside design source ("look out"). When it arrives: read it fully
+> (README/brief first, per its own instructions) before folding anything in —
+> it may reshape this list again, the way the 2026-07-19 brief did.
 
-**Cross-cutting work item — Ronin (the hidden planet): brainstorm + build.**
-We defined its *mood* (STATION ∅, "the lone road," "#1 is a direction, not a
+### ✅ Phase 1 — Quick wins (SHIPPED)
+Planet approach glow, log button prominence, session-only rewards, redesigned
+"?" button. See §3.1.
+
+### ✅ Phase 1.5 — Reward presentation & log polish (SHIPPED)
+Per-entry NEW tracking, brightened log, per-category reveal voices, clearer
+picker labels. See §3.2.
+
+### 🔶 Phase 2 — Content windows (IN PROGRESS)
+Architecture decided (Aaron approved 2026-07-18 via the interactive concept
+mockup): the old left **dock-holds-the-content** model is replaced by
+**floating content windows over the scene**. The rail becomes lightweight —
+station name, tabs, a one-line description of the current tab — while the
+actual content pops up centered over the planet scene, sized so the scene
+still shows around it; riffle/scroll through items, close to just watch the
+view. **Every window gets a theme- + type-specific treatment** (parchment for
+Bebop, HUD future-tablet for Expanse, glass card for prose) — not one
+re-skinned shell. Built reusably so it doubles as the Ground-Control computer
+screen in Phase 4.
+- ✅ Stage 1 — Bebop parchment poem window, shipped (commit `ebcdc5d`).
+- ✅ Stage 2 — Expanse HUD future-tablet poem window, shipped.
+- ✅ Palette + type system adopted site-wide immediately (2026-07-19 redesign
+  brief, commit `a8d0abe`) rather than finishing Phase 2 first and re-skinning
+  after — folded in here so nothing gets built twice. See §4 for detail.
+- ⬜ Stage 3 — **station immersive/clear mode**: a control hides the rail +
+  window entirely → pure scene, like TikTok/IG. Tap anywhere restores it, plus
+  a persistent low-key "tap for controls" handle so it's never a dead end.
+- ⬜ Stage 4 — **main-FLIGHT immersive mode**: same idea applied to normal
+  space flight — fly and shoot with only the woolong/bounty counter in a
+  corner + a small music play/stop button bottom-right + reward windows still
+  popping; everything else hidden. Same tap-to-restore.
+- ⬜ Stage 5 — the **other stations** (Mission, AlphaForge, Life, Notes) get
+  their own rich window treatments, in BOTH themes — right now only
+  Craft/Oromugai has this built out.
+- ⬜ Final polish + mobile pass, real screenshots both themes → Aaron merges.
+
+### ⬜ Phase 3 — Visual fidelity
+Real illustrated backgrounds/characters replacing procedural shapes (hangar
+ship size, forest contrast, blocky silhouettes, themes not visibly differing
+— issues #5/#6 in §2). Aaron supplies art or picks a sourcing route; scene
+specifics resolve as art arrives, not planned in the abstract. Can overlap
+with any other phase since it's gated on gathering art, not on sequence.
+**Quality bar + method: the Oromugai parchment box is the reference standard**
+("this is the quality I want the whole website at") — reuse the hybrid method
+(CSS/SVG shell + real art keyed/composited in) documented in `CLAUDE.md` →
+"The quality bar." Includes Ronin's dunes scene once its content brainstorm
+(see cross-cutting items below) is settled.
+
+### ⬜ Phase 4 — Ground Control (the big structural change)
+Heavily shaped by the 2026-07-19 redesign brief (§4). Ordered sub-parts:
+- **4a. The Doorway** — full-screen diagonal split, LAUNCH vs GROUND CONTROL,
+  modeled on the brief's Turn 4a mockup. Ground Control's door is present but
+  **locked — an "under construction" treatment, unclickable** — Ground
+  Control itself isn't built yet (4c).
+- **4b. The Ship/Theme Picker** — reached only via LAUNCH: a **second
+  full-screen scene, also split diagonally**, Swordfish on one side /
+  Rocinante on the other, each with its theme name + copy. Whichever ship the
+  visitor clicks **flies off the page**, and the screen warps into the main
+  flight view with that theme active. This is a bespoke front-door sequence
+  — distinct from the existing in-game hangar-bay ship-swap animation used
+  later for switching themes mid-session, which stays as-is and is untouched.
+- **4c. Ground Control itself** (full terminal: identity rail with photo/
+  résumé/LinkedIn/email always visible, 4 tabs CAREER/ABOUT/FACTS/QUOTES,
+  hidden Pong bottom-right) — **ON HOLD per Aaron, do not build yet.**
+- **4d. Captain's Dossier** (always-visible orientation panel on the system
+  map) — approved, not yet built. Open question: does pressing ◈ LOG surface
+  content in the Dossier instead of/alongside the current Mission Log panel?
+  Waiting on Aaron, who may return with a finished design.
+- **4e. Reward-loop STAR upgrade** (Problem/Move/Dent + hard metrics) for
+  EVERY reward category (Career Wins, About the Pilot, Fun Facts, Wisdom) —
+  approved, waiting on Aaron's completed per-category designs before build.
+- **4f. Ronin's Ground-Control entry** — wire Ronin into the GC menu once 4c
+  is built, unlocked via Pong win OR the existing ₩20,000 bounty (whichever
+  happens first, unlocks in both places; both tracks stay live).
+- **4g. Mobile — the calmer experience** — Ground Control's tap-menu style is
+  the natural mobile-primary path; resolve mobile's interaction model here,
+  not as a standalone patch (see the cross-cutting mobile note below).
+
+### ⬜ Phase 5 — In-site tutorial
+Teaches *visitors* how to operate the finished site. Built once the site's
+final shape is settled (needs Phase 4 done) — NOT the same as Phase 6 below.
+
+### ⬜ Phase 6 — The DIY build manual (THE FINAL PHASE, no matter what)
+A personal, plain-English, example-and-visual learning walkthrough FOR AARON
+on how this site was actually built: languages/tools used and why, where to
+learn them, the concepts that mattered, the real lessons + mistakes. Distinct
+from Phase 5 — that's for site visitors; this is for Aaron, about the build
+itself. Must be last so it can teach the *final* shape of everything above.
+
+---
+
+**Cross-cutting item — Ronin (the hidden planet): brainstorm + build.** We
+defined its *mood* (STATION ∅, "the lone road," "#1 is a direction, not a
 rank," a ronin w/ sword + headband walking the dunes) but never its actual
 *content* — what a visitor reads/sees/does when they land there.
-- **Step 0 — brainstorm (do first, anytime):** a dedicated session with Aaron to
-  decide what Ronin holds. It's the payoff for a hard-won discovery, so it should
-  feel special/different from the other stations — not just another info panel.
-- **Then build, threaded across the existing phases:**
-  - *Phase 2:* its content window (one more rich window to design — likely its
-    own distinct treatment, the way the parchment box is the poetry treatment).
-  - *Phase 3:* its scene/environment (the dunes + the walking ronin — a prime
-    candidate for the layered-art + animation method; see CLAUDE.md).
-  - *Phase 4:* wire it as the Ground-Control menu entry that appears once
-    unlocked (via Pong win OR ₩20,000 bounty).
-- Settle the brainstorm before finalizing the Phase 3 scene and the Phase 4 menu
-  entry, so its content, art, and unlock all point at the same idea.
+- **Step 0 — brainstorm (do first, anytime, can happen in parallel with any
+  phase):** a dedicated session with Aaron to decide what Ronin holds. It's
+  the payoff for a hard-won discovery, so it should feel special/different
+  from the other stations — not just another info panel.
+- **Then build, threaded across the phases above:** its content window
+  (Phase 2 Stage 5), its scene/environment (Phase 3 — a prime candidate for
+  the layered-art + animation method in `CLAUDE.md`), its Ground-Control menu
+  entry (Phase 4f).
+- Settle the brainstorm before finalizing the Phase 3 scene and the Phase 4f
+  menu entry, so content, art, and unlock all point at the same idea.
 
-**Cross-cutting work item — the MOBILE experience (LOW priority, Aaron's call,
-but quality-first — no "eh, this might work" patches).** On a phone the flight
-controls fight the device: the page pans/zooms during play, and a fire-touch and
-a move-touch aren't recognized as two separate fingers. Two layers to this:
-- **The real bug (fix regardless):** stop the page panning/zooming during play
-  (`touch-action:none` + preventDefault) and track fingers by pointer ID so one
-  = move, another = fire. Logged as issue #21 in §2.
-- **The deeper design call:** a precise two-thumb drag-to-fly + tap-to-fire game
-  is genuinely hard to make feel good on touch. Recommended direction (Claude's
-  take, 2026-07-18): don't port desktop combat to phones — give mobile a
-  deliberately *calmer, different* interaction that keeps all the mood/art/
-  content: tap-to-travel (auto-fly to a tapped planet), assisted/optional
-  combat. **This dovetails with Phase 4 — the Ground-Control direct-access mode
-  (a menu you tap, no flying) is the natural mobile-primary path**, with flight
-  as an optional assisted extra. So resolve this alongside Phase 4 rather than as
-  a standalone patch. Revisit the exact shape with Aaron when we get there.
-
-(An interstitial **Phase 1.5 — reward presentation & log polish** was added
-and shipped after Phase 1; see §3.2.)
+**Cross-cutting item — the MOBILE experience (LOW priority, Aaron's call, but
+quality-first — no "eh, this might work" patches).** On a phone the flight
+controls fight the device: the page pans/zooms during play, and a fire-touch
+and a move-touch aren't recognized as two separate fingers.
+- **The real bug (fix regardless, anytime):** stop the page panning/zooming
+  during play (`touch-action:none` + preventDefault) and track fingers by
+  pointer ID so one = move, another = fire. Logged as issue #21 in §2.
+- **The deeper design call:** a precise two-thumb drag-to-fly + tap-to-fire
+  game is genuinely hard to make feel good on touch. Recommended direction
+  (Claude's take, 2026-07-18): don't port desktop combat to phones — give
+  mobile a deliberately *calmer, different* interaction (tap-to-travel,
+  assisted/optional combat). Resolved as **Phase 4g** above, not standalone.
 
 ## 3.1 Phase 1 of the roadmap: quick wins (shipped earlier today)
 
@@ -307,7 +326,7 @@ all still outstanding — folded into Phase 3 (visual fidelity) and Phase 4
 
 ---
 
-## 4. The Redesign Brief (2026-07-19) — supersedes `docs/DESIGN-BRIEF.md`
+## 4. The Redesign Brief (2026-07-19) — where the new direction came from
 
 Aaron shared a full design handoff from a separate design session
 (`Design Notes.zip` → `design_handoff_aaronautics/README.md` +
@@ -319,64 +338,20 @@ Guarantee the exit"* — keep the full game, but résumé/LinkedIn/career-proof
 must be one click away from anywhere; the game delivers the portfolio, it
 doesn't gate it.
 
-Decisions made with Aaron (2026-07-19), item by item:
+The item-by-item decisions from reviewing this brief with Aaron are folded
+directly into the phase list in §3 above (mainly Phase 2's palette/type
+adoption and Phase 4's sub-parts 4a–4g). This section is provenance/reference
+only — §3 is the current source of truth for what's built vs. pending.
 
-1. **Palette + type system — ADOPTED IMMEDIATELY, shipped same day** (commit
-   `a8d0abe`), rather than finishing Phase 2 first and re-skinning after —
-   Aaron's call, so nothing gets built twice. Bebop accent `#ff7a3c`→`#f0a63c`,
-   Expanse accent `#74d0ff`→`#4fb8e8` (both hex-string AND decimal-rgba() forms
-   swept across `index.html`, plus `THEMES{}` in `01-config.js` and the HUD
-   window's own gauge stroke in `07-environments.js`). Station identity colors
-   (e.g. AlphaForge's own blue) and decorative scene-particle palettes were
-   deliberately left alone — those are independent creative choices, not "the
-   theme accent." Type: font *variables* were retargeted rather than hunting
-   every usage site — `--anton`/`--display` → Archivo Black (Bebop) / Chakra
-   Petch (Expanse); `--os` (body/labels, previously theme-independent) now also
-   swaps to Chakra Petch on Expanse. Space Mono constant across both, per the
-   brief. Fonts self-hosted via `@fontsource` → `docs/assets/fonts/` (no CDN).
-   Orbitron kept on disk but retired/unused. Verified both themes, desktop +
-   mobile, zero console errors.
-2. **The doorway** (diagonal-split intro, LAUNCH vs GROUND CONTROL) — approved,
-   model it after the zip's **Turn 4a** mockup. **Scope for now: Ground
-   Control's door is present but non-functional** — visually there, marked
-   "under construction," unclickable. Not yet built (next up).
-3. **Ground Control itself** (the full terminal — identity rail, 4 tabs, hidden
-   Pong) — **do not build yet.** Matches the doorway's WIP treatment.
-4. **Reward-loop STAR upgrade** (Problem/Move/Dent + hard metrics, per zip
-   Turn 2) — approved. **Every reward category** (Career Wins, About the
-   Pilot, Fun Facts, Wisdom) needs its own version of this level of detail/
-   polish, not just Career Wins. Aaron will bring back completed
-   category-specific designs before this gets built.
-5. **Captain's Dossier** (always-visible orientation panel, zip Turn 1a/12) —
-   approved, should exist. Open question, not yet resolved: should pressing the
-   existing ◈ LOG button surface things *in* the Dossier panel instead of/
-   alongside the current Mission Log panel? Aaron may return with a finished
-   design for this.
-6. **Theme-switch mechanism** — the zip's new arrow-press warp+font-crossfade
-   transition (Turn 11) is NOT being built. Working plan instead (Claude's
-   interpretation of Aaron's "I like our docking situation" — pending his
-   confirmation): reuse the **existing hangar-bay/docking ship-swap scene** as
-   the theme/ship picker, shown right after choosing "Launch" in the doorway —
-   you see the ship, pick Bebop or Expanse, picking one warps you into the
-   game. This is materially the same as the Phase 4 "pick theme/ship before
-   entering" note below — the doorway just sits in front of it.
-7. **New type system** (Archivo Black / Chakra Petch) — approved, shipped (see
-   #1).
-8. **New accent hex values** — approved, shipped (see #1).
-9. **Teal `#35c1d1` "single live spark" rule** — Aaron does NOT want this as a
-   sitewide rule (existing green ●ONLINE / accent-driven "live" indicators stay
-   as-is). Scoped down to just the **logo/wordmark's planet-i dot**, which he
-   does like. Not yet built anywhere beyond the logo itself.
-10. **Floating content windows (Phase 2's own model) are KEPT** — this redesign
-    brief doesn't mention them, but they're staying as the station-content
-    pattern regardless; not being replaced by Ground Control's flatter card
-    style.
-11. **The brief's "is the orbit-game now canonical" question — dropped
-    entirely.** Both Launch and Ground Control matter equally; a visitor just
-    picks their environment at the start. No hierarchy between them.
+One correction worth flagging explicitly: the brief's own arrow-press
+warp+font-crossfade theme transition (its Turn 11) is NOT being built.
+Aaron's actual ask (confirmed 2026-07-19): after LAUNCH, a **second
+full-screen diagonal-split scene** — Swordfish vs Rocinante, each with theme
+name/copy — where clicking a ship flies it off-screen and warps into flight.
+This is a new, bespoke front-door sequence, NOT a reuse of the existing
+in-game hangar-bay ship-swap animation (that stays exactly as it is, untouched,
+for later mid-session theme switching). See Phase 4b in §3.
 
-**Not yet built from this list:** the doorway (#2, next up), Ground Control
-(#3, paused), the reward-loop STAR content upgrade (#4, waiting on Aaron's
-designs), the Captain's Dossier (#5, waiting on Aaron's design/decision), the
-hangar-as-theme-picker flow (#6, pending Aaron's confirmation of the read
-above).
+**Standing note:** Aaron has said more design material is coming from this
+same outside source ("look out") — when it arrives, read fully before folding
+in; it may reshape §3 again, the way this brief did.
