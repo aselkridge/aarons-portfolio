@@ -27,13 +27,19 @@ function openStation(s){
 function closeStation(){
   if(state!=='station') return;
   panel.classList.remove('open');
+  $('cwin').classList.remove('show');
   history.replaceState(null,'',location.pathname);
   cancelAnimationFrame(envRAF); envScene=null;
   $('loc').textContent='SYSTEM MAP'; navHere(null);
   setTimeout(function(){ system.classList.remove('warp'); state='free'; $('c-stat').textContent='● ONLINE'; },260);
 }
 $('close').addEventListener('click', closeStation);
-panel.addEventListener('click', function(e){ if(e.target===panel||e.target===envc) closeStation(); });
+/* clicking the bare scene HIDES the floating window (enjoy the view); if it's
+   already hidden, a scene click lifts off. ESC / ✕ always lift off. */
+function hideWindow(){ $('cwin').classList.remove('show'); }
+panel.addEventListener('click', function(e){
+  if(e.target===panel||e.target===envc){ if($('cwin').classList.contains('show')) hideWindow(); else closeStation(); }
+});
 function sizeEnv(){ envc.width=envc.clientWidth*devicePixelRatio; envc.height=envc.clientHeight*devicePixelRatio;
   ectx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
 var SECTIONS={
@@ -90,11 +96,44 @@ function fillCard(s){
     if(i===0) selectSec(sec,a);
   });
 }
+/* ── slim-rail one-line description of the current tab ── */
+function escH(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function briefOf(sec){
+  if(sec.desc) return escH(sec.desc);
+  if(sec.intro) return escH(sec.intro);
+  if(sec.body&&sec.body[0]){ var t=sec.body[0], m=t.match(/^[^.!?]*[.!?]/); t=m?m[0]:t;
+    return escH(t.length>96?t.slice(0,94)+'…':t); }
+  return '';
+}
+/* ── the floating content window: one poem at a time (riffle) or a prose card ── */
+var winPoems=null, winIdx=0;
+function renderPoemOne(){
+  var p=winPoems[winIdx], num=p.n||('#'+('0'+(winIdx+1)).slice(-2));
+  $('p-body').className='cwin-body sec-body';
+  $('p-body').innerHTML='<figure class="poem-sheet hero">'+
+    '<figcaption class="poem-eye">Oromugai ∞ · '+escH(num)+'</figcaption>'+
+    '<blockquote class="poem-line">'+escH(p.line||'')+'</blockquote>'+
+    '<div class="poem-foot"><img class="poem-seal" src="assets/wax_seal.png" alt="Oromugai seal — an ouroboros">'+
+    '<span class="poem-meta">'+escH(p.meta||'8 syllables · one breath')+'</span></div>'+
+    '<img class="poem-quill" src="assets/quill.png" alt="" aria-hidden="true"></figure>';
+  $('cwin-dots').innerHTML=winPoems.map(function(_,i){return '<i class="'+(i===winIdx?'on':'')+'"></i>';}).join('');
+  $('cwin-count').textContent=(winIdx+1)+' / '+winPoems.length;
+}
 function selectSec(sec,a){
   var links=$('secs').querySelectorAll('a');
   for(var i=0;i<links.length;i++) links[i].classList.toggle('on', links[i]===a);
-  $('p-body').innerHTML=ContentViewer.render(sec);
+  $('rail-desc').innerHTML='<b>'+escH(sec.k)+'</b> · '+briefOf(sec);
+  if(sec.type==='poem' && sec.poems && sec.poems.length){
+    winPoems=sec.poems; winIdx=0; renderPoemOne(); $('cwin-riffle').classList.remove('hidden');
+  } else {
+    winPoems=null; $('p-body').className='cwin-body sec-body cwin-card';
+    $('p-body').innerHTML=ContentViewer.render(sec); $('cwin-riffle').classList.add('hidden');
+  }
+  $('cwin').classList.add('show');
 }
+$('cwin-close').addEventListener('click', hideWindow);
+$('cwin-prev').addEventListener('click', function(){ if(!winPoems)return; winIdx=(winIdx-1+winPoems.length)%winPoems.length; renderPoemOne(); Sound.blip(620); });
+$('cwin-next').addEventListener('click', function(){ if(!winPoems)return; winIdx=(winIdx+1)%winPoems.length; renderPoemOne(); Sound.blip(720); });
 /* — environment painters — */
 function ridge(w,h,base,jag,n){ var pts=[]; for(var i=0;i<=n;i++) pts.push({x:w*i/n, y:base+(Math.random()-0.5)*jag}); return pts; }
 function drawRidge(c,pts,h,col){ c.fillStyle=col; c.beginPath(); c.moveTo(-10,h+10);
