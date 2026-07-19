@@ -542,9 +542,12 @@ body.t-roci .contact-more{border-top:1px solid rgba(79,184,232,.25)}
 .rewardmodal.picking #rm-close{display:none}
 .rm-picker-lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;
   text-align:center;margin-bottom:16px}
-.rm-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* career hero on top (spans the row), then the three other channels in ONE
+   even line beneath — never a ragged 2+1 wrap. Phones stack everything. */
+.rm-picker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:540px){ .rm-picker-grid{grid-template-columns:1fr} }
 .rm-pick{cursor:pointer;padding:16px 10px 12px;border-radius:8px;text-align:center;transition:.15s}
-.rm-pick .rp-lab{display:block;font-family:var(--os);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.rm-pick .rp-lab{display:block;font-family:var(--os);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
 .rm-pick .rp-sub{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;opacity:.7;margin-top:3px}
 .rm-pick .rp-count{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;opacity:.6;margin-top:6px}
 body.t-sword .rm-pick{background:rgba(240,166,60,.08);border:1px solid rgba(240,166,60,.3);color:#c9924a}
