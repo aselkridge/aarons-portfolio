@@ -1121,7 +1121,11 @@ body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg
 .gate{position:fixed;inset:0;z-index:36;background:#07060a;overflow:hidden;transition:opacity .6s ease,visibility .6s}
 .gate.gone{opacity:0;visibility:hidden;pointer-events:none}
 #shipsel{opacity:0;visibility:hidden;pointer-events:none;z-index:35}
-#shipsel.show{opacity:1;visibility:visible;pointer-events:auto}
+/* entry is INSTANT (no transition): the picker sits beneath the doorway
+   (z 35 < 36), so it must already be fully opaque when the doorway starts
+   fading — otherwise both are semi-transparent mid-crossfade and the game
+   flashes through. Its own fade-out (.gone) still animates normally. */
+#shipsel.show{opacity:1;visibility:visible;pointer-events:auto;transition:none}
 .gate-stars{position:absolute;inset:0;background-image:
   radial-gradient(1px 1px at 18% 24%,rgba(255,255,255,.33) 0,transparent 100%),
   radial-gradient(1px 1px at 40% 70%,rgba(255,255,255,.27) 0,transparent 100%),
@@ -1138,23 +1142,38 @@ body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg
   padding-right:clamp(22px,7vw,90px)}
 #doorway .gr{background:radial-gradient(80% 90% at 78% 50%,rgba(150,170,190,.12),transparent 70%);cursor:default}
 #shipsel .gr{background:radial-gradient(80% 90% at 72% 50%,rgba(79,184,232,.16),transparent 72%)}
-.gh-k{font-family:var(--mono);font-size:clamp(10px,1.2vw,12px);letter-spacing:.32em;margin-bottom:12px;text-transform:uppercase}
+/* gate type scaled for the average reader — same hierarchy, ~20% larger */
+.gh-k{font-family:var(--mono);font-size:clamp(11.5px,1.4vw,14px);letter-spacing:.32em;margin-bottom:12px;text-transform:uppercase}
 .gh-k.warm{color:#f0a63c}.gh-k.steel{color:#a9c0d4}.gh-k.cold{color:#4fb8e8}
-.gh-t{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(1.8rem,4.6vw,2.85rem);line-height:.97;
+.gh-t{font-family:'Archivo Black',Impact,sans-serif;font-size:clamp(2.1rem,5.4vw,3.4rem);line-height:.97;
   letter-spacing:-.01em;color:#e8e2d6;text-transform:uppercase}
 .gh-t.cool{color:#eef2f6}
 .gh-t.chak{font-family:'Chakra Petch',sans-serif;font-weight:700;line-height:.99;color:#eef2f6}
-.gh-d{font-family:var(--os);font-weight:300;font-size:clamp(13px,1.4vw,15px);color:#c9c2b4;margin-top:14px;line-height:1.4;max-width:310px}
+.gh-d{font-family:var(--os);font-weight:300;font-size:clamp(15px,1.7vw,17.5px);color:#c9c2b4;margin-top:15px;line-height:1.45;max-width:360px}
 .gr .gh-d{color:#b9c3ce}
-.gh-f{font-family:var(--mono);font-size:10px;letter-spacing:.14em;margin-top:16px;color:#9a8f7a;text-transform:uppercase}
+.gh-f{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;margin-top:16px;color:#9a8f7a;text-transform:uppercase}
 .gh-f.warm{color:#f0a63c}.gh-f.cold{color:#4fb8e8}
-.gh-sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:#9a8f7a;margin-top:6px;text-transform:uppercase}
+.gh-sub{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;color:#9a8f7a;margin-top:6px;text-transform:uppercase}
 .gr .gh-sub{color:#7f94a4}
 #door-launch:hover .gh-t{text-shadow:0 0 34px rgba(240,166,60,.55)}
 #pick-sword:hover .gh-t{text-shadow:0 0 34px rgba(240,166,60,.55)}
 #pick-roci:hover .gh-t{text-shadow:0 0 34px rgba(79,184,232,.55)}
-.gate-lock{display:inline-flex;align-items:center;gap:8px;margin-top:16px;border:1px dashed #5a6a78;border-radius:4px;
-  padding:7px 12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:#8fa2b3;text-transform:uppercase}
+/* the holo "UNDER CONSTRUCTION" banner — HUD frame per Aaron's reference:
+   corner brackets, hazard-stripe bars, glowing border. Big on purpose. */
+.gate-lock{position:relative;display:flex;flex-direction:column;gap:9px;margin-top:22px;
+  width:min(340px,74vw);padding:15px 20px;border:1px solid rgba(79,184,232,.65);border-radius:10px;
+  background:rgba(9,20,32,.6);text-transform:uppercase;
+  box-shadow:0 0 26px rgba(79,184,232,.28),inset 0 0 20px rgba(79,184,232,.08)}
+.gl-cb{position:absolute;width:14px;height:14px;border-color:#4fb8e8;filter:drop-shadow(0 0 4px rgba(79,184,232,.8))}
+.gl-cb.tl{top:5px;left:5px;border-top:2px solid;border-left:2px solid}
+.gl-cb.tr{top:5px;right:5px;border-top:2px solid;border-right:2px solid}
+.gl-cb.bl{bottom:5px;left:5px;border-bottom:2px solid;border-left:2px solid}
+.gl-cb.br{bottom:5px;right:5px;border-bottom:2px solid;border-right:2px solid}
+.gl-stripe{height:10px;border-radius:2px;opacity:.8;
+  background:repeating-linear-gradient(135deg,#4fb8e8 0 16px,transparent 16px 30px)}
+.gl-txt{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(16px,1.9vw,22px);
+  letter-spacing:.13em;color:#7fd4ff;text-align:center;text-shadow:0 0 16px rgba(79,184,232,.65)}
+.gl-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:#8fa2b3;text-align:center}
 .gate-lock.nudge{animation:gnudge .5s}
 @keyframes gnudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}60%{transform:translateX(4px)}}
 .gate-seam{position:absolute;top:-10%;left:50%;width:2px;height:120%;transform:translateX(-50%) rotate(9deg);pointer-events:none;
@@ -1164,9 +1183,9 @@ body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg
 .gate-top{position:absolute;top:clamp(16px,4vh,36px);left:50%;transform:translateX(-50%);text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
 .gate-top img{height:52px;width:52px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(0,0,0,.6))}
-.gt-sub{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:#8a8272;text-transform:uppercase}
-.gate-foot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;
-  letter-spacing:.14em;color:#6b6459;text-transform:uppercase;text-align:center;pointer-events:none;max-width:92vw;line-height:1.6}
+.gt-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:#9a917f;text-transform:uppercase}
+.gate-foot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;color:#847c6e;text-transform:uppercase;text-align:center;pointer-events:none;max-width:92vw;line-height:1.6}
 .gs-slot{width:min(300px,64vw);height:min(150px,28vw);border:1px dashed;border-radius:8px;position:relative;
   display:flex;align-items:center;justify-content:center;margin-top:22px}
 #pick-sword .gs-slot{border-color:#6b4e1a;background:rgba(240,166,60,.04)}
@@ -1526,7 +1545,16 @@ body.t-roci .bnr .bk{color:#9affea}
     <div class="gh-k steel">◆ GROUND CONTROL</div>
     <div class="gh-t cool">I'M HERE<br>TO HIRE</div>
     <div class="gh-d">Sit at the terminal. Straight to the career case — experience, wins, résumé &amp; LinkedIn.</div>
-    <div class="gate-lock" id="gc-lock">⚠ terminal under construction</div>
+    <!-- holo HUD "under construction" banner (per Aaron's reference art):
+         corner brackets + hazard stripes + glow, big enough to read at a
+         glance. Nudges when the locked door is clicked. -->
+    <div class="gate-lock" id="gc-lock">
+      <i class="gl-cb tl"></i><i class="gl-cb tr"></i><i class="gl-cb bl"></i><i class="gl-cb br"></i>
+      <span class="gl-stripe"></span>
+      <span class="gl-txt">Under construction</span>
+      <span class="gl-sub">◆ ground control terminal · opening soon</span>
+      <span class="gl-stripe"></span>
+    </div>
   </div>
   <div class="gate-seam"></div>
   <div class="gate-top"><img src="../assets/brand/mark-transparent.png" alt="Aaronautics"><div class="gt-sub">Choose your approach vector</div></div>
