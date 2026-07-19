@@ -92,17 +92,33 @@ before the biggest structural change):
 
 1. **Quick wins** (this shipment — see §3.1): planet approach glow, log
    button prominence, session-only rewards, redesigned "?" button.
-2. **Content-viewer panel**: richer right-side display for station content
-   (blog/poem/image-grid layouts) — built reusably so it can double as the
-   Ground Control computer screen's content display in Phase 4.
-   **Scope reminder (bigger than one box): the Oromugai parchment box is only
-   the WARM (Swordfish/Bebop) poetry window. Still to design — rich content
-   windows for the OTHER stations, AND the EXPANSE (Rocinante/cool) counterpart
-   of each, including the Expanse version of the poetry window (likely the
-   blue-HUD language from Aaron's first reference image, not parchment). Two
-   themes × multiple stations = many rich windows. Open design question when we
-   resume: does each window get a theme-specific treatment (parchment vs. HUD)
-   or one shell re-skinned? Also see the Ronin-content brainstorm note below.**
+2. **Content windows** (was "content-viewer panel"). **ARCHITECTURE DECIDED
+   (Aaron approved 2026-07-18, via the interactive concept mockup):**
+   - The old left **dock-holds-the-content** model is REPLACED by **floating
+     content windows over the scene.** The left rail becomes lightweight — just
+     the station name, the tabs, and a **brief one-line description** of the
+     current tab. The actual content **pops up as a panel centered in the
+     available area over the planet scene**, sized so the scene still shows
+     around it; you **riffle/scroll** items inside it and can **close** it to
+     just watch the scenery.
+   - **Every window** works this way, with a **theme- + type-specific treatment**
+     (NOT one re-skinned shell): parchment for Bebop poems, cold **blue-HUD**
+     frame for the Expanse counterpart (Aaron's reference image 1), a glass card
+     for prose, etc. Two themes × multiple stations = many windows to design.
+   - **Immersive / "clear" mode** (like TikTok/IG): a control hides ALL chrome →
+     pure scene. Getting back: **tap anywhere restores** + a persistent low-key
+     "tap for controls" handle so it's never a dead end. **Also wanted on the
+     MAIN space-flight view** (Aaron 2026-07-18): an immersive mode where you can
+     still fly around and destroy things, the woolong/bounty counter stays in a
+     corner, a small music play/stop button sits bottom-right, reward windows
+     still pop — but everything else is hidden. Same tap-to-restore.
+   - **NOTE:** the dock-based parchment integration currently on the branch
+     (commit 3d2bdcf) is SUPERSEDED by this floating model — it will be rebuilt
+     as a floating window, not merged as-is. The parchment *treatment* itself
+     (paper/seal/quill) is kept; only its container changes.
+   - Still built reusably so it doubles as the Ground-Control computer screen in
+     Phase 4. Immediate next build: the **Expanse HUD window** mockup within this
+     model (green-lit).
 3. **Visual fidelity collaboration**: real illustrated backgrounds/
    characters replacing procedural shapes (hangar ship size, forest
    contrast, blocky silhouettes, themes not visibly differing — see the
