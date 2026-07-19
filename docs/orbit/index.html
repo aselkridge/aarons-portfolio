@@ -242,7 +242,10 @@ body.t-roci .tgtbox.on{display:block}
 .tgtbox .lab{position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:#4fb8e8;white-space:nowrap}
 
 /* bebop title-card cut-in */
-.titlecard{position:fixed;left:0;top:34%;z-index:9;pointer-events:none;transform:translateX(-102%) skewY(-2deg);
+/* z 48: the lock-on cut-ins are sub-second cinematic moments — they sweep
+   OVER the HUD chrome (dossier included) like the banners do, instead of
+   sliding in behind the dossier that now occupies the left column */
+.titlecard{position:fixed;left:0;top:34%;z-index:48;pointer-events:none;transform:translateX(-102%) skewY(-2deg);
   background:#0d0a07;border-block:3px solid var(--ink);padding:14px 42px 14px clamp(20px,6vw,70px);
   transition:transform .16s cubic-bezier(.2,.9,.3,1)}
 .titlecard.on{transform:translateX(0) skewY(-2deg)}
@@ -254,7 +257,7 @@ body.t-roci .titlecard{display:none}
    card above, not a reskin of it: a HUD scan-readout using the same
    glass-panel + cut-corner language as this theme's other panels (the
    banner, planet tags), sliding in from the left the same way. */
-.scancard{position:fixed;left:0;top:34%;z-index:9;pointer-events:none;display:none;
+.scancard{position:fixed;left:0;top:34%;z-index:48;pointer-events:none;display:none;
   transform:translateX(-102%);transition:transform .22s cubic-bezier(.2,.9,.3,1);
   background:rgba(4,10,18,.88);backdrop-filter:blur(10px);border:1px solid #4fb8e8;border-left:3px solid #4fb8e8;
   box-shadow:0 0 40px rgba(79,184,232,.35);padding:14px 34px 14px clamp(18px,5vw,54px);
