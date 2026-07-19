@@ -712,16 +712,13 @@ body.t-sword .dock{background:linear-gradient(90deg,rgba(12,8,5,.86) 0%,rgba(12,
   border-right:1px solid rgba(240,166,60,.16)}
 body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,10,18,.7) 78%,transparent 100%);
   border-right:1px solid rgba(79,184,232,.2)}
-/* station-screen mark (corrections sheet #1/#2): the asset used as a mask so
-   the tint is a flat single color per theme — cream on warm, holo-blue on
-   cool — and the shape can never drift from the real art */
+/* station-screen mark: the PNG as-is — the A is a hard constant, NEVER
+   tinted or theme-adjusted in any way (Aaron's rule). Hover affordance is
+   pure lighting (neutral glow + full opacity), zero color change. */
 .st-mark{background:none;border:none;padding:0;cursor:pointer;display:block;width:40px;height:40px;margin-bottom:12px}
-.st-mark i{display:block;width:100%;height:100%;transition:background .25s;
-  -webkit-mask:url('../assets/brand/mark-transparent.png') center/contain no-repeat;
-  mask:url('../assets/brand/mark-transparent.png') center/contain no-repeat}
-body.t-sword .st-mark i{background:#e8e2d6}
-body.t-roci .st-mark i{background:#4fb8e8}
-.st-mark:hover i,.st-mark:focus-visible i{background:var(--accent2)}
+.st-mark img{display:block;width:100%;height:100%;object-fit:contain;opacity:.94;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.6));transition:opacity .2s,filter .2s}
+.st-mark:hover img,.st-mark:focus-visible img{opacity:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 10px rgba(255,255,255,.35))}
 .dock .envlab{font-family:var(--mono);font-size:9px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
 .dock .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--pc,var(--accent))}
 /* hyphens/break-word: Archivo Black runs wider than the old Anton — long
@@ -1473,11 +1470,11 @@ body.t-roci .bnr .bk{color:#9affea}
   <canvas id="envc"></canvas>
   <!-- slim rail: station name + tabs + a one-line description of the current tab -->
   <div class="dock rail" id="dock">
-    <!-- the A mark, top-left of every station screen (corrections sheet #2):
-         mark ONLY, shared layout so all stations inherit it, clickable →
-         returns to orbit. Single-color tint per theme (cream/holo-blue) via
-         CSS mask of the real asset — never a redrawn mark. -->
-    <button class="st-mark" id="st-mark" type="button" aria-label="Return to orbit / system map" title="Return to orbit"><i></i></button>
+    <!-- the A mark, top-left of every station screen: the PNG asset AS IS —
+         full color, never tinted, never theme-adjusted (Aaron's rule).
+         Mark ONLY (no wordmark), shared layout so all stations inherit it,
+         clickable → returns to orbit. -->
+    <button class="st-mark" id="st-mark" type="button" aria-label="Return to orbit / system map" title="Return to orbit"><img src="../assets/brand/mark-transparent.png" alt=""></button>
     <div class="envlab" id="envlab">SURFACE</div>
     <div class="eyebrow" id="p-eye">STATION</div>
     <h2 id="p-title">Title</h2>
