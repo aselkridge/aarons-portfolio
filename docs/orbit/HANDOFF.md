@@ -5,7 +5,10 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-18 (Phase 1.5: per-entry NEW tracking w/ tab badges, lit-up unread log entries, per-category reveal voices + 2 new fonts, clearer picker labels)
+Last updated: 2026-07-19 (Phase 2: floating content windows shipped [Bebop
+parchment + Expanse HUD tablet]; new logo wired in; redesign-brief palette +
+type system adopted site-wide — see §4 for the full decision set from the
+2026-07-19 redesign brief)
 
 ---
 
@@ -301,3 +304,79 @@ placeholder sections that need no code changes to fill.
 **Explicitly NOT touched this shipment**: issues #2, #5–8, #11, #12a in §2,
 all still outstanding — folded into Phase 3 (visual fidelity) and Phase 4
 (Ground Control) of the roadmap above. Phases 2–5 not started.
+
+---
+
+## 4. The Redesign Brief (2026-07-19) — supersedes `docs/DESIGN-BRIEF.md`
+
+Aaron shared a full design handoff from a separate design session
+(`Design Notes.zip` → `design_handoff_aaronautics/README.md` +
+`Aaronautics Redesign.dc.html`, a 12-turn HTML mockup reference — a design
+medium to model from, not code to copy). **Its README explicitly supersedes
+the old `docs/DESIGN-BRIEF.md`** (stale — describes four aesthetics and a
+different flow). Governing rule from that brief: *"Lead with wonder.
+Guarantee the exit"* — keep the full game, but résumé/LinkedIn/career-proof
+must be one click away from anywhere; the game delivers the portfolio, it
+doesn't gate it.
+
+Decisions made with Aaron (2026-07-19), item by item:
+
+1. **Palette + type system — ADOPTED IMMEDIATELY, shipped same day** (commit
+   `a8d0abe`), rather than finishing Phase 2 first and re-skinning after —
+   Aaron's call, so nothing gets built twice. Bebop accent `#ff7a3c`→`#f0a63c`,
+   Expanse accent `#74d0ff`→`#4fb8e8` (both hex-string AND decimal-rgba() forms
+   swept across `index.html`, plus `THEMES{}` in `01-config.js` and the HUD
+   window's own gauge stroke in `07-environments.js`). Station identity colors
+   (e.g. AlphaForge's own blue) and decorative scene-particle palettes were
+   deliberately left alone — those are independent creative choices, not "the
+   theme accent." Type: font *variables* were retargeted rather than hunting
+   every usage site — `--anton`/`--display` → Archivo Black (Bebop) / Chakra
+   Petch (Expanse); `--os` (body/labels, previously theme-independent) now also
+   swaps to Chakra Petch on Expanse. Space Mono constant across both, per the
+   brief. Fonts self-hosted via `@fontsource` → `docs/assets/fonts/` (no CDN).
+   Orbitron kept on disk but retired/unused. Verified both themes, desktop +
+   mobile, zero console errors.
+2. **The doorway** (diagonal-split intro, LAUNCH vs GROUND CONTROL) — approved,
+   model it after the zip's **Turn 4a** mockup. **Scope for now: Ground
+   Control's door is present but non-functional** — visually there, marked
+   "under construction," unclickable. Not yet built (next up).
+3. **Ground Control itself** (the full terminal — identity rail, 4 tabs, hidden
+   Pong) — **do not build yet.** Matches the doorway's WIP treatment.
+4. **Reward-loop STAR upgrade** (Problem/Move/Dent + hard metrics, per zip
+   Turn 2) — approved. **Every reward category** (Career Wins, About the
+   Pilot, Fun Facts, Wisdom) needs its own version of this level of detail/
+   polish, not just Career Wins. Aaron will bring back completed
+   category-specific designs before this gets built.
+5. **Captain's Dossier** (always-visible orientation panel, zip Turn 1a/12) —
+   approved, should exist. Open question, not yet resolved: should pressing the
+   existing ◈ LOG button surface things *in* the Dossier panel instead of/
+   alongside the current Mission Log panel? Aaron may return with a finished
+   design for this.
+6. **Theme-switch mechanism** — the zip's new arrow-press warp+font-crossfade
+   transition (Turn 11) is NOT being built. Working plan instead (Claude's
+   interpretation of Aaron's "I like our docking situation" — pending his
+   confirmation): reuse the **existing hangar-bay/docking ship-swap scene** as
+   the theme/ship picker, shown right after choosing "Launch" in the doorway —
+   you see the ship, pick Bebop or Expanse, picking one warps you into the
+   game. This is materially the same as the Phase 4 "pick theme/ship before
+   entering" note below — the doorway just sits in front of it.
+7. **New type system** (Archivo Black / Chakra Petch) — approved, shipped (see
+   #1).
+8. **New accent hex values** — approved, shipped (see #1).
+9. **Teal `#35c1d1` "single live spark" rule** — Aaron does NOT want this as a
+   sitewide rule (existing green ●ONLINE / accent-driven "live" indicators stay
+   as-is). Scoped down to just the **logo/wordmark's planet-i dot**, which he
+   does like. Not yet built anywhere beyond the logo itself.
+10. **Floating content windows (Phase 2's own model) are KEPT** — this redesign
+    brief doesn't mention them, but they're staying as the station-content
+    pattern regardless; not being replaced by Ground Control's flatter card
+    style.
+11. **The brief's "is the orbit-game now canonical" question — dropped
+    entirely.** Both Launch and Ground Control matter equally; a visitor just
+    picks their environment at the start. No hierarchy between them.
+
+**Not yet built from this list:** the doorway (#2, next up), Ground Control
+(#3, paused), the reward-loop STAR content upgrade (#4, waiting on Aaron's
+designs), the Captain's Dossier (#5, waiting on Aaron's design/decision), the
+hangar-as-theme-picker flow (#6, pending Aaron's confirmation of the read
+above).
