@@ -129,7 +129,7 @@ function renderPoemOne(){
       '<g class="pw-gspin"><circle cx="31" cy="31" r="18" stroke="rgba(116,208,255,.4)" stroke-width="1" stroke-dasharray="3 6"/></g><circle cx="31" cy="31" r="3.2" fill="#8fe0ff"/></svg>';
     $('p-body').className='cwin-body';
     $('p-body').innerHTML='<div class="pw-device"><div class="pw-screen">'+
-      '<span class="pw-cb tl"></span><span class="pw-cb tr"></span><span class="pw-cb bl"></span><span class="pw-cb br"></span>'+
+      '<span class="pw-cb tl"></span><span class="pw-cb bl"></span><span class="pw-cb br"></span>'+
       '<div class="pw-sheen"></div>'+
       '<aside class="pw-instr">'+wave+gauge+'<div class="pw-ticks"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="pw-readout">CX 0.47<br>CY 1.02<br>Δ 0.08</div></aside>'+
       '<div class="pw-kick"><span class="k">◈ Transmission · Oromugai ∞ · '+escH(num)+'</span></div>'+
