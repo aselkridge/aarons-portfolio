@@ -734,16 +734,23 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 .rail .rail-desc b{color:var(--ink);font-weight:600}
 /* the floating window, centered in the area to the right of the rail */
 .cwin{position:absolute;z-index:3;top:50%;left:calc(330px + (100% - 330px)/2);transform:translate(-50%,-50%) scale(1);
-  width:min(460px,88vw);max-height:80vh;display:flex;flex-direction:column;
+  width:min(560px,90vw);max-height:86vh;display:flex;flex-direction:column;
   opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,transform .3s ease}
 .cwin.show{opacity:1;visibility:visible;pointer-events:auto}
-.cwin-body{overflow:auto;position:relative}
+/* overflow:auto is a safety net for genuinely long content on a short
+   viewport, not a default state — the window is sized generously so normal
+   content never needs it. Themed thin scrollbar so it never reads as a raw
+   OS bar if it ever does appear. */
+.cwin-body{overflow:auto;position:relative;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.cwin-body::-webkit-scrollbar{width:6px}
+.cwin-body::-webkit-scrollbar-track{background:transparent}
+.cwin-body::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;opacity:.6}
 .cwin-close{position:absolute;top:10px;right:10px;z-index:6;width:30px;height:30px;border-radius:50%;cursor:pointer;
   display:grid;place-items:center;font-family:var(--mono);font-size:13px;padding:0}
 body.t-sword .cwin-close{background:rgba(255,240,215,.5);border:1px solid rgba(120,80,40,.45);color:#6a2d1e}
 body.t-roci .cwin-close{background:rgba(9,22,36,.72);border:1px solid rgba(79,184,232,.45);color:#bce0ff}
 /* prose card (non-poem tabs) — a themed floating card */
-.cwin-card{padding:42px 26px 24px;border-radius:11px;max-height:80vh;overflow:auto}
+.cwin-card{padding:42px 26px 24px;border-radius:11px;max-height:86vh;overflow:auto}
 body.t-sword .cwin-card{background:rgba(20,13,8,.88);border:1px solid rgba(240,166,60,.26);backdrop-filter:blur(10px);box-shadow:0 26px 60px -22px rgba(0,0,0,.8)}
 body.t-roci .cwin-card{background:rgba(8,20,33,.84);border:1px solid rgba(79,184,232,.3);backdrop-filter:blur(12px);box-shadow:0 26px 60px -22px rgba(0,0,0,.8);
   clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
@@ -760,10 +767,16 @@ body.t-sword .cwin-arrow{border:1px solid rgba(240,166,60,.4)}body.t-roci .cwin-
 .cwin-count{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--dim);min-width:34px;text-align:center}
 
 /* ── Expanse (roci) HUD poem window — a future-tablet (pw- = poem window) ── */
+/* The glow bloom is a box-shadow term (below), NOT an absolutely-positioned
+   pseudo-element with a negative inset — that earlier approach silently
+   inflated #cwin's scrollable content box (any ancestor with overflow:auto
+   counts an offset absolute child toward its scrollWidth/scrollHeight even
+   though nothing is actually clipped), which is what caused the phantom
+   native scrollbars and threw off .cwin-close's positioning. box-shadow
+   paints outside the box without ever affecting layout/scroll size. */
 .pw-device{position:relative;padding:12px;border-radius:20px;
   background:linear-gradient(158deg,#20344a,#0c1a29 55%,#0f1f30);border:1px solid rgba(150,200,240,.28);
-  box-shadow:0 40px 90px -32px rgba(0,0,0,.9),0 0 54px -14px rgba(79,184,232,.3),inset 0 1px 0 rgba(205,232,255,.32),inset 0 -3px 10px rgba(0,0,0,.55)}
-.pw-device::before{content:'';position:absolute;inset:-22px;z-index:-1;border-radius:36px;background:radial-gradient(closest-side,rgba(79,184,232,.3),transparent 72%);filter:blur(9px)}
+  box-shadow:0 40px 90px -32px rgba(0,0,0,.9),0 0 60px 6px rgba(79,184,232,.22),inset 0 1px 0 rgba(205,232,255,.32),inset 0 -3px 10px rgba(0,0,0,.55)}
 .pw-device::after{content:'';position:absolute;left:16px;right:16px;top:5px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(210,235,255,.5),transparent)}
 .pw-screen{position:relative;overflow:hidden;padding:24px 26px;min-height:250px;
   background:linear-gradient(135deg,rgba(8,20,33,.92),rgba(4,11,20,.94));
