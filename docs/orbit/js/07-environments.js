@@ -380,12 +380,8 @@ function makeEnv(kind){
         c.globalAlpha=a*0.3; c.fillRect(nx-3,ny-3,24+(i%3)*16,11); } c.globalAlpha=1;
       // street
       c.fillStyle='#03030a'; c.fillRect(0,h*0.9,w,h*0.1);
-      // the coupe crossing
-      var ct=t%10;
-      if(ct<4.6){ var cx=-70+(ct/4.6)*(w+140); car(c,cx,h*0.94,Math.min(w,h)/620,1);
-        c.globalAlpha=0.6; var beam=c.createLinearGradient(cx+30,h*0.93,cx+180,h*0.95);
-        beam.addColorStop(0,'rgba(255,240,190,.7)'); beam.addColorStop(1,'transparent');
-        c.fillStyle=beam; c.beginPath(); c.moveTo(cx+30,h*0.925); c.lineTo(cx+190,h*0.9); c.lineTo(cx+190,h*0.965); c.lineTo(cx+30,h*0.945); c.closePath(); c.fill(); c.globalAlpha=1; }
+      // coupe removed with the rest of the procedural art (Aaron 2026-07-19)
+      // until real illustrated art lands in R2c
       if(!cel){ c.strokeStyle='rgba(160,200,255,.22)'; c.lineWidth=1;                                // rain
         for(i=0;i<60;i++){ var rx=(i*97+t*300)%w, ry=(i*53+t*380)%h; c.beginPath(); c.moveTo(rx,ry); c.lineTo(rx-2,ry-13); c.stroke(); } }
     } };
@@ -428,8 +424,8 @@ function makeEnv(kind){
         c.beginPath(); c.moveTo(0,y+6);
         for(var x=0;x<=w;x+=24) c.lineTo(x, y+Math.sin(x*0.02+t*(0.8+i*0.04)+i)*3);
         c.lineTo(w,y+6); c.closePath(); c.fill(); }
-      // the sloop
-      ship(c,w*0.5-((t*24)%(w+260))+ w*0.3, horizon-2, Math.min(w,h)/300, t);
+      // sloop removed with the rest of the procedural art (Aaron 2026-07-19)
+      // until real illustrated art lands in R2c — moonlit water carries it
     } };
   }
 
@@ -441,21 +437,11 @@ function makeEnv(kind){
       // brick wall with graffiti
       var wy=h*0.55; c.fillStyle=cel?'#241726':'#1e1522'; c.fillRect(0,wy,w,h*0.35);
       if(cel){ c.strokeStyle='#2e2038'; c.lineWidth=1.4; for(var yy=wy;yy<wy+h*0.35;yy+=15){ c.beginPath(); c.moveTo(0,yy); c.lineTo(w,yy); c.stroke(); } }
-      var TC=['#ff2d78','#74d0ff','#ffd36a','#7cff9b','#c9a8ff'];
-      for(var i=0;i<7;i++){ var gx=(i*211)%w, gy=wy+18+((i*53)%Math.floor(h*0.24)); c.save(); c.translate(gx,gy);
-        c.fillStyle=TC[i%5]; c.globalAlpha=0.9; c.font='italic 900 '+(26+(i%3)*10)+'px "Anton",sans-serif';
-        c.fillText(['FLOW','BX','404','DUMILE','WU','ILL','ONE'][i%7],0,0);
-        c.globalAlpha=1; c.restore(); }
+      // graffiti words + speaker stack + figures all removed with the rest
+      // of the procedural art (Aaron 2026-07-19) until real illustrated art
+      // lands in R2c — the wall, string lights, and sunset carry the mood
       // ground
       var gy2=h*0.9; c.fillStyle='#0a0609'; c.fillRect(0,gy2,w,h*0.1);
-      // speaker stack + beat glow
-      var beat=Math.pow(Math.max(0,Math.sin(t*4.6)),3), sx=w*0.5;
-      c.globalAlpha=0.22*beat; c.fillStyle='#ffd36a'; c.beginPath(); c.arc(sx,gy2-70,110+beat*36,0,7); c.fill(); c.globalAlpha=1;
-      for(var k=0;k<3;k++){ var sw=64-k*10, sh=38, yy2=gy2-(k+1)*sh-k*2;
-        c.fillStyle='#0c0810'; c.fillRect(sx-sw/2,yy2,sw,sh); if(cel){ c.strokeStyle='#000'; c.lineWidth=2; c.strokeRect(sx-sw/2,yy2,sw,sh); }
-        c.fillStyle='#1c1420'; c.beginPath(); c.arc(sx,yy2+sh/2,(sh/2-5)*(1+beat*0.12),0,7); c.fill(); }
-      // DJ/MC/crew figures removed until real illustrated art lands
-      // (Aaron's call — Phase 3 brings the art); the speakers + beat stay
       // string lights
       c.strokeStyle='rgba(255,220,150,.25)'; c.lineWidth=1;
       c.beginPath(); c.moveTo(0,wy-30); c.quadraticCurveTo(w*0.5,wy+16,w,wy-36); c.stroke();
