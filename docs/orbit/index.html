@@ -92,9 +92,8 @@ body.t-roci .flare{display:block}
 body.t-roci .sun-orbit{border-style:solid;opacity:.65}
 body.t-roci .sun-orbit.live{opacity:1}
 body.t-roci{--display:'Chakra Petch',sans-serif; --anton:'Chakra Petch',sans-serif; --os:'Chakra Petch','Arial Narrow',sans-serif}
-/* lockup spec: cool wordmark = Chakra Petch 700; size/spacing stay unified
-   with the base .wordmark rule (one shared component, no per-theme drift) */
-body.t-roci .wordmark{font-weight:700}
+/* §8: cool wordmark = Chakra Petch 700, letter-spacing .02em */
+body.t-roci .wordmark{font-weight:700;letter-spacing:.02em}
 body.t-roci .dock h2,body.t-roci .card h2{font-family:var(--display);font-weight:800;letter-spacing:-.01em;line-height:1.02}
 body.t-roci .bnr .bt,body.t-roci .toast .tt{font-family:var(--display);font-weight:800}
 
@@ -277,26 +276,26 @@ body.t-roci .scancard{display:block}
 /* positioned so the ?/LOG popovers can anchor BELOW the whole brand column
    (wordmark + nav + dossier) instead of on top of the dossier */
 .brand{pointer-events:auto;position:relative}
-/* THE lockup — one shared component, exact spec:
-   [mark] [wordmark] side by side · flex · align-items:center · gap:.5em ·
-   never one baked graphic. Mark = the untouched PNG asset, height matched
-   to the wordmark cap height (1em), object-fit:contain, never redrawn and
-   never recolored. Wordmark = one text element in the theme display font
-   (warm: Archivo Black / cool: Chakra Petch 700), letter-spacing .04em,
-   two spans: AARO cream #f4f1ea, NAUTICS theme accent. The i in NAUTICS is
-   a dotless ı (U+0131) wearing a separate floating round tittle — the
-   planet-dot motif, and the ONLY part of the logo (with the NAUTICS accent)
-   that flips with theme: teal #35c1d1 warm, orange #f0a63c cool. */
-.lockup{display:flex;align-items:center;gap:.5em;font-size:clamp(1.4rem,2.6vw,2.05rem)}
-.lk-mark{height:1em;width:auto;object-fit:contain;flex:none;
+/* THE lockup — §8 canonical 5F values (corrections sheet v2, pixel-for-
+   pixel): flex + align-items:flex-end; mark square, pulled 20% of its own
+   height below the row (negative bottom margin) so the wordmark baseline
+   lands at the A-foot; word = 43% of the mark height (mark = word/0.43 =
+   2.326em, with 1em = the word size); AARO in DIMMED cream #d8cfbe (not
+   white); NAUT+CS in the theme accent; letter-spacing .01em warm / .02em
+   cool; line-height .8; gap = mark × 0.12 (= .28 word-em). The ı is
+   dotless (U+0131) with a real child-span tittle. */
+.lockup{display:flex;align-items:flex-end;gap:.28em;font-size:clamp(17px,1.8vw,24px)}
+.lk-mark{height:2.326em;width:2.326em;object-fit:contain;flex:none;margin-bottom:-.465em;
   filter:drop-shadow(0 2px 10px rgba(0,0,0,.55))}
-.wordmark{font-family:var(--display);font-size:1em;text-transform:uppercase;line-height:.9;letter-spacing:.04em}
-.wm-a{color:#f4f1ea}
+.wordmark{font-family:var(--display);font-size:1em;text-transform:uppercase;line-height:.8;letter-spacing:.01em}
+.wm-a{color:#d8cfbe}
 .wm-n{color:var(--accent);transition:color .5s}
 .pi{position:relative;display:inline-block}
-.pi::after{content:'';position:absolute;left:50%;top:-.22em;transform:translateX(-50%);
-  width:.16em;height:.16em;border-radius:50%;background:#35c1d1;box-shadow:0 0 6px #35c1d1}
-body.t-roci .pi::after{background:#f0a63c;box-shadow:0 0 6px #f0a63c}
+/* floating tittle: .17em circle glowing via currentcolor — teal on warm,
+   orange on cool; sits where the dot of the i would be */
+.pi .tit{position:absolute;left:50%;top:-.34em;transform:translateX(-50%);width:.17em;height:.17em;
+  border-radius:50%;background:#35c1d1;color:#35c1d1;box-shadow:0 0 6px currentColor}
+body.t-roci .pi .tit{top:-.3em;background:#f0a63c;color:#f0a63c}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
 /* nav row: the station links + the instructions ("?") button that pops the
@@ -1407,7 +1406,7 @@ body.t-roci .bnr .bk{color:#9affea}
            never one baked graphic. Mark = the untouched PNG at wordmark
            cap-height. AARO cream / NAUTICS theme accent; the ı is dotless
            (U+0131) with a floating theme-colored planet-dot tittle. -->
-      <div class="lockup"><img class="lk-mark" src="../assets/brand/mark-transparent.png" alt="Aaronautics mark"><div class="wordmark"><span class="wm-a">Aaro</span><span class="wm-n">naut<span class="pi">ı</span>cs</span></div></div>
+      <div class="lockup"><img class="lk-mark" src="../assets/brand/mark-transparent.png" alt="Aaronautics mark"><div class="wordmark"><span class="wm-a">Aaro</span><span class="wm-n">naut<span class="pi">ı<span class="tit"></span></span>cs</span></div></div>
       <div class="loc">◈ <span id="loc">SYSTEM MAP</span></div>
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
