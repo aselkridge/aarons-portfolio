@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254">
-  <rect width="1254" height="1254" rx="270" fill="#0b0d12"/>
   <g transform="rotate(-20 640 632)"><ellipse cx="640" cy="632" rx="410" ry="94" fill="none" stroke="#ed7b23" stroke-width="36"/></g>
   <polygon points="561,264 693,264 999,960 829,960 632,515 426,960 256,960" fill="#f4ebda"/>
   <g transform="rotate(-20 640 632)"><path d="M1030,661 A410,94 0 0,1 250,661" fill="none" stroke="#ed7b23" stroke-width="36" stroke-linecap="round"/></g>
