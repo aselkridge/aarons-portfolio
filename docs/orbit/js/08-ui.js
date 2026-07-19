@@ -65,7 +65,32 @@ $('p-chip').addEventListener('click', function(e){ if(e.target.closest('button')
 setInterval(function(){
   $('chip-bounty').textContent='₩ '+bounty.toLocaleString();
   $('chip-tgt').textContent=$('target').textContent.replace('— ','').replace(' —','');
+  $('imm-bounty').textContent='₩ '+bounty.toLocaleString();
 },500);
+
+/* ══════════ IMMERSIVE / CLEAR MODE (Phase 2 Stage 3 station + Stage 4 flight) ══════════
+   Two independent body classes (only one is ever relevant at a time, since
+   you can't be docked and freely flying simultaneously) drive what the CSS
+   hides. #imm-handle is the one guaranteed, always-clickable way back in
+   either mode; station mode additionally lets you click the bare scene
+   (wired in 07-environments.js, since that's where the panel's click
+   handler already lives). */
+var immHintT=null;
+function immFlash(msg){
+  var h=$('imm-hint'); h.textContent=msg; h.classList.add('show');
+  clearTimeout(immHintT); immHintT=setTimeout(function(){ h.classList.remove('show'); },2200);
+}
+function exitImmersive(){
+  document.body.classList.remove('imm-station','imm-flight');
+}
+$('imm-handle').addEventListener('click', exitImmersive);
+$('imm-btn').addEventListener('click', function(){
+  if(state!=='free') return;
+  // clicks fire your weapon while flying, so the scene can't double as a
+  // restore gesture here — only the persistent handle gets you back.
+  document.body.classList.add('imm-flight'); immFlash('Tap the ◈ below to bring the controls back'); Sound.blip(themeId==='sword'?520:760);
+});
+
 /* ══════════ NEXT-REWARD MILESTONE ══════════ */
 /* Gold asteroids (the main reward trigger) spawn every REWARD_STEP woolongs
    of bounty, per checkBounty() in 03-progress.js — this just surfaces that

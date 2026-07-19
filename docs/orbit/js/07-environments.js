@@ -13,6 +13,7 @@ function openStation(s){
   envScene=makeEnv(s.env);
   sizeEnv();
   panel.classList.add('open');
+  document.body.classList.remove('imm-station');   // always start a fresh visit un-immersed
   state='station'; $('c-stat').textContent='● SURFACE';
   $('loc').textContent=s.name.toUpperCase()+' · '+s.envlab; navHere(s.id);
   Progress.d.visited[s.id]=1; Progress.save();
@@ -28,6 +29,7 @@ function closeStation(){
   if(state!=='station') return;
   panel.classList.remove('open');
   $('cwin').classList.remove('show');
+  document.body.classList.remove('imm-station');
   history.replaceState(null,'',location.pathname);
   cancelAnimationFrame(envRAF); envScene=null;
   $('loc').textContent='SYSTEM MAP'; navHere(null);
@@ -35,10 +37,18 @@ function closeStation(){
 }
 $('close').addEventListener('click', closeStation);
 /* clicking the bare scene HIDES the floating window (enjoy the view); if it's
-   already hidden, a scene click lifts off. ESC / ✕ always lift off. */
+   already hidden, a scene click lifts off. ESC / ✕ always lift off. Immersive
+   mode (Stage 3) takes priority — a scene click there just restores the rail
+   + window rather than lifting off, matching #imm-handle's behavior. */
 function hideWindow(){ $('cwin').classList.remove('show'); }
 panel.addEventListener('click', function(e){
-  if(e.target===panel||e.target===envc){ if($('cwin').classList.contains('show')) hideWindow(); else closeStation(); }
+  if(e.target===panel||e.target===envc){
+    if(document.body.classList.contains('imm-station')){ document.body.classList.remove('imm-station'); return; }
+    if($('cwin').classList.contains('show')) hideWindow(); else closeStation();
+  }
+});
+$('panel-imm-btn').addEventListener('click', function(){
+  document.body.classList.add('imm-station'); immFlash('Tap anywhere to bring the controls back'); Sound.blip(themeId==='sword'?520:760);
 });
 function sizeEnv(){ envc.width=envc.clientWidth*devicePixelRatio; envc.height=envc.clientHeight*devicePixelRatio;
   ectx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }

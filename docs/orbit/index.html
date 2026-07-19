@@ -802,6 +802,41 @@ body.t-sword .cwin-arrow{border:1px solid rgba(240,166,60,.4)}body.t-roci .cwin-
 /* roci prose card gets a faint HUD grid so it matches the tablet family */
 body.t-roci .cwin-card{background-image:linear-gradient(rgba(79,184,232,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(79,184,232,.05) 1px,transparent 1px);background-size:26px 26px}
 
+/* ───────── immersive / clear mode (Phase 2 Stage 3 station + Stage 4 flight) ─────────
+   Stage 3: hides the rail+window while docked, leaving just the painted scene
+   (console/player are already covered by the full-bleed scene canvas whenever
+   the station panel is open, so nothing else needs hiding there).
+   Stage 4: hides the header brand/nav, the NAV·COM console, the player and the
+   "space cowboy" sign during free flight, leaving only a tiny woolong readout
+   and a tiny play/pause button — the game itself (ship, shots, planets, HUD
+   reticle) stays fully playable underneath. */
+.panel-imm-btn{right:66px}
+body.imm-station #dock,body.imm-station #cwin,body.imm-station #close,
+body.imm-station .backhint,body.imm-station .panel-imm-btn{opacity:0;pointer-events:none;transition:opacity .35s}
+body.imm-flight .hud .top .brand,body.imm-flight .console,body.imm-flight .player,
+body.imm-flight .bl .sign{opacity:0;pointer-events:none;transition:opacity .35s}
+
+#imm-hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:70;max-width:min(340px,86vw);
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--ink);text-align:center;
+  background:rgba(0,0,0,.6);border:1px solid var(--line);padding:12px 22px;border-radius:20px;
+  backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .5s}
+#imm-hint.show{opacity:1}
+#imm-handle{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:70;cursor:pointer;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.68);
+  display:flex;align-items:center;gap:8px;opacity:0;pointer-events:none;transition:opacity .4s;
+  background:rgba(0,0,0,.35);padding:8px 16px;border-radius:999px;backdrop-filter:blur(6px)}
+#imm-handle::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:immpulse 2s ease-in-out infinite}
+@keyframes immpulse{0%,100%{opacity:.4}50%{opacity:1}}
+body.imm-station #imm-handle,body.imm-flight #imm-handle{opacity:1;pointer-events:auto}
+#imm-bounty{position:fixed;top:20px;right:20px;z-index:15;font-family:var(--mono);font-weight:700;font-size:15px;
+  letter-spacing:.05em;color:var(--accent);background:rgba(0,0,0,.35);padding:8px 14px;border-radius:999px;
+  backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s;font-variant-numeric:tabular-nums}
+#imm-play{position:fixed;bottom:20px;right:20px;z-index:15;width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;font-size:14px;cursor:pointer;background:rgba(0,0,0,.35);
+  border:1px solid var(--line);color:var(--ink);backdrop-filter:blur(6px);opacity:0;pointer-events:none;
+  transition:opacity .35s;font-family:var(--mono);padding:0}
+body.imm-flight #imm-bounty,body.imm-flight #imm-play{opacity:1;pointer-events:auto}
+
 @media (max-width:720px){
   .rail{width:100%}
   /* window up top over the scene, rail as a bottom sheet — they must not overlap */
@@ -911,6 +946,7 @@ body.t-roci .bnr .bk{color:#9affea}
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
         <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
         <button class="help-btn logbtn" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel"><i class="log-dot"></i> log<span class="log-badge" id="log-badge"></span></button>
+        <button class="help-btn" id="imm-btn" type="button" aria-label="Immersive view — hide the interface, just fly">◉</button>
         <div class="hint" id="hint" role="tooltip">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
         <div class="logpanel ctrlpanel" id="logpanel" role="dialog" aria-label="Rewards log">
           <div class="cp-head"><span class="cp-title">◈ REWARDS LOG</span>
@@ -1007,6 +1043,7 @@ body.t-roci .bnr .bk{color:#9affea}
     </div>
   </div>
   <button class="close" id="close" aria-label="Lift off">✕</button>
+  <button class="close panel-imm-btn" id="panel-imm-btn" aria-label="Immersive view — hide everything, just the scene">◉</button>
   <div class="backhint">press ESC or ✕ to lift off · click the scene to hide the window</div>
 </div>
 
@@ -1016,6 +1053,16 @@ body.t-roci .bnr .bk{color:#9affea}
 
 <div id="banner" aria-live="assertive"></div>
 <div id="ach" aria-live="polite"></div>
+
+<!-- Phase 2 Stage 3/4: immersive/clear mode. #imm-hint fades after a beat;
+     #imm-handle is the permanent, always-clickable way back (station mode also
+     allows tapping the bare scene). #imm-bounty/#imm-play only show during
+     flight-immersive — the "woolongs in a corner + a small play/stop button"
+     Aaron asked for; #imm-play reuses the existing .pl-play wiring. -->
+<div id="imm-hint">Tap anywhere to bring the controls back</div>
+<div id="imm-handle">◈ tap for controls</div>
+<div id="imm-bounty">₩ 0</div>
+<button id="imm-play" class="pl-play" type="button" aria-label="Play/pause music">►</button>
 
 <!-- reward signal modal — the main event now. Every reward-earning moment
      (gold asteroid crack, saucer kill) opens this straight to the picker,
@@ -1073,11 +1120,11 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=17"></script>
 <script src="js/04-world.js?v=15"></script>
-<script src="js/05-combat.js?v=12"></script>
+<script src="js/05-combat.js?v=13"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/10-content-viewer.js?v=2"></script>
-<script src="js/07-environments.js?v=14"></script>
-<script src="js/08-ui.js?v=21"></script>
+<script src="js/07-environments.js?v=15"></script>
+<script src="js/08-ui.js?v=22"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

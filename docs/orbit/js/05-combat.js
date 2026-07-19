@@ -22,7 +22,7 @@ addEventListener('pointerdown', function(e){
 var typedBuf='', rollT=0;
 addEventListener('keydown', function(e){
   if(e.key===' '&&state==='free'&&fine){ e.preventDefault(); fire(); }
-  if(e.key==='Escape') closeStation();
+  if(e.key==='Escape'){ closeStation(); if(document.body.classList.contains('imm-flight')) exitImmersive(); }
   if(e.key&&e.key.length===1&&/[a-z!]/i.test(e.key)){
     typedBuf=(typedBuf+e.key.toLowerCase()).slice(-8);
     if(themeId==='sword'&&/tank!?$/.test(typedBuf)&&typedBuf.slice(-1)==='!'){
