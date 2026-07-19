@@ -399,6 +399,27 @@ for later mid-session theme switching). See Phase 4b in §3.
 same outside source ("look out") — when it arrives, read fully before folding
 in; it may reshape §3 again, the way this brief did.
 
+**Corrections sheet (CLAUDE_CODE_FIXES.md, landed 2026-07-19 — overrides the
+v3 README where they conflict; all seven items applied):**
+- The **A mark is always the real asset** (`aaron-logo-transparent.png`) —
+  never redrawn. On busy station scenes it renders as a single-color tint
+  (cream warm / holo-blue cool) via CSS `mask` of the asset itself.
+- **Every station screen** carries the mark (mark ONLY) top-left of the
+  shared rail, breadcrumb beneath, **clickable → returns to orbit**
+  (`#st-mark`, wired to `closeStation`).
+- Wordmark placement: doorway + ship-select + stations = mark only; system
+  map/flight = full lockup (the lockup's first appearance on the system map
+  is an intentional reveal).
+- **The dot motif follows the environment: teal `#35c1d1` warm, orange
+  `#f0a63c` cool** — applied to the wordmark i-tittle, the profile-avatar
+  dot, and the wisdom quote marks.
+- **Signoff = option B**: straight Special Elite line, thin red contrail
+  into a **labeled placeholder slot for the red Swordfish II silhouette**
+  (`.sg-ship` — red in BOTH themes, never theme-swaps; Aaron is sourcing
+  the art, do not fabricate it).
+- **The only three cross-theme constants:** the A mark, the signoff, and
+  Space Mono. Everything else themes.
+
 **v3 brief (Design Notes 2.zip, landed 2026-07-19):** a consolidated v3
 handoff that supersedes v2 where they disagree. New in v3 and now BUILT:
 ship picker (T16), fixed signoff (T17A), profile window + three doors

@@ -281,8 +281,12 @@ body.t-roci .scancard{display:block}
 .wordmark{font-family:var(--anton);font-size:clamp(1.4rem,2.6vw,2.05rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
 .wordmark em{font-style:normal;color:var(--accent);transition:color .5s}
 .pi{position:relative;display:inline-block}
+/* the planet-dot motif follows the ENVIRONMENT (corrections sheet #4):
+   teal in warm/Bebop, orange in cool/Expanse — in Expanse the wordmark tail
+   is already blue, so the orange dot is the intentional complementary pop */
 .pi::after{content:'';position:absolute;left:50%;top:-.2em;transform:translateX(-50%);
   width:.2em;height:.2em;border-radius:50%;background:#35c1d1;box-shadow:0 0 6px rgba(53,193,209,.85)}
+body.t-roci .pi::after{background:#f0a63c;box-shadow:0 0 6px rgba(240,166,60,.85)}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
 /* nav row: the station links + the instructions ("?") button that pops the
@@ -426,17 +430,26 @@ body.t-roci .log-item.unseen .ld{text-shadow:0 0 16px rgba(79,184,232,.55)}
    accent-color touch that used to live in the "aaronautics · orbit"
    subtext (now removed) moves onto a hover/focus color shift instead, so
    it doubles as the "this is clickable" cue. */
-/* T17A: the authentic Bebop end-card — typewriter face, fixed off-white
-   #f4f1ea, IDENTICAL in both themes. This is the one element that never
-   reskins (brief §6). Still opens the contact card until the Hangar
-   easter egg exists to take this door over. */
+/* T17 option B: the authentic Bebop end-card — typewriter face, fixed
+   off-white #f4f1ea, IDENTICAL in both themes; straight line with a thin
+   contrail into a red ship slot (red never theme-swaps). One of only three
+   cross-theme constants (with the A mark and Space Mono). Still opens the
+   contact card until the Hangar easter egg takes this door over. */
 .sign{position:fixed;left:22px;bottom:18px;z-index:9;cursor:pointer;
   background:none;border:none;padding:0;margin:0;text-align:left;
-  font-family:'Special Elite',var(--mono);text-transform:uppercase;line-height:1.08;
-  font-size:clamp(1.15rem,2.2vw,1.8rem);letter-spacing:.01em;
+  display:flex;align-items:center;gap:12px;
+  font-family:'Special Elite',var(--mono);text-transform:uppercase;line-height:1.1;
+  font-size:clamp(1rem,1.8vw,1.5rem);letter-spacing:.01em;
   color:#f4f1ea;opacity:.9;text-shadow:0 4px 30px rgba(0,0,0,.8);white-space:nowrap;
   transition:opacity .3s,text-shadow .3s}
 .sign:hover,.sign:focus-visible{opacity:1;text-shadow:0 0 26px rgba(244,241,234,.45)}
+/* contrail: fades out toward the text, solid at the ship end */
+.sg-trail{width:clamp(28px,6vw,84px);height:1px;flex:none;
+  background:linear-gradient(90deg,rgba(224,64,47,0),rgba(224,64,47,.8))}
+/* labeled placeholder for the sourced Swordfish II silhouette — RED in both
+   themes; swaps to the real art the moment Aaron supplies it */
+.sg-ship{flex:none;border:1px dashed rgba(224,64,47,.6);border-radius:3px;padding:3px 7px;
+  font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:#e0402f;text-shadow:none;text-transform:uppercase}
 .sign:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
 @media (max-width:720px){ .sign{font-size:1.7rem} }
 
@@ -519,12 +532,13 @@ body.t-roci .rm-pick:hover{background:rgba(79,184,232,.16);color:#dff4ff;border-
    line under the frame (built by setRevealBody in 08-ui.js, which strips
    the plain quote marks out of the text so they don't stack with these). */
 .rm-quote{display:block}
-/* the decorative marks are TEAL in both themes (brief T13): wisdom is one of
-   the rare "alive" moments the single live-spark color is reserved for */
+/* the decorative marks carry the pop-dot motif, so they follow the
+   environment too (corrections sheet #4): teal in warm, orange in cool */
 .rm-quote::before{content:'“';display:block;font-size:2.2em;line-height:.5;margin:.2em auto .25em;
   color:#35c1d1;opacity:.9;text-shadow:0 0 18px rgba(53,193,209,.45)}
 .rm-quote::after{content:'”';display:block;font-size:2.2em;line-height:.5;margin:.35em auto 0;
   color:#35c1d1;opacity:.9;text-shadow:0 0 18px rgba(53,193,209,.45)}
+body.t-roci .rm-quote::before,body.t-roci .rm-quote::after{color:#f0a63c;text-shadow:0 0 18px rgba(240,166,60,.45)}
 .rm-attr{display:block;margin-top:1.1em;font-family:var(--os);font-weight:500;font-size:clamp(.85rem,1.2vw,1rem);
   letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-shadow:none}
 .rm-attr::before{content:'— '}
@@ -698,6 +712,16 @@ body.t-sword .dock{background:linear-gradient(90deg,rgba(12,8,5,.86) 0%,rgba(12,
   border-right:1px solid rgba(240,166,60,.16)}
 body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,10,18,.7) 78%,transparent 100%);
   border-right:1px solid rgba(79,184,232,.2)}
+/* station-screen mark (corrections sheet #1/#2): the asset used as a mask so
+   the tint is a flat single color per theme — cream on warm, holo-blue on
+   cool — and the shape can never drift from the real art */
+.st-mark{background:none;border:none;padding:0;cursor:pointer;display:block;width:40px;height:40px;margin-bottom:12px}
+.st-mark i{display:block;width:100%;height:100%;transition:background .25s;
+  -webkit-mask:url('../assets/brand/mark-transparent.png') center/contain no-repeat;
+  mask:url('../assets/brand/mark-transparent.png') center/contain no-repeat}
+body.t-sword .st-mark i{background:#e8e2d6}
+body.t-roci .st-mark i{background:#4fb8e8}
+.st-mark:hover i,.st-mark:focus-visible i{background:var(--accent2)}
 .dock .envlab{font-family:var(--mono);font-size:9px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
 .dock .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--pc,var(--accent))}
 /* hyphens/break-word: Archivo Black runs wider than the old Anton — long
@@ -1031,6 +1055,7 @@ body.t-roci .cc-head{border-bottom:1px solid rgba(79,184,232,.3);color:#4fb8e8}
 .contact-photo{width:118px;height:118px;position:relative;margin:0 auto 16px;border-radius:0;overflow:visible;background:none;border:none;display:block}
 .cc-ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--accent);transform:rotate(-18deg);opacity:.65}
 .cc-dot{position:absolute;top:5%;right:3%;width:11px;height:11px;border-radius:50%;background:#35c1d1;box-shadow:0 0 8px rgba(53,193,209,.8)}
+body.t-roci .cc-dot{background:#f0a63c;box-shadow:0 0 8px rgba(240,166,60,.8)}
 .cc-pic{position:absolute;inset:11px;border-radius:50%;overflow:hidden;display:grid;place-items:center}
 body.t-sword .cc-pic{border:1px solid #6b4e1a;background:#191207}
 body.t-roci .cc-pic{border:1px solid #2b5a7a;background:#0c1a29}
@@ -1403,7 +1428,16 @@ body.t-roci .bnr .bk{color:#9affea}
   </div>
   <div class="bottom">
     <div class="bl">
-      <button class="sign" id="sign" type="button" aria-haspopup="dialog" aria-controls="contactwrap">See you,<br>space cowboy…</button>
+      <!-- signoff option B (corrections sheet #6): straight line, a thin
+           contrail leading into the text, and a labeled slot at the right
+           end for the RED Swordfish II silhouette (red in BOTH themes — a
+           Bebop end-card homage that never theme-swaps). The slot waits for
+           Aaron's sourced art; the ship is never fabricated here. -->
+      <button class="sign" id="sign" type="button" aria-haspopup="dialog" aria-controls="contactwrap">
+        <span class="sg-t">See you, space cowboy…</span>
+        <span class="sg-trail" aria-hidden="true"></span>
+        <span class="sg-ship" aria-hidden="true" title="Swordfish II silhouette — asset incoming">[ ship ]</span>
+      </button>
     </div>
     <div class="player" id="player">
       <div class="chip" id="p-chip"><span class="mini-reel"></span><span class="pl-title">—</span><button class="pl-play" aria-label="Play/pause">►</button></div>
@@ -1439,6 +1473,11 @@ body.t-roci .bnr .bk{color:#9affea}
   <canvas id="envc"></canvas>
   <!-- slim rail: station name + tabs + a one-line description of the current tab -->
   <div class="dock rail" id="dock">
+    <!-- the A mark, top-left of every station screen (corrections sheet #2):
+         mark ONLY, shared layout so all stations inherit it, clickable →
+         returns to orbit. Single-color tint per theme (cream/holo-blue) via
+         CSS mask of the real asset — never a redrawn mark. -->
+    <button class="st-mark" id="st-mark" type="button" aria-label="Return to orbit / system map" title="Return to orbit"><i></i></button>
     <div class="envlab" id="envlab">SURFACE</div>
     <div class="eyebrow" id="p-eye">STATION</div>
     <h2 id="p-title">Title</h2>
@@ -1599,7 +1638,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=14"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/10-content-viewer.js?v=3"></script>
-<script src="js/07-environments.js?v=16"></script>
+<script src="js/07-environments.js?v=17"></script>
 <script src="js/08-ui.js?v=24"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>

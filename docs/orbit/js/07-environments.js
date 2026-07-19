@@ -36,6 +36,8 @@ function closeStation(){
   setTimeout(function(){ system.classList.remove('warp'); state='free'; $('c-stat').textContent='● ONLINE'; },260);
 }
 $('close').addEventListener('click', closeStation);
+/* the station-screen A mark returns to orbit — same action as the eject ✕ */
+$('st-mark').addEventListener('click', closeStation);
 /* clicking the bare scene HIDES the floating window (enjoy the view); if it's
    already hidden, a scene click lifts off. ESC / ✕ always lift off. Immersive
    mode (Stage 3) takes priority — a scene click there just restores the rail
