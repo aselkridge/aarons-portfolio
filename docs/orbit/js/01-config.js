@@ -6,6 +6,10 @@
 'use strict';
 
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* true while the front-door screens (doorway / ship picker) are up: the
+   game underneath must not react to the mouse yet — no lock-ons, no
+   cut-ins, no firing. Cleared in 08-ui.js once the visitor is actually in. */
+var gatesUp = true;
 var fine = matchMedia('(hover:hover)').matches;
 var $ = function(id){ return document.getElementById(id); };
 

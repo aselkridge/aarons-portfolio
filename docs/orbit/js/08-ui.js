@@ -350,7 +350,7 @@ $('dz-mz').addEventListener('click', function(e){ e.stopPropagation(); toggleMin
    (under construction) until 4c is built — per Aaron. Deep links
    (#station) skip both gates so a shared link still lands directly. */
 var doorway=$('doorway'), shipsel=$('shipsel'), gatePicked=false;
-if(location.hash.length>1) doorway.classList.add('gone');
+if(location.hash.length>1){ doorway.classList.add('gone'); gatesUp=false; }
 /* the seam must track the clip-path split exactly (58% → 42%, a 16% drop);
    a fixed rotation only matches one aspect ratio, so compute it live. On
    phones the halves stack (see the ≤640px CSS) and the seam lies down. */
@@ -375,7 +375,8 @@ function pickShip(id,el){
   el.classList.add('chosen'); shipsel.classList.add('launching');
   Sound.warp();
   setTimeout(function(){ applyTheme(id); },560);          // swap behind the flash peak
-  setTimeout(function(){ shipsel.classList.remove('show'); shipsel.classList.add('gone'); },1080);
+  setTimeout(function(){ shipsel.classList.remove('show'); shipsel.classList.add('gone');
+    gatesUp=false; },1080);                               // NOW the game may react to the mouse
 }
 $('pick-sword').addEventListener('click', function(){ pickShip('sword',this); });
 $('pick-roci').addEventListener('click', function(){ pickShip('roci',this); });

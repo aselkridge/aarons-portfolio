@@ -241,12 +241,11 @@ body.t-roci .tgtbox.on{display:block}
 .tgtbox .bl{left:0;bottom:0;border-right:0;border-top:0}.tgtbox .br{right:0;bottom:0;border-left:0;border-top:0}
 .tgtbox .lab{position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:#4fb8e8;white-space:nowrap}
 
-/* bebop title-card cut-in */
-/* z 48: the lock-on cut-ins are sub-second cinematic moments — they sweep
-   OVER the HUD chrome (dossier included) like the banners do, instead of
-   sliding in behind the dossier that now occupies the left column */
-.titlecard{position:fixed;left:0;top:34%;z-index:48;pointer-events:none;transform:translateX(-102%) skewY(-2deg);
-  background:#0d0a07;border-block:3px solid var(--ink);padding:14px 42px 14px clamp(20px,6vw,70px);
+/* bebop title-card cut-in — pops from the RIGHT edge, parked under the
+   NAV·COM console, so it never crosses the dossier column on the left */
+.titlecard{position:fixed;right:0;left:auto;top:max(46%,410px);z-index:48;pointer-events:none;text-align:right;
+  transform:translateX(102%) skewY(-2deg);
+  background:#0d0a07;border-block:3px solid var(--ink);padding:14px clamp(20px,6vw,70px) 14px 42px;
   transition:transform .16s cubic-bezier(.2,.9,.3,1)}
 .titlecard.on{transform:translateX(0) skewY(-2deg)}
 .titlecard .s{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--accent);text-transform:uppercase}
@@ -255,13 +254,13 @@ body.t-roci .titlecard{display:none}
 
 /* Expanse lock-on popout — its own themed equivalent of the anime title
    card above, not a reskin of it: a HUD scan-readout using the same
-   glass-panel + cut-corner language as this theme's other panels (the
-   banner, planet tags), sliding in from the left the same way. */
-.scancard{position:fixed;left:0;top:34%;z-index:48;pointer-events:none;display:none;
-  transform:translateX(-102%);transition:transform .22s cubic-bezier(.2,.9,.3,1);
-  background:rgba(4,10,18,.88);backdrop-filter:blur(10px);border:1px solid #4fb8e8;border-left:3px solid #4fb8e8;
-  box-shadow:0 0 40px rgba(79,184,232,.35);padding:14px 34px 14px clamp(18px,5vw,54px);
-  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+   glass-panel + cut-corner language as this theme's other panels, popping
+   from the right under the NAV·COM the same way. */
+.scancard{position:fixed;right:0;left:auto;top:max(46%,410px);z-index:48;pointer-events:none;display:none;text-align:right;
+  transform:translateX(102%);transition:transform .22s cubic-bezier(.2,.9,.3,1);
+  background:rgba(4,10,18,.88);backdrop-filter:blur(10px);border:1px solid #4fb8e8;border-right:3px solid #4fb8e8;
+  box-shadow:0 0 40px rgba(79,184,232,.35);padding:14px clamp(18px,5vw,54px) 14px 34px;
+  clip-path:polygon(18px 0,100% 0,100% 100%,0 100%,0 18px)}
 body.t-roci .scancard{display:block}
 .scancard.on{transform:translateX(0)}
 .scancard .k{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:#4fb8e8;text-transform:uppercase}
@@ -599,6 +598,8 @@ body.t-roci .rewardmodal.cat-random .rm-text{color:#dff4ff}
 .c-row .lab{font-family:var(--mono);font-size:9px;letter-spacing:.24em;align-self:center;width:34px;flex:none}
 .c-row button{flex:1;border:0;cursor:pointer;font-family:var(--os);font-weight:600;font-size:11.5px;letter-spacing:.14em;
   text-transform:uppercase;padding:7px 4px 6px;transition:.15s;position:relative;background:transparent}
+/* the immersive toggle rides in the COM row as a compact square */
+#imm-btn{flex:0 0 40px;font-size:13px;letter-spacing:0}
 /* pinned career exits — résumé/LinkedIn ride in the console (brief §4.1) */
 .c-links{display:flex;gap:6px;padding:2px 10px 8px}
 .c-links a,.c-links .c-resume{flex:1;text-align:center;font-family:var(--mono);font-weight:700;font-size:9.5px;
@@ -1408,7 +1409,6 @@ body.t-roci .bnr .bk{color:#9affea}
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
         <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
-        <button class="help-btn" id="imm-btn" type="button" aria-label="Immersive view — hide the interface, just fly">◉</button>
         <!-- the rewards log panel drops down directly beneath the dossier
              (anchored to .brand); its toggle is the permanent bar on the
              dossier's bottom edge below -->
@@ -1468,7 +1468,8 @@ body.t-roci .bnr .bk{color:#9affea}
         <!-- door 1 to the profile window (brief T18) + the always-pinned
              career exits (brief's governing rule: guarantee the exit) -->
         <div class="c-row"><span class="lab">COM</span>
-          <button id="b-hail">◆ Hail pilot</button></div>
+          <button id="b-hail">◆ Hail pilot</button>
+          <button id="imm-btn" aria-label="Immersive view — hide the interface, just fly" title="Immersive view">◉</button></div>
         <div class="c-links">
           <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
           <span class="c-resume" title="Résumé PDF incoming — drops straight in once Aaron supplies it">▤ Résumé · soon</span>
@@ -1715,15 +1716,15 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="data/facts.js?v=12"></script>
 <!-- Orbit engine, split into labeled files (each owns one visible system) — load order matters. -->
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
-<script src="js/01-config.js?v=12"></script>
+<script src="js/01-config.js?v=13"></script>
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=17"></script>
 <script src="js/04-world.js?v=16"></script>
-<script src="js/05-combat.js?v=15"></script>
-<script src="js/06-flight.js?v=12"></script>
+<script src="js/05-combat.js?v=16"></script>
+<script src="js/06-flight.js?v=13"></script>
 <script src="js/10-content-viewer.js?v=3"></script>
 <script src="js/07-environments.js?v=17"></script>
-<script src="js/08-ui.js?v=25"></script>
+<script src="js/08-ui.js?v=26"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

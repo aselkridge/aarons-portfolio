@@ -68,6 +68,7 @@ function spawnProj(kind,delay){
   }, delay||0);
 }
 function fire(){
+  if(gatesUp) return;   // no stray shots while the front-door screens are up
   var now=performance.now();
   if(weapon==='cannon'){ if(now-lastShot<260) return; lastShot=now; spawnProj('cannon',0); }
   else { if(now-lastShot<430) return; lastShot=now; spawnProj('pdc',0); spawnProj('pdc',75); spawnProj('pdc',150); }

@@ -8,7 +8,7 @@
 /* ══════════ LOCK-ON ══════════ */
 var tcTimer=null, scTimer=null;
 function updateLock(){
-  if(state!=='free'){ setLock(null); return; }
+  if(state!=='free'||gatesUp){ setLock(null); return; }   // no lock-ons behind the front door
   var best=null,bd=1e9;
   ALL.forEach(function(s){
     var d=Math.hypot(mx-(s.x+plx),my-(s.y+ply));
