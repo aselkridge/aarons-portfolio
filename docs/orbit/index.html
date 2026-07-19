@@ -92,7 +92,9 @@ body.t-roci .flare{display:block}
 body.t-roci .sun-orbit{border-style:solid;opacity:.65}
 body.t-roci .sun-orbit.live{opacity:1}
 body.t-roci{--display:'Chakra Petch',sans-serif; --anton:'Chakra Petch',sans-serif; --os:'Chakra Petch','Arial Narrow',sans-serif}
-body.t-roci .wordmark{font-family:var(--display);font-weight:800;letter-spacing:-.01em;font-size:clamp(1.32rem,2.5vw,1.95rem)}
+/* lockup spec: cool wordmark = Chakra Petch 700; size/spacing stay unified
+   with the base .wordmark rule (one shared component, no per-theme drift) */
+body.t-roci .wordmark{font-weight:700}
 body.t-roci .dock h2,body.t-roci .card h2{font-family:var(--display);font-weight:800;letter-spacing:-.01em;line-height:1.02}
 body.t-roci .bnr .bt,body.t-roci .toast .tt{font-family:var(--display);font-weight:800}
 
@@ -271,22 +273,26 @@ body.t-roci .scancard{display:block}
 .bottom{align-items:flex-end}
 /* brand header + nav */
 .brand{pointer-events:auto}
-/* the "5F" lockup (brief §5): the mark leads as an icon, the wordmark rides
-   beside it as a quiet nameplate — AARO cream, NAUTICS in the theme accent,
-   and the planet-i wears a teal tittle: the one rare "live spark" teal is
-   allowed to touch outside truly-alive UI. */
-.lockup{display:flex;align-items:center;gap:12px}
-.lk-mark{width:clamp(38px,4.4vw,52px);height:clamp(38px,4.4vw,52px);object-fit:contain;flex:none;
+/* THE lockup — one shared component, exact spec:
+   [mark] [wordmark] side by side · flex · align-items:center · gap:.5em ·
+   never one baked graphic. Mark = the untouched PNG asset, height matched
+   to the wordmark cap height (1em), object-fit:contain, never redrawn and
+   never recolored. Wordmark = one text element in the theme display font
+   (warm: Archivo Black / cool: Chakra Petch 700), letter-spacing .04em,
+   two spans: AARO cream #f4f1ea, NAUTICS theme accent. The i in NAUTICS is
+   a dotless ı (U+0131) wearing a separate floating round tittle — the
+   planet-dot motif, and the ONLY part of the logo (with the NAUTICS accent)
+   that flips with theme: teal #35c1d1 warm, orange #f0a63c cool. */
+.lockup{display:flex;align-items:center;gap:.5em;font-size:clamp(1.4rem,2.6vw,2.05rem)}
+.lk-mark{height:1em;width:auto;object-fit:contain;flex:none;
   filter:drop-shadow(0 2px 10px rgba(0,0,0,.55))}
-.wordmark{font-family:var(--anton);font-size:clamp(1.4rem,2.6vw,2.05rem);text-transform:uppercase;line-height:.9;letter-spacing:.015em}
-.wordmark em{font-style:normal;color:var(--accent);transition:color .5s}
+.wordmark{font-family:var(--display);font-size:1em;text-transform:uppercase;line-height:.9;letter-spacing:.04em}
+.wm-a{color:#f4f1ea}
+.wm-n{color:var(--accent);transition:color .5s}
 .pi{position:relative;display:inline-block}
-/* the planet-dot motif follows the ENVIRONMENT (corrections sheet #4):
-   teal in warm/Bebop, orange in cool/Expanse — in Expanse the wordmark tail
-   is already blue, so the orange dot is the intentional complementary pop */
-.pi::after{content:'';position:absolute;left:50%;top:-.2em;transform:translateX(-50%);
-  width:.2em;height:.2em;border-radius:50%;background:#35c1d1;box-shadow:0 0 6px rgba(53,193,209,.85)}
-body.t-roci .pi::after{background:#f0a63c;box-shadow:0 0 6px rgba(240,166,60,.85)}
+.pi::after{content:'';position:absolute;left:50%;top:-.22em;transform:translateX(-50%);
+  width:.16em;height:.16em;border-radius:50%;background:#35c1d1;box-shadow:0 0 6px #35c1d1}
+body.t-roci .pi::after{background:#f0a63c;box-shadow:0 0 6px #f0a63c}
 .loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
 .loc span{color:var(--ink)}
 /* nav row: the station links + the instructions ("?") button that pops the
@@ -1344,9 +1350,11 @@ body.t-roci .bnr .bk{color:#9affea}
 <div class="hud">
   <div class="top">
     <div class="brand">
-      <!-- the "5F" lockup — mark leads as icon, wordmark rides beside it as the
-           nameplate; the planet-i wears the teal tittle (brief §5) -->
-      <div class="lockup"><img class="lk-mark" src="../assets/brand/mark-transparent.png" alt="Aaronautics mark"><div class="wordmark">Aaro<em>naut<span class="pi">i</span>cs</em></div></div>
+      <!-- THE lockup — the single shared component: [mark] [wordmark], flex,
+           never one baked graphic. Mark = the untouched PNG at wordmark
+           cap-height. AARO cream / NAUTICS theme accent; the ı is dotless
+           (U+0131) with a floating theme-colored planet-dot tittle. -->
+      <div class="lockup"><img class="lk-mark" src="../assets/brand/mark-transparent.png" alt="Aaronautics mark"><div class="wordmark"><span class="wm-a">Aaro</span><span class="wm-n">naut<span class="pi">ı</span>cs</span></div></div>
       <div class="loc">◈ <span id="loc">SYSTEM MAP</span></div>
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
