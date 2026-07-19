@@ -328,37 +328,56 @@ body.t-sword .help-btn{border:1px solid rgba(240,166,60,.4);background:rgba(240,
 body.t-sword .help-btn:hover,body.t-sword .help-btn.on{background:#f0a63c;color:#1c0e04;border-color:#f0a63c;box-shadow:0 0 12px rgba(240,166,60,.5)}
 body.t-roci .help-btn{border:1px solid rgba(79,184,232,.35);color:#6fa8c9;background:transparent}
 body.t-roci .help-btn:hover,body.t-roci .help-btn.on{background:rgba(79,184,232,.18);color:#dff4ff;border-color:#4fb8e8;box-shadow:0 0 12px rgba(79,184,232,.4)}
-/* drops BELOW the entire brand column (anchored to .brand, not .navrow) so
-   it sits under the Captain's Dossier instead of on top of it — mid-screen
-   was too noisy */
-.hint{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:max-content;max-width:min(300px,80vw);
-  font-size:clamp(10.5px,1.2vw,13px);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
-  background:rgba(8,9,14,.9);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:10px;
-  padding:11px 14px;box-shadow:0 14px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;translate:0 -4px;
-  transition:opacity .18s,translate .18s}
-.hint.on{opacity:1;pointer-events:auto;translate:0 0}
-.hint b{color:var(--ink);font-weight:600}.hint a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+/* the flight manual — a center-screen modal with a LIGHT blur backdrop
+   (deliberately less dimming than the reward/contact modals); click
+   anywhere outside the card to return. Future home of "run the tutorial
+   again" (Phase 5). */
+.hint{position:fixed;inset:0;z-index:58;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:rgba(4,5,8,.42);backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s,visibility .22s}
+.hint.on{opacity:1;visibility:visible;pointer-events:auto}
+.hint-card{width:min(420px,92vw);text-align:center;padding:26px 28px 20px;border-radius:12px;
+  transform:translateY(10px);transition:transform .22s}
+.hint.on .hint-card{transform:none}
+body.t-sword .hint-card{background:linear-gradient(180deg,rgba(28,20,8,.96),rgba(16,11,5,.96));border:1px solid #5a4526;
+  box-shadow:0 30px 70px rgba(0,0,0,.6)}
+body.t-roci .hint-card{background:rgba(7,17,28,.95);border:1px solid rgba(79,184,232,.45);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 34px rgba(79,184,232,.18)}
+.hm-kick{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.hm-body{font-family:var(--os);font-weight:300;font-size:clamp(14px,1.6vw,16.5px);letter-spacing:.06em;
+  text-transform:uppercase;color:#c9c2b4;line-height:1.7}
+.hm-body b{color:var(--ink);font-weight:600}
+.hm-body a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+.hm-tut{display:inline-block;margin-top:18px;border:1px dashed var(--line);border-radius:999px;padding:8px 16px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;cursor:help}
+.hm-out{margin-top:16px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--dim);opacity:.75;text-transform:uppercase}
 /* mission log — persistent history of every reward earned in flight,
    styled as a real ship control-panel readout (see .ctrlpanel below).
    Stays open until explicitly closed via .cp-close — it no longer
    auto-dismisses on an outside click. */
-.help-btn.logbtn{width:auto;border-radius:15px;padding:0 13px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;
-  display:inline-flex;align-items:center;gap:6px}
-.log-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);opacity:.7;transition:background .3s,box-shadow .3s}
-/* un-viewed reward: solid red fill (not just a border) + a numeric badge
-   showing how many are waiting, so it reads unmistakably at a glance
-   instead of relying on a small pulsing dot alone. A brief scale "bump"
-   (re-triggered via .bump, see markLogNew in 08-ui.js) fires the moment a
-   new one lands, on top of the steady glow that holds until it's opened. */
-.help-btn.logbtn.hasnew{background:rgba(255,90,70,.18);border-color:rgba(255,90,70,.85);color:var(--ink);
-  opacity:1;box-shadow:0 0 16px rgba(255,90,70,.55)}
-.help-btn.logbtn.hasnew .log-dot{background:#ff5a46;opacity:1;box-shadow:0 0 8px rgba(255,90,70,.9);animation:logpulse 1.2s ease-in-out infinite}
+/* the rewards-log bar — permanently attached to the dossier's bottom edge
+   (outside .dz-bd, so it stays visible even when the dossier is minimized).
+   Same alert system as the old nav button: un-viewed reward = solid red
+   fill + numeric badge + a scale "bump" the moment a new one lands. */
+.dz-log{display:flex;align-items:center;gap:8px;width:100%;padding:10px 13px;background:transparent;border:none;
+  cursor:pointer;font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);transition:.18s;text-align:left}
+body.t-sword .dz-log{border-top:1px dashed #5a4526}
+body.t-roci .dz-log{border-top:1px solid rgba(79,184,232,.25)}
+body.t-sword .dz-log:hover,body.t-sword .dz-log.on{color:#f0a63c;background:rgba(240,166,60,.07)}
+body.t-roci .dz-log:hover,body.t-roci .dz-log.on{color:#4fb8e8;background:rgba(79,184,232,.08)}
+.dz-log-caret{margin-left:auto;transition:transform .2s}
+.dz-log.on .dz-log-caret{transform:rotate(180deg)}
+.log-dot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--dim);opacity:.7;transition:background .3s,box-shadow .3s}
+.dz-log.hasnew{background:rgba(255,90,70,.16);color:var(--ink);box-shadow:inset 0 0 18px rgba(255,90,70,.22)}
+.dz-log.hasnew .log-dot{background:#ff5a46;opacity:1;box-shadow:0 0 8px rgba(255,90,70,.9);animation:logpulse 1.2s ease-in-out infinite}
 @keyframes logpulse{0%,100%{box-shadow:0 0 4px rgba(255,90,70,.6)}50%{box-shadow:0 0 12px rgba(255,90,70,1)}}
 .log-badge{display:none;background:#ff5a46;color:#2a0800;border-radius:999px;font-family:var(--mono);
   font-weight:700;font-size:8.5px;line-height:1;padding:2px 5px;min-width:14px;text-align:center}
-.help-btn.logbtn.hasnew .log-badge{display:inline-block}
-.help-btn.logbtn.bump{animation:logbump .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes logbump{0%{transform:scale(1)}40%{transform:scale(1.24)}100%{transform:scale(1)}}
+.dz-log.hasnew .log-badge{display:inline-block}
+.dz-log.bump{animation:logbump .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes logbump{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
 
 /* ═══ shared "control panel" skin — used by the log panel AND the reward
    signal modal so both read as real ship hardware, each themed to match
@@ -434,8 +453,10 @@ body.t-roci .log-item.unseen .ld{text-shadow:0 0 16px rgba(79,184,232,.55)}
   font-family:var(--mono);font-weight:700;font-size:7.5px;letter-spacing:.12em;padding:2px 6px;
   box-shadow:0 0 10px rgba(255,90,70,.6)}
 .log-empty{padding:18px 14px;font-family:var(--os);font-size:12px;color:var(--dim);font-style:italic}
-/* below the brand column, same as .hint — under the dossier, never on it */
-.logpanel{position:absolute;top:calc(100% + 10px);left:0;z-index:15;width:min(340px,86vw);
+/* the dossier's dropdown: opens tight beneath the dossier (whose log bar
+   is the last thing in .brand), matched to its width so the two read as
+   one attached piece */
+.logpanel{position:absolute;top:calc(100% + 6px);left:0;z-index:15;width:min(300px,84vw);
   opacity:0;pointer-events:none;translate:0 -4px;transition:opacity .18s,translate .18s}
 .logpanel.on{opacity:1;pointer-events:auto;translate:0 0}
 /* the signoff is a real button now — click opens the contact card. The
@@ -1384,9 +1405,10 @@ body.t-roci .bnr .bk{color:#9affea}
       <div class="navrow">
         <nav class="stnav" id="stnav" aria-label="Stations"></nav>
         <button class="help-btn" id="help-btn" type="button" aria-expanded="false" aria-controls="hint" aria-label="Instructions">?</button>
-        <button class="help-btn logbtn" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel"><i class="log-dot"></i> log<span class="log-badge" id="log-badge"></span></button>
         <button class="help-btn" id="imm-btn" type="button" aria-label="Immersive view — hide the interface, just fly">◉</button>
-        <div class="hint" id="hint" role="tooltip">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
+        <!-- the rewards log panel drops down directly beneath the dossier
+             (anchored to .brand); its toggle is the permanent bar on the
+             dossier's bottom edge below -->
         <div class="logpanel ctrlpanel" id="logpanel" role="dialog" aria-label="Rewards log">
           <div class="cp-head"><span class="cp-title">◈ REWARDS LOG</span>
             <button class="cp-close" id="log-close" type="button" aria-label="Close log">✕</button></div>
@@ -1415,6 +1437,13 @@ body.t-roci .bnr .bk{color:#9affea}
             <a class="sec" href="mailto:amo.selkridge@gmail.com">✉ · Hail</a>
           </div>
         </div>
+        <!-- the rewards log lives ON the dossier now — a permanent bottom
+             bar (visible even when the dossier is minimized) that drops the
+             log panel down beneath. Same alert system: red fill + count
+             badge + bump when a new reward lands. -->
+        <button class="dz-log" id="log-btn" type="button" aria-expanded="false" aria-controls="logpanel">
+          <i class="log-dot"></i> rewards log<span class="log-badge" id="log-badge"></span><span class="dz-log-caret">▾</span>
+        </button>
       </div>
     </div>
     <div class="console" id="console">
@@ -1633,6 +1662,19 @@ body.t-roci .bnr .bk{color:#9affea}
 <!-- contact card — opened by clicking "See you, space cowboy…". Photo is a
      placeholder (falls back to initials) until a real image lands at
      assets/aaron.jpg — no code changes needed once it does. -->
+<!-- flight manual — the "?" opens this center-screen with a LIGHT blur
+     backdrop (less dimming than the other modals); click anywhere outside
+     the card to return. Also the future home of "run the tutorial again"
+     once the Phase 5 tutorial exists — the slot is already here. -->
+<div class="hint" id="hint" role="dialog" aria-modal="true" aria-label="How to fly">
+  <div class="hint-card">
+    <div class="hm-kick">◆ FLIGHT MANUAL</div>
+    <div class="hm-body" id="hint-body">◐ <b>Fly near a station to lock</b> · click / space fires · click while locked to dock</div>
+    <div class="hm-tut" title="The full guided tutorial lands with Phase 5">▶ run the tutorial · soon</div>
+    <div class="hm-out">click anywhere to return to flight</div>
+  </div>
+</div>
+
 <div class="contactwrap" id="contactwrap">
   <!-- the profile window, redesigned per brief T15: an "incoming transmission"
        ID badge. Avatar wears the logo's own orbit-ring + teal planet dot.
@@ -1674,11 +1716,11 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/02-sound.js?v=11"></script>
 <script src="js/03-progress.js?v=17"></script>
 <script src="js/04-world.js?v=16"></script>
-<script src="js/05-combat.js?v=14"></script>
+<script src="js/05-combat.js?v=15"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/10-content-viewer.js?v=3"></script>
 <script src="js/07-environments.js?v=17"></script>
-<script src="js/08-ui.js?v=24"></script>
+<script src="js/08-ui.js?v=25"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>

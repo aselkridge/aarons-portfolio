@@ -113,20 +113,17 @@ function updateNextReward(){
   }
 }
 setInterval(updateNextReward,500);
-/* ══════════ INSTRUCTIONS POPOVER ══════════ */
-/* The hint sentence used to sit permanently in the bottom-left corner,
-   colliding with the "See you, space cowboy" signoff (which is
-   position:fixed and ignores that flow entirely). Now it only shows on
-   demand, next to the station nav links. */
+/* ══════════ FLIGHT MANUAL (the "?" modal) ══════════ */
+/* Center-screen with a light blur backdrop; click anywhere outside the
+   card (or Escape) to return to flight. Also the future surface for
+   re-running the Phase 5 tutorial. */
 var helpBtn=$('help-btn'), helpPop=$('hint');
 function setHelp(on){
   helpBtn.classList.toggle('on',on); helpBtn.setAttribute('aria-expanded',String(on));
   helpPop.classList.toggle('on',on);
 }
 helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setLog(false); setHelp(!helpPop.classList.contains('on')); });
-document.addEventListener('pointerdown', function(e){
-  if(helpPop.classList.contains('on') && !e.target.closest('.navrow')) setHelp(false);
-});
+helpPop.addEventListener('pointerdown', function(e){ if(!e.target.closest('.hint-card')) setHelp(false); });
 
 /* ══════════ REWARDS LOG ══════════ */
 /* The log is the reward collection, nothing else — categorized facts/quotes
@@ -388,7 +385,7 @@ addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); s
 /* touch: FIRE button + hint copy + start minimized on small screens */
 $('fireb').addEventListener('pointerdown', function(e){ e.preventDefault(); Sound.unlock(); Music.autostart(); if(state==='free') fire(); });
 if(!fine){
-  $('hint').innerHTML='◐ <b>Drag to fly</b> · FIRE shoots · tap a planet to dock · <a href="../">Walkman ↗</a>';
+  $('hint-body').innerHTML='◐ <b>Drag to fly</b> · FIRE shoots · tap a planet to dock · <a href="../">Walkman ↗</a>';
 }
 if(!fine||innerWidth<720){ $('console').classList.add('min'); $('player').classList.add('min'); $('dossier').classList.add('min'); }
 

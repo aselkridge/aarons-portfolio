@@ -13,7 +13,8 @@ addEventListener('pointerdown', function(e){
   // .hud/.panel — without these two, a click on the open modal falls through
   // to fire()/beginLanding() and docks the planet behind it.
   if(e.target.closest('.hud')||e.target.closest('.panel')||e.target.closest('#boot')||e.target.closest('#fireb')
-     ||e.target.closest('#rewardmodal')||e.target.closest('#contactwrap')||e.target.closest('.gate')) return;
+     ||e.target.closest('#rewardmodal')||e.target.closest('#contactwrap')||e.target.closest('.gate')
+     ||e.target.closest('#hint')) return;   // the flight-manual modal backdrop closes it; it must not also fire
   if(!fine){ mx=e.clientX; my=e.clientY; return; }   // touch: tap/drag = fly there; FIRE button shoots
   if(state!=='free') return;
   if(lockStation){ beginLanding(lockStation); }
