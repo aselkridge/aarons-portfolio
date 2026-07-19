@@ -107,15 +107,35 @@ function briefOf(sec){
 }
 /* ── the floating content window: one poem at a time (riffle) or a prose card ── */
 var winPoems=null, winIdx=0;
+var PW_OURO='<svg class="pw-emblem" viewBox="0 0 120 60" fill="none" aria-hidden="true"><path d="M60 30 C60 9 90 9 90 30 C90 51 60 51 60 30 C60 9 30 9 30 30 C30 51 60 51 60 30 Z" stroke="#8fe0ff" stroke-width="2.6" vector-effect="non-scaling-stroke"/><circle cx="31" cy="24" r="3" fill="#8fe0ff"/></svg>';
 function renderPoemOne(){
-  var p=winPoems[winIdx], num=p.n||('#'+('0'+(winIdx+1)).slice(-2));
-  $('p-body').className='cwin-body sec-body';
-  $('p-body').innerHTML='<figure class="poem-sheet hero">'+
-    '<figcaption class="poem-eye">Oromugai ∞ · '+escH(num)+'</figcaption>'+
-    '<blockquote class="poem-line">'+escH(p.line||'')+'</blockquote>'+
-    '<div class="poem-foot"><img class="poem-seal" src="assets/wax_seal.png" alt="Oromugai seal — an ouroboros">'+
-    '<span class="poem-meta">'+escH(p.meta||'8 syllables · one breath')+'</span></div>'+
-    '<img class="poem-quill" src="assets/quill.png" alt="" aria-hidden="true"></figure>';
+  var p=winPoems[winIdx], num=p.n||('#'+('0'+(winIdx+1)).slice(-2)),
+      meta=escH(p.meta||'8 syllables · one breath'), line=escH(p.line||'');
+  if(themeId==='roci'){
+    // Expanse HUD future-tablet: a decoded transmission
+    var wave='<div class="pw-wave">'+[5,10,4,13,7,9,3,11,6,8].map(function(v){return '<i style="height:'+v+'px"></i>';}).join('')+'</div>';
+    var gauge='<svg class="pw-gauge" viewBox="0 0 62 62" fill="none"><circle cx="31" cy="31" r="25" stroke="rgba(116,208,255,.22)" stroke-width="1"/>'+
+      '<circle cx="31" cy="31" r="25" stroke="#74d0ff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="80 200" transform="rotate(-90 31 31)"/>'+
+      '<g class="pw-gspin"><circle cx="31" cy="31" r="18" stroke="rgba(116,208,255,.4)" stroke-width="1" stroke-dasharray="3 6"/></g><circle cx="31" cy="31" r="3.2" fill="#8fe0ff"/></svg>';
+    $('p-body').className='cwin-body';
+    $('p-body').innerHTML='<div class="pw-device"><div class="pw-screen">'+
+      '<span class="pw-cb tl"></span><span class="pw-cb tr"></span><span class="pw-cb bl"></span><span class="pw-cb br"></span>'+
+      '<div class="pw-sheen"></div>'+
+      '<aside class="pw-instr">'+wave+gauge+'<div class="pw-ticks"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="pw-readout">CX 0.47<br>CY 1.02<br>Δ 0.08</div></aside>'+
+      '<div class="pw-kick"><span class="k">◈ Transmission · Oromugai ∞ · '+escH(num)+'</span></div>'+
+      '<div class="pw-line">'+line+'</div>'+
+      '<div class="pw-foot"><div class="pw-emblem-wrap">'+PW_OURO+'</div><span class="pw-meta">'+meta+'<br><b>signal locked</b></span></div>'+
+      '</div></div>';
+  } else {
+    // Bebop parchment sheet
+    $('p-body').className='cwin-body sec-body';
+    $('p-body').innerHTML='<figure class="poem-sheet hero">'+
+      '<figcaption class="poem-eye">Oromugai ∞ · '+escH(num)+'</figcaption>'+
+      '<blockquote class="poem-line">'+line+'</blockquote>'+
+      '<div class="poem-foot"><img class="poem-seal" src="assets/wax_seal.png" alt="Oromugai seal — an ouroboros">'+
+      '<span class="poem-meta">'+meta+'</span></div>'+
+      '<img class="poem-quill" src="assets/quill.png" alt="" aria-hidden="true"></figure>';
+  }
   $('cwin-dots').innerHTML=winPoems.map(function(_,i){return '<i class="'+(i===winIdx?'on':'')+'"></i>';}).join('');
   $('cwin-count').textContent=(winIdx+1)+' / '+winPoems.length;
 }

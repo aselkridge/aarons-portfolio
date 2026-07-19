@@ -743,7 +743,7 @@ body.t-roci .dock{background:linear-gradient(90deg,rgba(4,10,18,.85) 0%,rgba(4,1
 body.t-sword .cwin-close{background:rgba(255,240,215,.5);border:1px solid rgba(120,80,40,.45);color:#6a2d1e}
 body.t-roci .cwin-close{background:rgba(9,22,36,.72);border:1px solid rgba(116,208,255,.45);color:#bce0ff}
 /* prose card (non-poem tabs) — a themed floating card */
-.cwin-card{padding:24px 26px;border-radius:11px;max-height:80vh;overflow:auto}
+.cwin-card{padding:42px 26px 24px;border-radius:11px;max-height:80vh;overflow:auto}
 body.t-sword .cwin-card{background:rgba(20,13,8,.88);border:1px solid rgba(255,180,74,.26);backdrop-filter:blur(10px);box-shadow:0 26px 60px -22px rgba(0,0,0,.8)}
 body.t-roci .cwin-card{background:rgba(8,20,33,.84);border:1px solid rgba(116,208,255,.3);backdrop-filter:blur(12px);box-shadow:0 26px 60px -22px rgba(0,0,0,.8);
   clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
@@ -758,6 +758,49 @@ body.t-sword .cwin-arrow{border:1px solid rgba(255,180,74,.4)}body.t-roci .cwin-
 .cwin-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.32)}
 .cwin-dots i.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
 .cwin-count{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--dim);min-width:34px;text-align:center}
+
+/* ── Expanse (roci) HUD poem window — a future-tablet (pw- = poem window) ── */
+.pw-device{position:relative;padding:12px;border-radius:20px;
+  background:linear-gradient(158deg,#20344a,#0c1a29 55%,#0f1f30);border:1px solid rgba(150,200,240,.28);
+  box-shadow:0 40px 90px -32px rgba(0,0,0,.9),0 0 54px -14px rgba(116,208,255,.3),inset 0 1px 0 rgba(205,232,255,.32),inset 0 -3px 10px rgba(0,0,0,.55)}
+.pw-device::before{content:'';position:absolute;inset:-22px;z-index:-1;border-radius:36px;background:radial-gradient(closest-side,rgba(116,208,255,.3),transparent 72%);filter:blur(9px)}
+.pw-device::after{content:'';position:absolute;left:16px;right:16px;top:5px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(210,235,255,.5),transparent)}
+.pw-screen{position:relative;overflow:hidden;padding:24px 26px;min-height:250px;
+  background:linear-gradient(135deg,rgba(8,20,33,.92),rgba(4,11,20,.94));
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  box-shadow:inset 0 0 0 1px rgba(116,208,255,.5),inset 0 0 44px rgba(0,0,0,.7),inset 0 0 24px rgba(116,208,255,.08)}
+.pw-screen::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(116,208,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(116,208,255,.06) 1px,transparent 1px);background-size:26px 26px}
+.pw-screen::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(116,208,255,.045) 0 1px,transparent 1px 3px)}
+.pw-screen>*{position:relative;z-index:1}
+.pw-sheen{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(116deg,transparent 40%,rgba(190,225,255,.08) 49%,transparent 60%)}
+.pw-cb{position:absolute;width:15px;height:15px;z-index:2;pointer-events:none;border-color:#8fe0ff;filter:drop-shadow(0 0 4px rgba(116,208,255,.85))}
+.pw-cb.tl{top:6px;left:6px;border-top:2px solid;border-left:2px solid}.pw-cb.tr{top:6px;right:6px;border-top:2px solid;border-right:2px solid}
+.pw-cb.bl{bottom:6px;left:6px;border-bottom:2px solid;border-left:2px solid}.pw-cb.br{bottom:6px;right:6px;border-bottom:2px solid;border-right:2px solid}
+.pw-instr{position:absolute;right:14px;top:48px;bottom:42px;width:74px;z-index:1;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;opacity:.6;pointer-events:none}
+.pw-wave{display:flex;align-items:flex-end;gap:2px;height:15px}
+.pw-wave i{width:2px;background:#74d0ff;box-shadow:0 0 4px rgba(116,208,255,.7)}
+.pw-gauge{width:62px;height:62px}
+.pw-gspin{transform-origin:31px 31px;animation:pwspin 16s linear infinite}
+@keyframes pwspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.pw-gspin{animation:none}.pw-emblem-wrap::before{animation:none}}
+.pw-ticks{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.pw-ticks i{height:1px;background:rgba(116,208,255,.6)}.pw-ticks i:nth-child(odd){width:15px}.pw-ticks i:nth-child(even){width:9px}
+.pw-readout{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:#82b6d8;text-align:right;line-height:1.5}
+.pw-kick .k{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#8fd6ff}
+.pw-line{font-family:'Iowan Old Style','Palatino Linotype','Palatino','Georgia',serif;font-style:italic;
+  font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.24;color:#eaf6ff;max-width:13ch;margin-top:16px;padding-right:78px;
+  text-shadow:0 0 22px rgba(116,208,255,.5);min-height:2.3em}
+.pw-foot{display:flex;align-items:center;gap:14px;margin-top:22px}
+.pw-emblem-wrap{position:relative;width:62px;height:62px;flex:none;display:grid;place-items:center;border-radius:14px;
+  border:1px solid rgba(116,208,255,.55);background:radial-gradient(circle at 50% 42%,rgba(116,208,255,.22),rgba(8,20,33,.4));
+  box-shadow:0 0 22px rgba(116,208,255,.42),inset 0 0 16px rgba(116,208,255,.25)}
+.pw-emblem-wrap::before{content:'';position:absolute;inset:-7px;border-radius:50%;border:1px dashed rgba(116,208,255,.5);animation:pwspin 14s linear infinite}
+.pw-emblem{width:40px;height:auto;filter:drop-shadow(0 0 7px rgba(116,208,255,.9))}
+.pw-meta{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#7fb2d6;line-height:1.6}
+.pw-meta b{color:#bfe6ff;font-weight:400}
+/* roci prose card gets a faint HUD grid so it matches the tablet family */
+body.t-roci .cwin-card{background-image:linear-gradient(rgba(116,208,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(116,208,255,.05) 1px,transparent 1px);background-size:26px 26px}
 
 @media (max-width:720px){
   .rail{width:100%}
@@ -1033,7 +1076,7 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/05-combat.js?v=12"></script>
 <script src="js/06-flight.js?v=12"></script>
 <script src="js/10-content-viewer.js?v=2"></script>
-<script src="js/07-environments.js?v=13"></script>
+<script src="js/07-environments.js?v=14"></script>
 <script src="js/08-ui.js?v=21"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
