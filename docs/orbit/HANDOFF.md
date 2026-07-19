@@ -124,13 +124,16 @@ screen in Phase 4.
 - ✅ Palette + type system adopted site-wide immediately (2026-07-19 redesign
   brief, commit `a8d0abe`) rather than finishing Phase 2 first and re-skinning
   after — folded in here so nothing gets built twice. See §4 for detail.
-- ⬜ Stage 3 — **station immersive/clear mode**: a control hides the rail +
-  window entirely → pure scene, like TikTok/IG. Tap anywhere restores it, plus
-  a persistent low-key "tap for controls" handle so it's never a dead end.
-- ⬜ Stage 4 — **main-FLIGHT immersive mode**: same idea applied to normal
-  space flight — fly and shoot with only the woolong/bounty counter in a
-  corner + a small music play/stop button bottom-right + reward windows still
-  popping; everything else hidden. Same tap-to-restore.
+- ✅ Stage 3 — **station immersive/clear mode**, shipped (commit `2410e84`): a
+  new ◉ button in the station panel hides the rail + window entirely → pure
+  scene. Tap anywhere on the scene, or the persistent low-key "tap for
+  controls" handle, restores it.
+- ✅ Stage 4 — **main-FLIGHT immersive mode**, shipped (commit `2410e84`): a
+  new ◉ button in the header hides the header/console/player/sign, leaving
+  only a tiny woolong readout (corner) + a tiny play/pause button — fly and
+  shoot underneath as normal, reward windows keep popping. Deliberately
+  restore-via-handle-only here (not tap-the-scene) since clicks fire your
+  weapon while flying; ESC also exits.
 - ⬜ Stage 5 — the **other stations** (Mission, AlphaForge, Life, Notes) get
   their own rich window treatments, in BOTH themes — right now only
   Craft/Oromugai has this built out.
