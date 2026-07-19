@@ -97,16 +97,18 @@ $('imm-btn').addEventListener('click', function(){
    same cadence as a visible countdown/progress bar so it's never a mystery
    when the next reward is coming. */
 var REWARD_STEP=2500, bhHud=$('bounty-hud'), bhLab=$('bh-next-lab'), bhBar=$('bh-bar-fill');
+var immWrap=$('imm-bounty-wrap'), immBar=$('imm-bar-fill');
 function updateNextReward(){
   var goldLive = typeof asteroids!=='undefined' && asteroids.some(function(a){ return a.gold; });
   if(goldLive){
     bhLab.textContent='◈ SIGNAL LIVE — crack the gold asteroid';
-    bhBar.style.width='100%';
-    bhHud.classList.add('signal');
+    bhBar.style.width='100%'; immBar.style.width='100%';
+    bhHud.classList.add('signal'); immWrap.classList.add('signal');
   }else{
+    immWrap.classList.remove('signal');
     var into=bounty%REWARD_STEP, remain=REWARD_STEP-into;
     bhLab.textContent='NEXT SIGNAL · ₩'+remain.toLocaleString()+' TO GO';
-    bhBar.style.width=((into/REWARD_STEP)*100)+'%';
+    bhBar.style.width=((into/REWARD_STEP)*100)+'%'; immBar.style.width=((into/REWARD_STEP)*100)+'%';
     bhHud.classList.remove('signal');
   }
 }
