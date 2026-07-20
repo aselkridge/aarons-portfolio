@@ -149,6 +149,57 @@ the answer into your notes").
 
 ---
 
+## Playtest 002 — 2026-07-20
+
+**Player profile:** second outside playtester. Doesn't play games at all.
+Played the PRE-Playtest-001-changes build (none of the P1 treatments were
+live yet). Reached the table, stopped there. Feedback relayed by Aaron.
+
+**Overall read:** independently reproduces Playtest 001's root finding (the
+plan is missing), and adds a genuinely new one: the game assumes players
+know that games guide you, but a non-gamer needs the interface itself to
+say what to touch next. Two players, zero shared context, same wall.
+
+### Findings
+
+**P2.1 — At the table, still didn't know the point or objective.**
+`CONFIRMS P1.12 / P1.1` No new treatment: this is the plan-before-the-table
+gap (P1.12's LEARN / CHOOSE / SAY HELLO plan + tracker) and the wall beat
+(P1.1), now independently reproduced by a second player on the old build.
+Strong evidence those two treatments are the right priority.
+
+**P2.2 — The select screen has no sequence.** `PROPOSED`
+Player saw the name field first ("pick a name... what name? MY name?"),
+typed their own name, nothing visibly happened, and only later discovered
+the suit cards were clickable and required. After picking a suit: "okay,
+then what?"
+*Interpretation:* the screen presents three controls as equals with no
+order, and the callsign label assumes context ("callsign" itself is
+pilot-speak).
+*Change:* the select screen becomes three numbered steps (1 PICK YOUR
+SUIT, 2 TYPE ANY NAME YOU LIKE, 3 DROP TO THE SURFACE) with the current
+step lit and the finished steps checked; the name field explains itself
+("what should the astronaut call you? any name works"); the drop button,
+when not ready, says why in plain words instead of sitting dim.
+
+**P2.3 — Nothing ever says what to do next, anywhere.** `PROPOSED`
+Player asked for the next thing to be bouncing / highlighted, and for a
+reminder to appear if nothing happens for a while, all tied back to the
+overarching goal.
+*Change:* a game-wide "guided hand": the one control the run is waiting on
+gets a soft pulse; after ~8 quiet seconds a small nudge chip appears next
+to it in the astronaut's voice ("Next: pick a suit. Click one of the
+cards."); the nudge names the current plan word (P1.12's tracker) so every
+next step ties back to where the run is headed. Nudges never block, never
+repeat once acted on, and disappear for the rest of a screen once used.
+
+### Session decisions
+
+- P2.2 + P2.3 mocked as one treatment (section 10) on the Playtest 001
+  mockup page; awaiting Aaron's approval alongside the P1 set.
+
+---
+
 *Template for future entries: copy the Playtest 001 structure — profile,
 overall read, numbered findings (verbatim quote or faithful paraphrase +
 interpretation + change + status), session decisions.*
