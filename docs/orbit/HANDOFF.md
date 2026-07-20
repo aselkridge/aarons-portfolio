@@ -5,8 +5,13 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-20 night (R1f + R1h shipped — branded boot loader,
-real social share card. Also fixed, same day: scanner cursor now tilted
+Last updated: 2026-07-20 night (THE COLDEST CALL IS LIVE: the full playable
+game now replaces the placeholder at `docs/orbit/coldest-call/` — real terrain
+strips, Aaron's five chosen character sprites, the orbit build's real ship art
+(Swordfish II / Rocinante) parked at the landing site, full dialogue + clay
+workstation + debrief loop. Entry: the AlphaForge mission door + PLAYABLE
+BUILD 05 deck card. See RCC in §3. Same day, main-build thread: R1f + R1h
+shipped — branded boot loader, real social share card; scanner cursor tilted
 like a real pointer + shrunk twice more (still needs Aaron's real-browser
 confirmation — see the known-issues note below, screenshots can't show a
 custom cursor); Rocinante mirrored to face left + launches left, opposite
@@ -268,6 +273,45 @@ instruction — do not batch-fix these without his go-ahead on each.
   both check, or a master `GainNode` for SFX + muting the `<audio>`
   element for music) and persists across the session so it doesn't reset
   on its own mid-play.
+
+### RCC — The Coldest Call (added 2026-07-20; runs as its own thread)
+Aaron's playable GTM-engineering game for AlphaForge. Spec: Aaron's build
+doc ("Moon Transmission, Build Spec & Handoff", Google Doc, 2026-07-20) —
+title/subtitle per Aaron's direct instruction: **The Coldest Call · "a
+playable outreach run. help a stranded astronaut introduce ice cream to a
+moon."** Placement decided (mockup signed off 2026-07-20): mission door on
+the AlphaForge rail + PLAYABLE deck card, both opening a mission-briefing
+window whose CTA routes to `coldest-call/`.
+- **RCC-a. Entry point — SHIPPED on-branch 2026-07-20** (this shipment).
+  Door markup/CSS in `index.html` (`#mdoor`, `.has-mission`, `.bf-*`,
+  `.k-brief`), show/hide + briefing in `07-environments.js`
+  (`openMissionBrief`), PLAYABLE card support in `10-content-viewer.js`,
+  placeholder route at `docs/orbit/coldest-call/index.html`. Verified live
+  both themes, desktop + 1349×789 + mobile; door only exists on AlphaForge.
+- **RCC-b. The game build — SHIPPED LIVE 2026-07-20** (Aaron: "push the
+  game live. We are done"). The full run now lives at
+  `docs/orbit/coldest-call/index.html` (single self-contained page, all CSS
+  + JS inline; fonts relative to `docs/assets/fonts/`; art under
+  `coldest-call/assets/`: five character sprites Aaron picked from a
+  21-candidate live audition (pilot=Firefly26, engineer=21, offduty=17,
+  ronin=07, generic=12, crowd-tinted per person), two terrain strips
+  (bebop/expanse, world anchors read off the art's own landmarks), and the
+  orbit build's real ships (Swordfish II / Roci) parked at the landing site
+  with theme-colored ownership glows. Game loop: intro transmission →
+  suit select → walk the vertical strip through 4 stations → clay
+  workstation console takeover (live 24-row table, free-column trap) →
+  the seam (six human-written lines, three approaches) → send → debrief
+  (reward-card style, insights, honest zero-reply branch). Both themes via
+  in-game toggle or `?t=roci`/`#roci`; returns to `../#alphaforge`.
+  3-run Playwright suite in the session scratchpad passed on the shipped
+  build (exact credit math, silent branch, tutorial, free-column trap).
+  Sources/build pipeline (template.html, build.py for the inline-artifact
+  version, deploy.py for this site version, playtest.py) live in the build
+  session's scratchpad; the shipped page is the artifact of record.
+- **RCC-c. Open decisions — RESOLVED:** (1) walker = Aaron's sourced sprites
+  (tier-A ambient bob + rotate, per medium-honesty); (2) rival first names
+  kept per Aaron's direction (AlphaForge coach nods); (3) ships in BOTH
+  theme skins.
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are

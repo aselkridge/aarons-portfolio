@@ -1037,6 +1037,97 @@ body.t-sword .bp-mx>div{border-color:#4a3a20}body.t-roci .bp-mx>div{border-color
 body.t-sword .bp-mx b{color:#f0a63c}body.t-roci .bp-mx b{color:#4fb8e8}
 .bp-mx i{display:block;font-style:normal;font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--dim);margin-top:3px;text-transform:uppercase}
 .bp-note{margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);line-height:1.6}
+
+/* ── ALPHAFORGE · The Coldest Call — mission door + briefing ──
+   The door is the game's entry point on the rail (mockup signed off
+   2026-07-20). It only exists on AlphaForge: fillCard() sets .has-mission
+   on #dock for that station, which flips the rail to a flex column so the
+   door pins to its BOTTOM as its own zone — margin-top:auto pushes it down
+   on tall viewports, position:sticky keeps it on screen while the tabs
+   scroll behind it on short ones. Never below the fold on landing. */
+#mdoor{display:none}
+.dock.has-mission{display:flex;flex-direction:column;align-items:stretch}
+.dock.has-mission .rail-desc{margin-bottom:20px}
+.dock.has-mission #mdoor{display:block;position:sticky;bottom:6px;margin-top:auto;flex:none}
+.mdoor{position:relative;text-align:left;cursor:pointer;padding:17px 18px 15px;border-radius:10px;overflow:hidden;
+  transition:transform .18s ease,border-color .18s,box-shadow .18s}
+body.t-sword .mdoor{background:linear-gradient(160deg,#1d1408,#110b07);
+  border:1px dashed rgba(240,166,60,.42);box-shadow:0 14px 30px -14px rgba(0,0,0,.7),0 -12px 22px -8px rgba(0,0,0,.5)}
+body.t-roci .mdoor{background:rgba(9,20,32,.85);backdrop-filter:blur(8px);border:1px solid rgba(116,208,255,.42);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  box-shadow:0 0 22px rgba(116,208,255,.14),inset 0 0 18px rgba(116,208,255,.05),0 -12px 22px -8px rgba(0,0,0,.45)}
+.mdoor:hover{transform:translateY(-1px)}
+body.t-sword .mdoor:hover{border-color:rgba(240,166,60,.8);box-shadow:0 14px 34px -12px rgba(0,0,0,.8),0 0 24px rgba(240,166,60,.18)}
+body.t-roci .mdoor:hover{border-color:rgba(116,208,255,.85);box-shadow:0 0 30px rgba(116,208,255,.3),inset 0 0 18px rgba(116,208,255,.08)}
+/* corner brackets — the site's HUD idiom (.gl-cb family) */
+.mdoor i.cb{position:absolute;width:12px;height:12px;pointer-events:none}
+body.t-sword .mdoor i.cb{border-color:#f0a63c;filter:drop-shadow(0 0 4px rgba(240,166,60,.7))}
+body.t-roci .mdoor i.cb{border-color:#74d0ff;filter:drop-shadow(0 0 4px rgba(116,208,255,.8))}
+.mdoor i.tl{top:4px;left:4px;border-top:2px solid;border-left:2px solid}
+.mdoor i.tr{top:4px;right:4px;border-top:2px solid;border-right:2px solid}
+.mdoor i.bl{bottom:4px;left:4px;border-bottom:2px solid;border-left:2px solid}
+.mdoor i.br{bottom:4px;right:4px;border-bottom:2px solid;border-right:2px solid}
+/* one motion: a slow scan sweep across the door */
+.mdoor::after{content:'';position:absolute;inset:0;pointer-events:none;background-size:260% 100%;animation:mdsweep 4.6s linear infinite}
+body.t-sword .mdoor::after{background-image:linear-gradient(105deg,transparent 0 42%,rgba(240,166,60,.09) 50%,transparent 58%)}
+body.t-roci .mdoor::after{background-image:linear-gradient(105deg,transparent 0 42%,rgba(116,208,255,.10) 50%,transparent 58%)}
+@keyframes mdsweep{from{background-position:130% 0}to{background-position:-130% 0}}
+.md-kick{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--pc,var(--accent));margin-bottom:9px}
+.md-kick .live{color:var(--accent2,var(--accent))}
+.md-title{display:block;font-family:var(--display);text-transform:uppercase;font-size:19px;line-height:1.06;letter-spacing:.01em;color:#f2ecdf;margin-bottom:8px}
+body.t-roci .md-title{font-weight:700;color:#eef2f6}
+body.t-sword .mdoor:hover .md-title{text-shadow:0 0 22px rgba(240,166,60,.45)}
+body.t-roci .mdoor:hover .md-title{text-shadow:0 0 22px rgba(116,208,255,.45)}
+.md-sub{display:block;font-family:var(--mono);font-size:10px;line-height:1.65;color:var(--dim);margin-bottom:11px}
+.md-foot{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+/* the PLAYABLE deck card (BUILD 05) — same blueprint family, plus pulse + click */
+.bp-card.playable{cursor:pointer;transition:transform .18s ease,box-shadow .18s}
+.bp-card.playable:hover{transform:translateY(-2px)}
+body.t-sword .bp-card.playable:hover{box-shadow:0 30px 60px -18px rgba(0,0,0,.8),0 0 30px rgba(240,166,60,.22)}
+body.t-roci .bp-card.playable:hover{box-shadow:0 30px 60px -18px rgba(0,0,0,.8),0 0 40px rgba(79,184,232,.28)}
+.bp-card.playable .bp-note{color:var(--accent)}
+body.t-sword .bp-stamp.pulse{animation:stpulse-w 2.4s ease-in-out infinite}
+body.t-roci .bp-stamp.pulse{animation:stpulse-c 2.4s ease-in-out infinite}
+@keyframes stpulse-w{0%,100%{box-shadow:0 0 0 0 rgba(240,166,60,0)}50%{box-shadow:0 0 14px 2px rgba(240,166,60,.5)}}
+@keyframes stpulse-c{0%,100%{box-shadow:0 0 0 0 rgba(116,208,255,0)}50%{box-shadow:0 0 14px 2px rgba(116,208,255,.5)}}
+/* the mission briefing — rides the cwin-card chrome at its own fitted width */
+.cwin.k-brief{width:min(478px,92vw)}
+.cwin.k-brief .cwin-close{top:-10px;right:-10px}
+.bf-title{font-family:var(--display);text-transform:uppercase;font-size:clamp(24px,3vw,30px);line-height:1.02;color:#f2ecdf;margin-bottom:10px}
+body.t-roci .bf-title{font-weight:700;color:#eef2f6}
+.bf-sub{font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--dim);margin-bottom:18px}
+.bf-voice-label{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+/* the astronaut speaks in the HUMAN face, never mono — load-bearing type split */
+.bf-voice{border-left:2px solid var(--pc,var(--accent));padding:2px 0 2px 14px;margin-bottom:18px;
+  font-family:var(--os);font-weight:300;font-size:15.5px;line-height:1.55;color:#dcdee6}
+.bf-mx{display:flex;gap:8px;margin-bottom:20px}
+.bf-mx>div{flex:1;border-radius:5px;padding:10px 5px;text-align:center;border:1px solid}
+body.t-sword .bf-mx>div{border-color:#4a3a20}body.t-roci .bf-mx>div{border-color:#2b5a7a}
+.bf-mx b{display:block;font-family:var(--display);font-size:19px;line-height:1.1;color:var(--pc,var(--accent))}
+.bf-mx i{display:block;font-style:normal;font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--dim);margin-top:4px;text-transform:uppercase}
+.bf-cta{display:block;width:100%;padding:13px;border-radius:7px;cursor:pointer;border:none;text-align:center;text-decoration:none;
+  font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;transition:box-shadow .18s,transform .12s}
+body.t-sword .bf-cta{background:#f0a63c;color:#12100c}
+body.t-sword .bf-cta:hover{box-shadow:0 0 26px rgba(240,166,60,.5)}
+body.t-roci .bf-cta{background:#4fb8e8;color:#071018;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px))}
+body.t-roci .bf-cta:hover{box-shadow:0 0 26px rgba(79,184,232,.55)}
+.bf-cta:active{transform:scale(.985)}
+.bf-note{margin-top:11px;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-align:center;line-height:1.8}
+/* phones: bottom-sheet rail — promote the door ABOVE the tabs so it's
+   visible in the sheet without scrolling (order swap; sticky off) */
+@media (max-width:720px){
+  .dock.has-mission .st-mark{order:0}
+  .dock.has-mission .envlab{order:1}
+  .dock.has-mission .eyebrow{order:2}
+  .dock.has-mission h2{order:3}
+  .dock.has-mission #mdoor{order:4;position:static;margin:2px 0 14px}
+  .dock.has-mission .secs{order:5}
+  .dock.has-mission .rail-desc{order:6;margin-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .mdoor::after{animation:none}
+  .bp-stamp.pulse{animation:none}
+}
 /* ── LIFE · polaroid (warm) / now-playing widget (cool) ── */
 .lf-pol{width:min(266px,72vw);margin:0 auto;background:#f4f1ea;border-radius:4px;
   box-shadow:0 34px 60px -14px rgba(0,0,0,.65);padding:14px 14px 0;transform:rotate(-2.2deg)}
@@ -1614,6 +1705,17 @@ body.t-roci .bnr .bk{color:#9affea}
     <h2 id="p-title">Title</h2>
     <nav class="secs" id="secs" aria-label="Sections"></nav>
     <p class="rail-desc" id="rail-desc"></p>
+    <!-- ══ ALPHAFORGE ONLY · mission door — entry to The Coldest Call.
+         Hidden unless #dock carries .has-mission (set per-station in
+         fillCard). Pinned to the rail's bottom zone on desktop; promoted
+         above the tabs on phones. Opens the mission briefing in #cwin. ══ -->
+    <button class="mdoor" id="mdoor" type="button" aria-haspopup="dialog">
+      <i class="cb tl"></i><i class="cb tr"></i><i class="cb bl"></i><i class="cb br"></i>
+      <span class="md-kick"><span class="live">●</span> MISSION AVAILABLE</span>
+      <span class="md-title">The Coldest Call</span>
+      <span class="md-sub">a playable outreach run. help a stranded astronaut introduce ice cream to a moon.</span>
+      <span class="md-foot">▸ CLICK TO PLAY · 10–15 MIN</span>
+    </button>
   </div>
   <!-- floating content window over the scene (parchment / HUD / prose per theme+type) -->
   <div class="cwin" id="cwin">
@@ -1800,9 +1902,9 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/04-world.js?v=16"></script>
 <script src="js/05-combat.js?v=17"></script>
 <script src="js/06-flight.js?v=13"></script>
-<script src="js/10-content-viewer.js?v=3"></script>
-<script src="js/07-environments.js?v=19"></script>
-<script src="js/08-ui.js?v=27"></script>
-<script src="js/09-main.js?v=14"></script>
+<script src="js/10-content-viewer.js?v=5"></script>
+<script src="js/07-environments.js?v=21"></script>
+<script src="js/08-ui.js?v=28"></script>
+<script src="js/09-main.js?v=15"></script>
 </body>
 </html>

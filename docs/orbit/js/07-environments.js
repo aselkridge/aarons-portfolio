@@ -85,7 +85,13 @@ var SECTIONS={
         note:'never let AI explain AI without evidence in between'},
        {title:'AlphaForge, complete',
         desc:'Clay’s GTM engineering cohort — every build shipped, warm-up through the final wedge. The full 001–009 launch-sequence lands here as each build gets written up.',
-        metrics:[{v:'△',l:'every build shipped'},{v:'001–009',l:'sequence incoming'}]}
+        metrics:[{v:'△',l:'every build shipped'},{v:'001–009',l:'sequence incoming'}]},
+       /* The Coldest Call — the playable build. Cross-reference to the same
+          mission briefing the rail's mission door opens. */
+       {title:'The Coldest Call', playable:true, stamp:'PLAYABLE',
+        desc:'An outreach run you can fly yourself — pick who to ask first, choose what to learn about them, spend a real budget, and write the one line the machine can’t.',
+        metrics:[{v:'24',l:'citizens to meet'},{v:'100',l:'credits to spend'},{v:'1',l:'line only you write'}],
+        note:'▸ opens the mission briefing'}
      ]},
     {k:'The held send', body:['The final build: a complete outbound system for Lantern — sourcing, cleaning, scoring, segmenting, and a fully assembled 40-email send with three tiers of verified personalization. Every email ready. And I didn\'t hit send.','These were real heads of school in the city I want to build in. The first email they ever get from me matters more than a deadline. So I built the machine carefully, got the experience right on my end first, and chose restraint over speed. The whole system, ready, held on purpose.']},
     {k:'The classifier', body:['An AI enrichment claimed 30 of my 40 contacts had "public writing" I could reference. Reading closely: only 13 were real external work — the other 17 were welcome letters on the schools\' own homepages. Referencing those would have made the outreach look less researched, not more.','The fix wasn\'t more AI. One deterministic rule — is the piece on their own domain, or an outside one? — separated real thought leadership from homepage blurbs, every time, without wavering. More than half the "personalization" would have been embarrassing. A simple rule caught what the model couldn\'t.']},
@@ -139,6 +145,8 @@ function fillCard(s){
   $('p-title').textContent=s.title;
   $('envlab').textContent='SURFACE · '+s.envlab;
   $('dock').style.setProperty('--pc',s.color);
+  /* the mission door (The Coldest Call) only exists on AlphaForge */
+  $('dock').classList.toggle('has-mission', s.id==='alphaforge');
   var secs=[{k:'Overview', body:s.body, tags:s.tags, soon:s.soon}].concat(SECTIONS[s.id]||[]);
   var nav=$('secs'); nav.innerHTML='';
   secs.forEach(function(sec,i){
@@ -200,15 +208,39 @@ function drawRiffle(){
 /* narrow artifacts shrink the window to hug them (see .cwin.k-* CSS) */
 function setWinKind(kind){
   var cw=$('cwin');
-  ['k-patch','k-builds','k-life','k-dispatch'].forEach(function(c){ cw.classList.remove(c); });
+  ['k-patch','k-builds','k-life','k-dispatch','k-brief'].forEach(function(c){ cw.classList.remove(c); });
   if(kind) cw.classList.add('k-'+kind);
 }
 function renderWinItem(){
   if(winKind==='poem'){ renderPoemOne(); return; }   // poems keep their bespoke per-theme builds
   $('p-body').className='cwin-body';
   $('p-body').innerHTML=ContentViewer.renderItem(winKind,winItems[winIdx],winIdx,winItems.length);
+  /* the PLAYABLE blueprint card is a second door into the mission briefing */
+  var pl=$('p-body').querySelector('.bp-card.playable');
+  if(pl) pl.addEventListener('click', function(){ openMissionBrief(); Sound.blip(760); });
   drawRiffle();
 }
+/* ── ALPHAFORGE · The Coldest Call mission briefing ──
+   Opened by the rail's mission door (#mdoor) and the PLAYABLE deck card.
+   Static content; the CTA navigates to the game's own route (coldest-call/),
+   which deep-links back here via ../#alphaforge when the run ends. */
+function openMissionBrief(){
+  winItems=null;
+  $('p-body').className='cwin-body sec-body cwin-card';
+  setWinKind('brief');
+  $('p-body').innerHTML=
+    '<div class="p-eye">ALPHAFORGE // MISSION BRIEFING</div>'+
+    '<div class="bf-title">The Coldest Call</div>'+
+    '<div class="bf-sub">a playable outreach run. help a stranded astronaut introduce ice cream to a moon.</div>'+
+    '<div class="bf-voice-label">INCOMING VOICE // THE STRANDED ASTRONAUT</div>'+
+    '<div class="bf-voice">“Crashed here two years ago. There’s a whole civilization on the far side of this moon — and they’ve never had ice cream. Help me figure out who to ask first.”</div>'+
+    '<div class="bf-mx"><div><b>24</b><i>citizens to meet</i></div><div><b>100</b><i>credits to spend</i></div><div><b>1</b><i>line only you write</i></div></div>'+
+    '<a class="bf-cta" href="coldest-call/">▸ BEGIN THE RUN</a>'+
+    '<div class="bf-note">one sitting · full screen · flies you back to alphaforge after</div>';
+  $('cwin-riffle').classList.add('hidden');
+  $('cwin').classList.add('show');
+}
+$('mdoor').addEventListener('click', function(){ openMissionBrief(); Sound.blip(760); });
 function selectSec(sec,a){
   var links=$('secs').querySelectorAll('a');
   for(var i=0;i<links.length;i++) links[i].classList.toggle('on', links[i]===a);
