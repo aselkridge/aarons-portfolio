@@ -326,7 +326,13 @@ body.t-roci .scancard{display:block}
 /* brand header + nav */
 /* positioned so the ?/LOG popovers can anchor BELOW the whole brand column
    (wordmark + nav + dossier) instead of on top of the dossier */
-.brand{pointer-events:auto;position:relative}
+/* pointer-events lives on the direct children, not .brand itself — .brand
+   has no explicit width, so it's always exactly as wide as its widest row
+   (.navrow); giving IT pointer-events:auto turned its entire bounding box
+   into a hoverable/cursor-active zone, including empty space to the right
+   of narrower rows above/below .navrow */
+.brand{position:relative}
+.brand>*{pointer-events:auto}
 /* THE lockup — §8 canonical 5F values (corrections sheet v2, pixel-for-
    pixel): flex + align-items:flex-end; mark square, pulled 20% of its own
    height below the row (negative bottom margin) so the wordmark baseline
@@ -335,7 +341,7 @@ body.t-roci .scancard{display:block}
    white); NAUT+CS in the theme accent; letter-spacing .01em warm / .02em
    cool; line-height .8; gap = mark × 0.12 (= .28 word-em). The ı is
    dotless (U+0131) with a real child-span tittle. */
-.lockup{display:flex;align-items:flex-end;gap:.28em;font-size:clamp(17px,1.8vw,24px)}
+.lockup{display:flex;align-items:flex-end;gap:.28em;font-size:clamp(17px,1.8vw,24px);width:fit-content}
 .lk-mark{height:2.326em;width:2.326em;object-fit:contain;flex:none;margin-bottom:-.465em;
   filter:drop-shadow(0 2px 10px rgba(0,0,0,.55))}
 .wordmark{font-family:var(--display);font-size:1em;text-transform:uppercase;line-height:.8;letter-spacing:.01em}
@@ -347,7 +353,7 @@ body.t-roci .scancard{display:block}
 .pi .tit{position:absolute;left:50%;top:-.34em;transform:translateX(-50%);width:.17em;height:.17em;
   border-radius:50%;background:#35c1d1;color:#35c1d1;box-shadow:0 0 6px currentColor}
 body.t-roci .pi .tit{top:-.3em;background:#f0a63c;color:#f0a63c}
-.loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px}
+.loc{font-family:var(--mono);font-size:clamp(9px,1vw,11px);letter-spacing:.3em;color:var(--dim);text-transform:uppercase;margin-top:7px;width:fit-content}
 .loc span{color:var(--ink)}
 /* nav row: the station links + the instructions ("?") button that pops the
    hint sentence up beside them. The hint used to live permanently in the
@@ -1087,7 +1093,12 @@ body.t-roci .nt-body p{font-family:var(--os);font-weight:300;color:#b9c3ce}
 
 /* ───────── Captain's Dossier (Phase 4d / brief T14) ───────── */
 /* dossier + the "?" button share a row so they can never overlap */
-.dz-row{display:flex;align-items:flex-start;gap:8px;margin-top:14px}
+/* fit-content — without it this flex row silently stretches to .brand's
+   full width (set by the widest sibling, .navrow, which legitimately
+   spans to "NOTES"), leaving a large invisible pointer-events:auto dead
+   zone to the right of the dossier that showed the cursor and looked
+   like it was "sitting on top of the ship" with nothing visibly there */
+.dz-row{display:flex;align-items:flex-start;gap:8px;margin-top:14px;width:fit-content}
 .dossier{width:min(300px,84vw);position:relative;overflow:hidden}
 body.t-sword .dossier{background:rgba(26,18,10,.78);border:1px solid #5a4526;border-radius:8px;backdrop-filter:blur(5px)}
 body.t-roci .dossier{background:rgba(8,20,32,.62);border:1px solid rgba(79,184,232,.4);backdrop-filter:blur(9px);
