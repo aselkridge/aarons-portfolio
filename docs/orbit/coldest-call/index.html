@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Coldest Call — Aaronautics</title>
+<meta name="description" content="A playable outreach run. Help a stranded astronaut introduce ice cream to a moon.">
+<link rel="icon" type="image/svg+xml" href="../../assets/brand/mark.svg">
+<link rel="icon" type="image/png" sizes="48x48" href="../../assets/brand/icon-48.png">
+<link rel="apple-touch-icon" href="../../assets/brand/apple-touch-icon.png">
+<!-- ══ PLACEHOLDER ROUTE — the game itself (build spec: Moon Transmission /
+     The Coldest Call) replaces this page. It exists so the mission door's
+     BEGIN THE RUN never dead-ends while the game is under construction.
+     House rules apply: no CDNs (fonts self-hosted below), static only. ══ -->
+<style>
+@font-face{font-family:'Space Mono';src:url(../../assets/fonts/space-mono-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Space Mono';src:url(../../assets/fonts/space-mono-700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Chakra Petch';src:url(../../assets/fonts/chakra-petch-700.woff2) format('woff2');font-weight:700;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{display:grid;place-items:center;overflow:hidden;color:#efece6;font-family:'Space Mono',ui-monospace,monospace;
+  background:radial-gradient(130% 100% at 50% 30%,#0b1622 0%,#070d16 50%,#04070d 100%)}
+.stars{position:fixed;inset:0;pointer-events:none;background-image:
+  radial-gradient(1px 1px at 18% 24%,rgba(255,255,255,.33) 0,transparent 100%),
+  radial-gradient(1px 1px at 40% 70%,rgba(255,255,255,.25) 0,transparent 100%),
+  radial-gradient(1px 1px at 72% 30%,rgba(255,255,255,.33) 0,transparent 100%),
+  radial-gradient(1px 1px at 88% 60%,rgba(255,255,255,.25) 0,transparent 100%),
+  radial-gradient(1px 1px at 30% 44%,rgba(255,255,255,.18) 0,transparent 100%),
+  radial-gradient(1px 1px at 55% 12%,rgba(255,255,255,.27) 0,transparent 100%)}
+.hold{position:relative;width:min(460px,90vw);padding:26px 28px 24px;border:1px solid rgba(116,208,255,.5);border-radius:10px;
+  background:rgba(9,20,32,.6);text-align:center;
+  box-shadow:0 0 26px rgba(116,208,255,.22),inset 0 0 20px rgba(116,208,255,.07)}
+.cb{position:absolute;width:14px;height:14px;border-color:#74d0ff;filter:drop-shadow(0 0 4px rgba(116,208,255,.8))}
+.cb.tl{top:5px;left:5px;border-top:2px solid;border-left:2px solid}
+.cb.tr{top:5px;right:5px;border-top:2px solid;border-right:2px solid}
+.cb.bl{bottom:5px;left:5px;border-bottom:2px solid;border-left:2px solid}
+.cb.br{bottom:5px;right:5px;border-bottom:2px solid;border-right:2px solid}
+.kick{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#74d0ff;margin-bottom:12px}
+h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(26px,6vw,34px);line-height:1;letter-spacing:.02em;
+  text-transform:uppercase;color:#eef2f6;text-shadow:0 0 20px rgba(116,208,255,.4);margin-bottom:10px}
+.sub{font-size:10.5px;line-height:1.7;color:#8b93a6;margin-bottom:18px}
+.stripe{height:10px;border-radius:2px;opacity:.75;margin-bottom:14px;
+  background:repeating-linear-gradient(135deg,#4fb8e8 0 16px,transparent 16px 30px)}
+.soon{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7fd4ff;margin-bottom:20px}
+a.back{display:inline-block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8fa2b3;text-decoration:none;
+  border:1px solid rgba(139,147,166,.4);border-radius:999px;padding:9px 18px;transition:.16s}
+a.back:hover{color:#efece6;border-color:#efece6}
+a.back:focus-visible{outline:2px solid #74d0ff;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main class="hold">
+  <i class="cb tl"></i><i class="cb tr"></i><i class="cb bl"></i><i class="cb br"></i>
+  <div class="kick">ALPHAFORGE // MISSION ROUTE</div>
+  <h1>The Coldest Call</h1>
+  <p class="sub">a playable outreach run. help a stranded astronaut introduce ice cream to a moon.</p>
+  <div class="stripe" aria-hidden="true"></div>
+  <div class="soon">◇ mission under construction — the run lands here next</div>
+  <a class="back" href="../#alphaforge">◂ RETURN TO ALPHAFORGE</a>
+</main>
+</body>
+</html>

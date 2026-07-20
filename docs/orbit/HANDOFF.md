@@ -5,7 +5,12 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 late (R1 grew four items: picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
+Last updated: 2026-07-20 (NEW: The Coldest Call — Aaron's playable GTM game
+for AlphaForge — entry point shipped on-branch, awaiting screenshot sign-off:
+mission door on the AlphaForge rail + mission briefing window + PLAYABLE
+BUILD 05 deck card + placeholder route at `docs/orbit/coldest-call/`. The
+game itself is NOT built yet — see RCC in §3 for the spec pointer and open
+decisions. Earlier: R1 grew four items: picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
 2.zip", a strict superset/supersede of the first brief — landed and its README
 governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
 screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
@@ -166,6 +171,32 @@ instruction — do not batch-fix these without his go-ahead on each.
   echoing the doorway — warm left / cool right); generate 1200×630,
   update og:image + twitter meta on the orbit page (and root once R1a
   promotes it).
+
+### RCC — The Coldest Call (added 2026-07-20; runs as its own thread)
+Aaron's playable GTM-engineering game for AlphaForge. Spec: Aaron's build
+doc ("Moon Transmission, Build Spec & Handoff", Google Doc, 2026-07-20) —
+title/subtitle per Aaron's direct instruction: **The Coldest Call · "a
+playable outreach run. help a stranded astronaut introduce ice cream to a
+moon."** Placement decided (mockup signed off 2026-07-20): mission door on
+the AlphaForge rail + PLAYABLE deck card, both opening a mission-briefing
+window whose CTA routes to `coldest-call/`.
+- **RCC-a. Entry point — SHIPPED on-branch 2026-07-20** (this shipment).
+  Door markup/CSS in `index.html` (`#mdoor`, `.has-mission`, `.bf-*`,
+  `.k-brief`), show/hide + briefing in `07-environments.js`
+  (`openMissionBrief`), PLAYABLE card support in `10-content-viewer.js`,
+  placeholder route at `docs/orbit/coldest-call/index.html`. Verified live
+  both themes, desktop + 1349×789 + mobile; door only exists on AlphaForge.
+- **RCC-b. The game build** — the full 10–15 min run per the spec (stations
+  0–9, 24-citizen JSON, credit economy, column menu, the seam, rivals,
+  open scoring). Replaces the placeholder route. Type split is load-bearing:
+  Space Mono = tool voice, theme display face = human voice.
+- **RCC-c. Open decisions before RCC-b ships:** (1) astronaut walker — the
+  spec assumes a sprite system that does NOT exist; a walking character is
+  tier-C art (sourced sprite sheet or v1 without a walker) per the
+  medium-honesty rule; (2) rival names Natalie/Jordan/Adam — spec's own
+  flag: confirm they're not real cohortmates; Yash cameo is the friendly
+  slot and fine; (3) which theme skin v1 ships in (spec allows one skin
+  with hooks stubbed — site standard is both).
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are

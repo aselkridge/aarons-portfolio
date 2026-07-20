@@ -104,9 +104,9 @@ var ContentViewer=(function(){
      07-environments.js. Returns the HTML for a single item. ── */
   function renderBuildItem(item,i,total){
     var pad=function(n){ return ('0'+n).slice(-2); };
-    var html='<div class="bp-card"><div class="bp-in">';
+    var html='<div class="bp-card'+(item.playable?' playable':'')+'"><div class="bp-in">';
     html+='<div class="bp-head"><span class="bp-no">BUILD '+pad(i+1)+' / '+pad(total)+'</span>'+
-          '<span class="bp-stamp'+(item.held?' held':'')+'">'+esc(item.stamp||(item.held?'HELD ON PURPOSE':'SHIPPED'))+'</span></div>';
+          '<span class="bp-stamp'+(item.held?' held':'')+(item.playable?' pulse':'')+'">'+esc(item.stamp||(item.held?'HELD ON PURPOSE':'SHIPPED'))+'</span></div>';
     html+='<div class="bp-title">'+esc(item.title)+'</div>';
     html+='<div class="bp-desc">'+esc(item.desc||'')+'</div>';
     if(item.metrics&&item.metrics.length){
