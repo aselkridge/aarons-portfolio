@@ -22,6 +22,15 @@ repos — `aarons-3d-portfolio` needs to be created by Aaron by hand, then
 handed back. Full remaining roadmap — R1–R6 — is unchanged below; still
 paused except for the items Aaron explicitly greenlit.)
 
+**Later same night**: found and fixed the REAL cause of the cursor-on-ship
+overlap (an invisible dead-zone bug, not a sizing issue — see the dedicated
+entry below); also root-caused why the scanner still doesn't feel like a
+pointer even shrunk/angled (the source art's shape has no true tip at any
+crop) and proposed pivoting to a small vector glyph instead — awaiting
+Aaron's go/no-go. Also merged in "The Coldest Call" (built by a separate
+session directly on the live branch while this work was in flight) —
+clean merge, nothing lost either side.
+
 Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
 master audio mute, readability→R4a, mobile rework→R4c, picker exit
 directions, branded boot loader, manual auto-open, social share card); T14
@@ -213,6 +222,49 @@ instruction — do not batch-fix these without his go-ahead on each.
   og:image URL against the live site first — the existing docs/-prefixed
   path already resolves (200); this repo isn't in GitHub Pages' "docs
   folder as root" mode, so only the artwork needed replacing, not the path.
+- **2026-07-20 night — cursor-on-ship root cause FOUND + FIXED**: Aaron gave
+  a precise repro this time — the overlap is consistent, always in one
+  region: right of the dossier, under Oromugai/Notes. Measured it directly
+  rather than guessing again: `.lockup`, `.loc`, and `.dz-row` are all
+  block-level flex containers with no explicit width, so each silently
+  stretched to `.brand`'s full width (set by its widest row, `.navrow` —
+  legitimately wide, it spans to "NOTES"). That left large invisible
+  `pointer-events:auto` dead zones — `.dz-row` measured 534px wide vs
+  ~338px of actual content — with nothing visible there but the cursor
+  still activating. `.brand` also had `pointer-events:auto` set directly
+  on itself, an independent second bug (its own box, same widest-child
+  problem, catching hovers regardless of which child was really present).
+  **Fix**: `width:fit-content` on the three offending rows, and moved
+  `pointer-events:auto` off `.brand` onto `.brand>*`. Verified by
+  re-testing the exact point Aaron described — now correctly falls
+  through to the game canvas (`cursor:none`) instead of showing the
+  scanner over empty space; confirmed real controls (dossier, help-btn,
+  nav links) still hit correctly. This was a real, fixable bug — separate
+  from the cursor-shape complaint below.
+- **2026-07-20 night — cursor SHAPE finding, not yet fixed**: Aaron said
+  the scanner still doesn't work like a pointer even smaller/angled — the
+  hotspot reads like it's "the handle," and he'd rather scrap the whole
+  thing than keep a bad experience. Tested this concretely instead of
+  guessing again: cropped the source art three different ways (lens-only,
+  head+neck, sharpest corner) at true cursor size — all three came out as
+  a round blob, none read as a tapered pointer tip. **Root cause: the
+  source art is an octagonal gadget housing — that shape has no single
+  vertex to taper to, at any rotation or crop.** This is a geometry
+  mismatch, not a sizing problem, and isn't fixable by more cropping.
+  Proposed to Aaron: stop trying to force the illustration into the
+  pointer role, and instead build a small clean vector/CSS pointer glyph
+  (genuine tapered tip, true hotspot-at-tip) tinted with the scanner's
+  teal/orange palette for "character" — squarely CSS/SVG territory, not
+  organic illustration, so this is actually the right medium for a cursor
+  glyph in the first place. Awaiting Aaron's go/no-go before building it.
+- **2026-07-20 night — merged in parallel work**: pushing this round's fix
+  hit a diverged `claude/website-build-nevi30` — a separate session had
+  shipped **The Coldest Call** (a full playable mini-game replacing the
+  AlphaForge mission-door placeholder) directly to the live branch in the
+  meantime. Merged cleanly (auto-merge, no conflicts — different sections
+  of `index.html`), verified the merged result still boots clean and the
+  dead-zone fix above still holds, then pushed. Nothing from either side
+  was lost.
 
 ---
 
