@@ -22,7 +22,9 @@ function applyTheme(id){
   Music.onTheme();
   Sound.blip(id==='roci'?520:880);
 }
-function shipSVG(id){ var g=$('ship-'+(id==='sword'?'sword':'roci')); return '<svg viewBox="0 0 40 44">'+g.innerHTML+'</svg>'; }
+// name kept for minimal diff — the ships are <img>-based now, not <svg>,
+// so this just clones the cursor ship's own group markup for the bay
+function shipSVG(id){ var g=$('ship-'+(id==='sword'?'sword':'roci')); return g.innerHTML; }
 function shipSwap(toId){
   if(themeId===toId||state==='hangar') return;
   if(!fine||state!=='free'){ applyTheme(toId); return; }
