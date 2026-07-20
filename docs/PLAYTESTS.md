@@ -193,10 +193,40 @@ cards."); the nudge names the current plan word (P1.12's tracker) so every
 next step ties back to where the run is headed. Nudges never block, never
 repeat once acted on, and disappear for the rest of a screen once used.
 
+**P2.4 — At the table: "what do these mean, why are they important, how
+do I use them?"** `MOSTLY COVERED BY P1.4 + P1.5, EXTENDED`
+Player hit the column-meaning question at the TABLE headers, not only at
+the pick menu (mood today, who they trust, etc. read as riddles).
+*Change (extension):* the P1.5 hover hints ride with the columns onto the
+console table itself: hovering any column header shows the same what-it-is-
+for card. One set of hints, present everywhere the column appears.
+
+**P2.5 — "Why is it a P.S.? What does that even mean for the whole
+message?"** `PARTLY COVERED BY P1.3/P1.8, EXTENDED`
+The seam options are labeled P.S. but the game never says what a P.S. is,
+never shows the full letter, and never shows where the line lands in it.
+*Change (extension):* the seam adds a one-letter preview: the shared body
+everyone receives (dimmed), with YOUR line highlighted in place at the
+bottom, labeled "your line rides here, at the end of every letter." Plus
+one plain sentence: a P.S. is the little note under a letter, the one part
+written for one person. The P1.3 colored source chips light inside that
+preview, so meaning, placement, and data-source read in one glance.
+
+**P2.6 — Hard to keep track of who is talking.** `PROPOSED`
+Rival cutscenes, popups, and transmissions identify speakers with small
+text only; the player lost track of who was speaking.
+*Change:* every voice gets a face. Rival and Yash lines get the speaker's
+sprite portrait chip (their crowd tint) plus their name in their color;
+the astronaut's wrist-unit screen carries his name on the channel line
+(extends P1.11); narration stays faceless on purpose, since it is nobody
+speaking.
+
 ### Session decisions
 
 - P2.2 + P2.3 mocked as one treatment (section 10) on the Playtest 001
   mockup page; awaiting Aaron's approval alongside the P1 set.
+- P2.4 / P2.5 / P2.6 folded into mockup sections 02, 04, and 08 as
+  extensions (noted inline on the page).
 
 ---
 
