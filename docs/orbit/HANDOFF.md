@@ -5,15 +5,17 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-20 evening (post-R2a bug round: scanner cursor shrunk a
-lot — it was overlapping the flying ship near the dossier/console corners;
-Rocinante mirrored to face left + launches left, opposite Swordfish's right,
-matching the picker copy's own ◂/▸ hints. Earlier today: R2a ship art, R1c
-scanner cursor, R1b GitHub link, employment-status correction — see SHIPPED
-below. R1a still blocked on Aaron: the GitHub App this session runs under
-can't create repos — `aarons-3d-portfolio` needs to be created by Aaron by
-hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged below;
-still paused except for the items Aaron explicitly greenlit.)
+Last updated: 2026-07-20 night (R1f + R1h shipped — branded boot loader,
+real social share card. Also fixed, same day: scanner cursor now tilted
+like a real pointer + shrunk twice more (still needs Aaron's real-browser
+confirmation — see the known-issues note below, screenshots can't show a
+custom cursor); Rocinante mirrored to face left + launches left, opposite
+Swordfish's right. Earlier today: R2a ship art, R1c scanner cursor, R1b
+GitHub link, employment-status correction — see SHIPPED below. R1a still
+blocked on Aaron: the GitHub App this session runs under can't create
+repos — `aarons-3d-portfolio` needs to be created by Aaron by hand, then
+handed back. Full remaining roadmap — R1–R6 — is unchanged below; still
+paused except for the items Aaron explicitly greenlit.)
 
 Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
 master audio mute, readability→R4a, mobile rework→R4c, picker exit
@@ -172,6 +174,40 @@ instruction — do not batch-fix these without his go-ahead on each.
   launches off-screen left on the ship picker, opposite Swordfish's right
   — matches the picker copy's own long-standing ◂/▸ arrow hints, which the
   motion direction hadn't actually honored since Phase 4b shipped.
+- **2026-07-20 night — second cursor pass**: Aaron confirmed in his own
+  browser that the scanner still overlapped the ship and still read too
+  big, and separately asked why it wasn't tilted like a normal OS pointer.
+  **Fix**: all four cursor renders rotated -20° (the classic arrow lean)
+  and shrunk again (idle 26px→22px, lit 32-34px→28-30px); hotspot moved
+  from an eyeballed lens-center guess to the actual tip pixel (topmost-
+  then-leftmost opaque point), matching how a real pointer's hotspot
+  sits at its tip. **Still open**: the structural cause (ship always
+  chases the mouse into the same dossier/console real estate the cursor
+  activates over) hasn't been touched — offered Aaron the option of
+  fading the ship out while hovering those zones (so it's ship *or*
+  scanner, never both) if the smaller/angled version still isn't enough.
+  Not built yet, needs his go-ahead first.
+- **2026-07-20 night — R1f + R1h done**: **Boot loader** rebuilt from
+  plain "NAV SYSTEMS online" terminal text to the real brand moment —
+  wordmark, the mark icon with a teal dot continuously orbiting it (pure
+  CSS, a rotating parent + an offset dot, no JS per frame), and launch-
+  prep words cycling underneath every ~520ms (ANALYZING SIGNAL… CHECKING
+  FUEL… PLOTTING TRAJECTORY… CALIBRATING NAV·COM… IGNITION…). Boot
+  duration 1.9s→2.7s to give the cycle room; still click-to-skip.
+  **Social share card**: og.png (and its og.html source template) rebuilt
+  from a plain wordmark-on-stars placeholder to the real lockup (actual
+  mark asset + wordmark, dot correctly over the dotless-i this time — an
+  early draft had it floating detached, fixed by wrapping just the "ı" in
+  its own positioning context instead of the whole word) on the same
+  diagonal warm/cool split the doorway uses. Rendered at 2x and
+  downsampled to the true 1200×630 og:image spec for crisp text. Also
+  filled in meta tags that were missing (og:url, og:image:width/height,
+  og:image:alt, twitter:title/description/image — twitter:card alone
+  doesn't reliably fall back to og:image on every platform). **Checked,
+  not assumed**: curl'd both the current and a "no /docs/" candidate
+  og:image URL against the live site first — the existing docs/-prefixed
+  path already resolves (200); this repo isn't in GitHub Pages' "docs
+  folder as root" mode, so only the artwork needed replacing, not the path.
 
 ---
 
@@ -207,21 +243,15 @@ instruction — do not batch-fix these without his go-ahead on each.
 - **R1e. Picker exit directions** — on ship-select, the Expanse ship flies
   OFF TO THE LEFT when clicked; Bebop keeps flying right. (Mirror the
   launch transform for the cool half.)
-- **R1f. Branded boot loader** — replace the "NAV SYSTEMS online" boot text:
-  wordmark with the logo mark beneath it, the TEAL PLANET DOT orbiting the
-  mark as the loading motion, and cycling launch-prep words underneath in
-  Space Mono (ANALYZING… · CHECKING FUEL… · PLOTTING TRAJECTORY… ·
-  CALIBRATING NAV·COM… · IGNITION…), LLM-loader style. NOTE: Aaron
-  explicitly authorized the wordmark here — the boot splash is a brand
-  moment, an exception to the mark-only screens rule.
+- ~~**R1f. Branded boot loader**~~ **DONE 2026-07-20** — wordmark, mark with
+  an orbiting teal dot, cycling launch-prep words. See SHIPPED above.
 - **R1g. Flight manual auto-open** — the ? modal pops on FIRST entry into
   the system (right after the ship pick lands you in flight), dismissible
   by clicking out as normal; once per visit.
-- **R1h. Social share card** — the og:/twitter image becomes logo +
-  wordmark on a split-theme background (recommend the diagonal seam,
-  echoing the doorway — warm left / cool right); generate 1200×630,
-  update og:image + twitter meta on the orbit page (and root once R1a
-  promotes it).
+- ~~**R1h. Social share card**~~ **DONE 2026-07-20** — real lockup on the
+  doorway's diagonal warm/cool split, 1200×630. Root page (docs/index.html,
+  the Walkman) intentionally left untouched — it's slated to move to its
+  own repo under R1a, not worth updating twice.
 - **R1i. Return to the hangar doors from flight** (Aaron 2026-07-20: "a way
   for players to return to the FIRST screen... from the orbit game
   screen"). A visible HUD control (console row or nav row, styled to match
