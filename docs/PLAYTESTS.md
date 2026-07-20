@@ -121,6 +121,25 @@ glowing text); in-person lines get a portrait chip and a clean open plate
 with no device chrome; narration stays bare. Three voices, three
 unmistakable looks.
 
+**P1.12 — The player never knew the plan, so the table came from nowhere.**
+`PROPOSED` (Best insight of the session, per Aaron.) The player knew the
+goal (get the neighbors to try ice cream) but had no idea the method would
+involve building a table, so the console read as a non sequitur. The bridge
+only formed by accident: they recognized "claygent" because they already
+know Clay. An average player has no such bridge.
+*Interpretation:* the game taught the steps but never stated the strategy.
+Newcomers need the plan BEFORE the first tool, in physical words, with no
+GTM vocabulary.
+*Change:* (a) right after the intro call, the astronaut lays out the whole
+job in three words: LEARN, CHOOSE, SAY HELLO; (b) those three words become
+a persistent corner tracker that lights up and checks off as the run
+progresses, so every screen answers "which word am I on"; (c) the table is
+introduced as what it honestly is ("my notes on all twenty four, laid side
+by side so you can compare them; that is all a table is"); (d) the claygent
+gets one plain sentence needing no outside knowledge ("a tin helper with
+good manners; it walks the town, asks one question at each door, writes
+the answer into your notes").
+
 ### Session decisions
 
 - Mockups of all eight treatments built as an interactive page (in the
