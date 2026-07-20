@@ -40,12 +40,16 @@ out loud, so newcomers read the feeling as correct rather than as failure.
 job as making a big list small. Plus a new insight, THE WALL, so the lesson
 lands in the notebook for every player.
 
-**P1.2 — Rival results were interesting but under-explained.** `PROPOSED`
-Player enjoyed seeing rivals do poorly but couldn't tell WHY each one failed.
-*Change:* each rival card in the debrief gets a hover / tap reveal that
-diagnoses the strategy in one breath (Jordan: one loud message, compared
-notes; Natalie: right facts, same machine voice, zero replies; Adam: perfect
-table, zero sends), each tied back to the matching insight.
+**P1.2 — Rival results were interesting but under-explained AND
+under-highlighted.** `PROPOSED`
+Player enjoyed seeing rivals do poorly but couldn't tell WHY each one
+failed, and asked for the comparison to be highlighted more overall.
+*Change:* the debrief pauses on MEANWHILE, ON THE FAR SIDE — the rival
+cards sweep in one by one with a glow so the moment lands — then each card
+gets a hover / tap reveal that diagnoses the strategy in one breath
+(Jordan: one loud broadcast, compared notes; Natalie: flawless machine
+notes with no person inside; Adam: perfect table, zero sends), each tied
+back to the matching insight.
 
 **P1.3 — Hard to know which citizen info mattered for the flyer.** `PROPOSED`
 Reading names/rows, the player couldn't tell what to carry forward into the
@@ -61,7 +65,9 @@ so we don't hand over answers — we hand over the question.
 *Change:* a tieback banner above the column menu ("a column earns its place
 two ways: it helps you choose WHO to visit, or gives you something real to
 SAY at the door") + significant-moment popups in the tutorial style at the
-biggest decision points, not just at the start.
+four biggest decisions of the run — first console open, the group gate,
+locking columns, and right before the send — so guidance travels with the
+player instead of ending at the start.
 
 **P1.5 — The free-column hover hint was loved; wants hints on the rest.**
 `PROPOSED` *Change:* every column gets a hover hint written as a heuristic,
@@ -88,6 +94,32 @@ rolling number animation, a spend flash on paid picks, a distinct FREE flash
 *Change:* covered by the P1.3 seam treatment + the P1.4 banner language, so
 the promise ("this will become words at the door") is made at pick time and
 kept at write time.
+
+**P1.9 — Didn't realize more than one group could be kept.** `PROPOSED`
+Player kept only The Traditionalists, believing the choice was one-of-three.
+The multi-select exists mechanically but nothing announces it.
+*Change:* the gate states the rule in plain words ("keep one group, keep
+two, keep all three"), cards become visible keep-toggles with checkbox
+marks, and a live count ("KEEPING 14 OF 24") shows the list growing as
+groups are added. (House note: we never say "segments" in game voice.)
+
+**P1.10 — Group names appear from nowhere.** `PROPOSED`
+The Curious / The Traditionalists / The Quiet Ones are never explained.
+*Interpretation:* keep it simple — no new grouping mechanic. The groups
+were always the astronaut's read of his neighbors; the fix is him saying
+so.
+*Change:* one beat before the gate: the astronaut's log ("two years and a
+radio... I wrote three names in my log"), each name defined in a breath,
+closed with "those are my notes, not rules." Shares a treatment with P1.9.
+
+**P1.11 — Transmission device needs beauty + a crystal-clear split from
+in-person speech.** `PROPOSED` (Raised by Aaron on reviewing the same
+session.)
+*Change:* radio lines arrive inside a drawn wrist unit (metal bezel,
+channel line, blinking signal bars, waveform, scanline shimmer over
+glowing text); in-person lines get a portrait chip and a clean open plate
+with no device chrome; narration stays bare. Three voices, three
+unmistakable looks.
 
 ### Session decisions
 
