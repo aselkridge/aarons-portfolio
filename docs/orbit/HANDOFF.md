@@ -5,14 +5,20 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 late (R1 grew two more items: return-to-hangar from flight, master audio mute; readability scan folded into R4a, full mobile rework folded into R4c. Just before that: R1 grew four items — picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
-2.zip", a strict superset/supersede of the first brief — landed and its README
-governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
-screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
-stations' artifact windows, both themes], Phase 4a [doorway], 4b [ship
-picker], 4d [Captain's Dossier], 4e [STAR reward cards], the T15 profile
-window + its T18 doors, the §5 "5F" lockup wordmark, decoded nav, and the
-T17A fixed typewriter signoff.)
+Last updated: 2026-07-20 (code paused-round resumed for four small live fixes:
+employment-status correction, R1b GitHub link, R1c real scanner cursor — see
+SHIPPED below. R1a blocked on Aaron: the GitHub App this session runs under
+can't create repos — `aarons-3d-portfolio` needs to be created by Aaron by
+hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged below;
+still paused except for the items Aaron explicitly greenlit this round.)
+
+Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
+master audio mute, readability→R4a, mobile rework→R4c, picker exit
+directions, branded boot loader, manual auto-open, social share card); T14
+folded into R4a; backlog section dissolved — everything lives in a phase.
+Before that: the v3 design brief ("Design Notes 2.zip") landed and shipped in
+one batch — Phase 2 Stage 5, Phase 4a/4b/4d/4e, the T15 profile window, the
+§5 "5F" lockup, decoded nav, the T17A signoff.
 
 ---
 
@@ -116,6 +122,20 @@ instruction — do not batch-fix these without his go-ahead on each.
   right-side lock-on cut-ins, gate mouse-guard (`gatesUp`), fire-through
   HUD chrome, planet-dot cursor, figures stripped from scenes, bigger gate
   marks, picker row fix, popover placements.
+- **2026-07-20 — employment fix + R1b + R1c**: dossier STATUS chip corrected
+  from "Open to crew" to "Active duty" (Aaron is not open to work — Lead
+  Automation Analyst at HubSpot; role subtitle now reads "Lead Automation
+  Analyst · HubSpot"). **R1b done** — GitHub chip added to the profile
+  popup's Other Builds row (`github.com/aselkridge/aarons-portfolio`).
+  **R1c done** — planet-dot cursor replaced by Aaron's real sourced scanner
+  art (idle + a bigger/brighter lit state over anything clickable), picked
+  via a live hover-comparison mockup: Bebop 2 idle / Bebop 1 lit (warm),
+  source render idle / newest Drive upload lit (cool). Pure CSS swap on
+  `:root` custom properties, no JS touched. **R1a started, blocked** — tried
+  creating the `aarons-3d-portfolio` repo directly via the GitHub API and it
+  403'd (this session's GitHub App has no repo-creation permission); Aaron
+  needs to create it by hand and hand it back before the Walkman move can
+  continue.
 
 ---
 
@@ -130,21 +150,21 @@ instruction — do not batch-fix these without his go-ahead on each.
 - **R1a. Separate the Walkman** (Aaron 2026-07-19: "its own separate thing").
   The Walkman currently IS the site root (`docs/index.html`); the game lives
   under `/docs/orbit/`. Plan: (1) move the Walkman to its own repo with its
-  own Pages URL (Aaron creates or okays the repo); (2) promote the orbit
-  game to the ROOT of this repo's site so the main URL opens the game
+  own Pages URL — repo name decided: `aarons-3d-portfolio`; (2) promote the
+  orbit game to the ROOT of this repo's site so the main URL opens the game
   directly (asset paths + og/meta + favicon updates); (3) remove the two
   cross-links (profile "OTHER BUILDS ↗ The Walkman" chip, mobile hint
   "Walkman ↗"); (4) optional redirect stub at the old orbit URL so shared
-  links keep working. DECISION NEEDED: new repo name + whether root
-  promotion happens same day.
-- **R1b. GitHub link in the profile window** — add "↗ GITHUB" to the
-  OTHER BUILDS row (and consider the dossier). NEEDED: which GitHub
-  profile/org URL to show.
-- **R1c. Scanner cursor v2** (replaces the planet-dot cursor): a futuristic
-  scanner/reticle cursor everywhere that isn't the ship, with a LIT/expanded
-  state whenever hovering anything clickable — buttons stop using the OS
-  pointer entirely. Two cursor sprites (idle + lit) per theme, hover wiring
-  via CSS on interactive selectors. Must stay legible on bright scenes.
+  links keep working. **BLOCKED 2026-07-20**: tried to create the repo
+  directly via the GitHub API, got a 403 — this session's GitHub App isn't
+  authorized to create repos, only to work in ones it's already been granted
+  access to. Aaron needs to create `aarons-3d-portfolio` by hand on
+  github.com (empty, public, no init needed) and say so — then this resumes.
+- ~~**R1b. GitHub link in the profile window**~~ **DONE 2026-07-20** — added
+  to the Other Builds row, links to `github.com/aselkridge/aarons-portfolio`.
+- ~~**R1c. Scanner cursor v2**~~ **DONE 2026-07-20** — idle + lit states, real
+  sourced art, both themes. Hotspots are eyeballed to each asset's lens
+  center, not pixel-measured — revisit if it ever feels off in real play.
 - **R1d. Micro-bug batch** — #19 log-count clip (re-verify post log-bar
   redesign), #11 banner timing, #2 projectile tunneling through planets
   (swept segment-circle test), #12a ₩20,000 threshold (Aaron decides value).
