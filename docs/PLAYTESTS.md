@@ -221,12 +221,40 @@ the astronaut's wrist-unit screen carries his name on the channel line
 (extends P1.11); narration stays faceless on purpose, since it is nobody
 speaking.
 
+**P2.7 — "They don't know what they're learning."** `PROPOSED`
+A player handed the game cold (no LinkedIn post, no context) has no idea
+the run teaches anything, or what. Aaron flags the bigger question too:
+how the site page frames it, and what the game is ultimately for.
+*Change:* the title screen makes the promise out loud, in one human
+sentence with zero course language ("One run, about ten minutes. You leave
+knowing how anything new gets introduced to strangers: not by shouting at
+everyone, but by choosing a few people and saying something true"), and
+frames the notebook from minute one as the thing you fill and keep. The
+site-page framing question stays open with Aaron.
+
+### Ideas (vision backlog, not queued with fixes)
+
+**I-1 — The Side Job (Aaron, 2026-07-20).** At the moment credit pressure
+first lands, offer optional work: the sprite walks off the main path to
+one of two mini games (left/right), earns a small capped credit amount,
+rivals quietly earn too, then walks back. Real-world tieback: money buys
+credits everywhere, and time is how you earn money.
+*Claude's take: worth building, and not only for fun — "your rivals worked
+shifts too" makes it the sharpest lesson in the game (budget is grindable
+by everyone; judgment is not). Guardrails so it can't break the economy:
+one shift per job, fixed small payout (~+15), offered once (right after
+claygent prices land), fully optional, under a minute, mints a THE GRIND
+field note. Playable 30-second proof (Scoop Catch) lives on the mockup
+page, section 12.*
+
 ### Session decisions
 
 - P2.2 + P2.3 mocked as one treatment (section 10) on the Playtest 001
   mockup page; awaiting Aaron's approval alongside the P1 set.
 - P2.4 / P2.5 / P2.6 folded into mockup sections 02, 04, and 08 as
   extensions (noted inline on the page).
+- P2.7 mocked as section 11 (the promise on the door). I-1 demoed as
+  section 12, decision deferred to Aaron as a separate, larger build.
 
 ---
 
