@@ -1,25 +1,37 @@
 # Aaronautics
 
 Aaron's personal portfolio — a spaceflight / mission-control themed, interactive
-website. Not a normal web page: a *place you interface with*. Boot up, pick an
-aesthetic (retro / modern / futuristic / anime), watch the countdown, launch, and
-fly into a cockpit whose console panels are the navigation.
+website. Not a normal web page: a *place you operate*. Pick a ship, fly a
+top-down solar system where the sun is the mission statement, land on planets
+to open the portfolio's sections, earn bounty, and find the secret planet.
 
-> **Building on this project? Read [`docs/DESIGN-BRIEF.md`](docs/DESIGN-BRIEF.md) first.**
-> Starting a fresh Claude Code session? Read [`docs/NEXT-SESSION.md`](docs/NEXT-SESSION.md).
+**Live:** https://aselkridge.github.io/aarons-portfolio/orbit/
 
-## Status
+> **What are the games and how do they play?** Read [`docs/GAMES.md`](docs/GAMES.md).
+> **Building on this project?** Read [`docs/DESIGN-BRIEF.md`](docs/DESIGN-BRIEF.md) first,
+> then [`docs/orbit/HANDOFF.md`](docs/orbit/HANDOFF.md) (the always-current maintenance doc).
 
-Early prototyping. Concepts live in [`prototypes/`](prototypes/). The real site
-(Three.js + real 3D model, self-hosted fonts, GitHub Pages) is not built yet — the
-next step needs a session with **Full** network access (see `docs/NEXT-SESSION.md`).
+## What's here
+
+Two playable experiences (both explained in [`docs/GAMES.md`](docs/GAMES.md)):
+
+- **Orbit** (`docs/orbit/`) — the portfolio itself, played as a spaceship.
+  Two full theme skins (Cowboy Bebop / The Expanse), asteroid combat with a
+  bounty system, five painted planet scenes, achievements and rewards.
+- **The Coldest Call** (`docs/orbit/coldest-call/`) — a 10–15 minute teaching
+  game about go-to-market engineering: help a stranded astronaut introduce
+  ice cream to a moon, on a budget of 100 credits. Reached through the
+  AlphaForge station's mission door, or directly at
+  https://aselkridge.github.io/aarons-portfolio/orbit/coldest-call/
 
 ## Structure
 
-- `docs/` — the design brief and handoff notes (the project's memory).
-- `prototypes/` — self-contained HTML concept explorations.
-  - `00-hero-v0.1.html` — first hero concept.
-  - `01-mission-control-v0.2.html` — theme-switch + countdown + launch + cockpit nav.
-  - `02-walkman-v2.html` — CSS-3D orbitable tape deck with clickable transport.
-  - `03-type-identity-bebop.html` — self-hosted type identity (Cowboy Bebop cut).
-  - `build-type.js` — how fonts get inlined from `@fontsource` npm packages.
+- `docs/` — the live site (GitHub Pages serves this) + the project's memory:
+  - `docs/GAMES.md` — reader-facing explanation of both games.
+  - `docs/DESIGN-BRIEF.md` — permanent design memory and decisions.
+  - `docs/orbit/HANDOFF.md` — rewritten every shipment: file map, known
+    issues, roadmap.
+  - `docs/assets/fonts/` — all fonts, self-hosted (house rule: no CDNs).
+- `prototypes/` — the original self-contained HTML concept explorations that
+  grew into the site (hero, mission control, the CSS-3D Walkman, type
+  identity).
