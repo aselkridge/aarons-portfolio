@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 evening (roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
+Last updated: 2026-07-19 late (R1 grew four items: picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
 2.zip", a strict superset/supersede of the first brief — landed and its README
 governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
 screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
@@ -148,6 +148,24 @@ instruction — do not batch-fix these without his go-ahead on each.
 - **R1d. Micro-bug batch** — #19 log-count clip (re-verify post log-bar
   redesign), #11 banner timing, #2 projectile tunneling through planets
   (swept segment-circle test), #12a ₩20,000 threshold (Aaron decides value).
+- **R1e. Picker exit directions** — on ship-select, the Expanse ship flies
+  OFF TO THE LEFT when clicked; Bebop keeps flying right. (Mirror the
+  launch transform for the cool half.)
+- **R1f. Branded boot loader** — replace the "NAV SYSTEMS online" boot text:
+  wordmark with the logo mark beneath it, the TEAL PLANET DOT orbiting the
+  mark as the loading motion, and cycling launch-prep words underneath in
+  Space Mono (ANALYZING… · CHECKING FUEL… · PLOTTING TRAJECTORY… ·
+  CALIBRATING NAV·COM… · IGNITION…), LLM-loader style. NOTE: Aaron
+  explicitly authorized the wordmark here — the boot splash is a brand
+  moment, an exception to the mark-only screens rule.
+- **R1g. Flight manual auto-open** — the ? modal pops on FIRST entry into
+  the system (right after the ship pick lands you in flight), dismissible
+  by clicking out as normal; once per visit.
+- **R1h. Social share card** — the og:/twitter image becomes logo +
+  wordmark on a split-theme background (recommend the diagonal seam,
+  echoing the doorway — warm left / cool right); generate 1200×630,
+  update og:image + twitter meta on the orbit page (and root once R1a
+  promotes it).
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are
@@ -190,9 +208,15 @@ showcasing myself" — the site is only done when the words are his)
   for calling content DONE.
 
 ### R4 — Ground Control + mobile (old 4c/4f/4g)
-- **R4a. Ground Control terminal** — the calm career console (identity rail,
-  CAREER/ABOUT/FACTS/QUOTES tabs); unlocks the doorway's locked door.
-  Content comes ready-made from R3b.
+- **R4a. Ground Control terminal + the full T14 console restyle** — the
+  calm career console (identity rail, CAREER/ABOUT/FACTS/QUOTES tabs)
+  unlocks the doorway's locked door; content comes ready-made from R3b.
+  The NAV·COM console gets its full T14 rebuild in the same pass (big
+  bounty hierarchy, true segmented SHIP/WPN toggles, bordered data footer,
+  reward-card header language) so GC and the console ship to one matched
+  standard — the console is the most wired-up component on the page
+  (hangar bay, minimize/chip, immersive toggle), so it gets its own full
+  regression run here, not a rider on another batch.
 - **R4b. Secret paths** — hidden Pong in GC corner, Ronin's GC entry,
   dual unlock (Pong win OR bounty threshold from R1d's decision).
 - **R4c. Mobile, the calm experience** — mobile-primary path via GC's
@@ -206,12 +230,13 @@ tutorial · soon" slot goes live as the replay entry. Needs R4 shape final.
 Aaron's personal plain-English walkthrough of how this was all built:
 tools, concepts, lessons, mistakes. Last, so it teaches the final shape.
 
-### Backlog (explicitly parked, needs Aaron's word to activate)
-- T14 full NAV·COM console restyle (declined for now — lighter touch chosen).
-- Cars/ships silhouettes in scenes (kept when figures were removed; can
-  also strip on request).
-- More design-brief drops from the outside source (standing note: read
-  fully before folding in).
+### No backlog — by design
+Everything known lives in a phase above (Aaron 2026-07-19: "I don't want
+a backlog at all"). T14 folded into R4a; the cars/boats/words/speakers
+strip shipped 2026-07-19. One standing PROCESS note (not a task): if the
+outside design source sends another brief, read it fully before folding
+in — it overrides its predecessors where they conflict, but Aaron's own
+direct instructions outrank any document.
 
 
 ## 3.1 Phase 1 of the roadmap: quick wins (shipped earlier today)
