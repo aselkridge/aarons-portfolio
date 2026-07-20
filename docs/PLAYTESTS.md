@@ -232,6 +232,15 @@ everyone, but by choosing a few people and saying something true"), and
 frames the notebook from minute one as the thing you fill and keep. The
 site-page framing question stays open with Aaron.
 
+**P2.8 — Mid-conversation, there is no way back.** `PROPOSED`
+A missed line cannot be reread; dialogue only moves forward. On a learning
+platform a missed line is a missed lesson.
+*Change:* words never disappear, two ways. (1) The conversation window
+keeps every line of the current scene, scrollable, earlier lines dimmed
+but readable. (2) The notebook grows a LOG page holding the run's full
+transcript, scene by scene, re-readable at any point, even stations later.
+Forward flow unchanged; the BACK travel button keeps its current job.
+
 ### Ideas (vision backlog, not queued with fixes)
 
 **I-1 — The Side Job (Aaron, 2026-07-20).** At the moment credit pressure
@@ -255,6 +264,7 @@ page, section 12.*
   extensions (noted inline on the page).
 - P2.7 mocked as section 11 (the promise on the door). I-1 demoed as
   section 12, decision deferred to Aaron as a separate, larger build.
+- P2.8 mocked as section 13 (the rewind: scrollback + notebook LOG).
 
 ---
 
