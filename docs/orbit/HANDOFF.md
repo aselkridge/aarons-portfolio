@@ -5,19 +5,26 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-20 (NEW: The Coldest Call — Aaron's playable GTM game
-for AlphaForge — entry point shipped on-branch, awaiting screenshot sign-off:
-mission door on the AlphaForge rail + mission briefing window + PLAYABLE
-BUILD 05 deck card + placeholder route at `docs/orbit/coldest-call/`. The
-game itself is NOT built yet — see RCC in §3 for the spec pointer and open
-decisions. Earlier: R1 grew four items: picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
-2.zip", a strict superset/supersede of the first brief — landed and its README
-governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
-screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
-stations' artifact windows, both themes], Phase 4a [doorway], 4b [ship
-picker], 4d [Captain's Dossier], 4e [STAR reward cards], the T15 profile
-window + its T18 doors, the §5 "5F" lockup wordmark, decoded nav, and the
-T17A fixed typewriter signoff.)
+Last updated: 2026-07-20 late (THE COLDEST CALL IS LIVE: the full playable
+game now replaces the placeholder at `docs/orbit/coldest-call/` — real terrain
+strips, Aaron's five chosen character sprites, the orbit build's real ship art
+(Swordfish II / Rocinante) parked at the landing site, full dialogue + clay
+workstation + debrief loop. Entry: the AlphaForge mission door + PLAYABLE
+BUILD 05 deck card (shipped earlier on-branch, now merged). See RCC in §3.
+Merged with the main build's post-R2a state: scanner cursor shrink, Rocinante
+mirror/launch direction, R2a ship art, R1c scanner cursor, R1b GitHub link,
+employment-status correction — see SHIPPED below. R1a still blocked on Aaron:
+`aarons-3d-portfolio` must be created by hand, then handed back. Full
+remaining roadmap R1–R6 unchanged below; still paused except items Aaron
+explicitly greenlit.)
+
+Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
+master audio mute, readability→R4a, mobile rework→R4c, picker exit
+directions, branded boot loader, manual auto-open, social share card); T14
+folded into R4a; backlog section dissolved — everything lives in a phase.
+Before that: the v3 design brief ("Design Notes 2.zip") landed and shipped in
+one batch — Phase 2 Stage 5, Phase 4a/4b/4d/4e, the T15 profile window, the
+§5 "5F" lockup, decoded nav, the T17A signoff.
 
 ---
 
@@ -90,7 +97,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 | ~~18~~ | ~~Ship-swap hangar: doors open on the *outbound* leg but the bay looks empty — no visible "ship flies out" moment (docking/inbound leg works fine)~~ **FIXED 2026-07-18** | Root cause (confirmed with live measured computed styles, not source-reading): on the outbound leg, `bay-open` (550ms door reveal) and `ship-out` (500ms exit, but only **300ms opacity fade**) fired on the same tick with no stagger — measured mid-run, the ship's opacity had already hit ~0 by the time the doors were only ~56% open, so the bay always looked empty; the inbound leg works precisely because it staggers (doors get a 260ms head start on the ship). Additionally, `ship-in` was removed the instant the ship SVG swapped, so the new ship never sat visibly parked. **Fix (mirrors the working inbound stagger, in reverse):** the new ship now stays parked (`ship-in` kept) when the theme flips behind closed doors; doors open first at 2300ms revealing the parked ship; `ship-out` fires at 2850ms — 550ms later, once the doors are essentially fully open; the exit's opacity fade now holds full opacity for most of the climb (0.3s delay) and fades only near the top; sequence-end cleanup moved 3150→3700ms to fit. **Verified** by re-running the same 140ms-interval computed-style sampling that diagnosed the bug: doors ≥87% open with the ship parked at full opacity, then the ship visibly climbing at full opacity with doors wide open across multiple samples — the exact condition that never once occurred pre-fix — and the sequence still ends clean (all classes removed, `state==='free'`). | `08-ui.js` (`shipSwap`), `index.html` (`.ship-out` transition) |
 | ~~10~~ | ~~Popups vanish too fast; no way to see what you've done~~ **FIXED 2026-07-18 (as the "Mission Log")** | Toasts self-remove after ~5.2s, banners after ~3.6s, and no history existed anywhere — this needed a new data structure, not a timer tweak. **Built:** `Progress.logEvent()` (`03-progress.js`) records every popup — achievements, transmissions/pilot facts, major-event banners — into `Progress.d.log` in `localStorage` (capped at 200 entries), hooked into `toast()` and `banner()` at the source so nothing that pops can escape being logged. New "◈ LOG" button in the header nav row (next to the "?" button) opens a scrollable Mission Log panel — same glass-panel styling family as the hint popover — listing everything newest-first with kind/title/description/timestamp; closes on outside-click or Escape; shows a friendly empty state on a fresh profile. Unlike the secret planet (session-only by design), the log deliberately **persists across sessions** — it's the "go back and see what you've done" record. **Verified**: fresh profile shows the empty state; generated real achievement/banner/fact events, **hard-reloaded the page**, and confirmed all three appear in the panel newest-first with correct kind labels (persistence proven, not assumed); Escape closes it; screenshotted the open panel. | `03-progress.js` (`logEvent`, hooks), `08-ui.js` (panel behavior), `index.html` (markup/CSS) |
 | 19 | Log panel: the (badge/count) number is cut off in the Expanse (Rocinante) theme | Reported by Aaron with a screenshot 2026-07-18 — the numeric value in the ◈ LOG panel is clipped in the Expanse theme specifically (likely a theme-specific `clip-path`/padding/overflow on the badge or tab-count chip). NOT yet diagnosed against the live code — diagnose the exact element before touching it. Small, self-contained fix (fold into a quick-wins batch). | `08-ui.js` / `index.html` (log panel + `.tab-new` / badge CSS — TBC) |
-| 20 | Ships feel a little small (FYI, not urgent) | Aaron's note: the flying ship cursor could stand to be a touch bigger overall for presence. Separate from the *hangar-bay* ship-too-small point already captured in issue #5 (that one is the docked ship inside the console). Both are size passes; batch with Phase 3 (visual fidelity) since ship art/scale is part of that. | `index.html` (`.rocket` sizing) for the cursor ship; `07-environments.js` for the bay ship |
+| ~~20~~ | ~~Ships feel a little small~~ **FIXED 2026-07-20** | Landed as part of R2a's real-ship-art pass — `.rocket`'s box went 44×44 → 54×62 alongside the SVG→`<img>` swap, since both changes touched the exact same CSS rule. The hangar-bay docked ship (the other half of this note) stayed at its existing 40×46 — Aaron's note was specifically about the flying cursor's presence, not the bay. | `index.html` (`.rocket` sizing) |
 | 21 | Mobile touch controls fight the device (LOW priority) | Reported by Aaron 2026-07-18: on a phone the page pans/zooms during play, and a *fire* touch and a *move* touch aren't distinguished — the game can't tell you're trying to do both, so multitouch flails. Two layers: (a) the true bug — the page isn't locking touch gestures (`touch-action:none` + preventDefault missing) and touch handling doesn't track fingers by pointer ID; (b) the bigger design question of whether precise dual-touch flight belongs on mobile at all. See the "MOBILE experience" cross-cutting item in §3 for the recommended direction (calmer tap-to-travel / assisted mobile mode, resolved alongside Phase 4 Ground Control). Do NOT ship an average patch here — Aaron cares about the mobile quality. | touch/pointer handling in `05-combat.js` / `06-flight.js` / `09-main.js`; `index.html` (`touch-action` CSS) |
 
 ---
@@ -121,6 +128,53 @@ instruction — do not batch-fix these without his go-ahead on each.
   right-side lock-on cut-ins, gate mouse-guard (`gatesUp`), fire-through
   HUD chrome, planet-dot cursor, figures stripped from scenes, bigger gate
   marks, picker row fix, popover placements.
+- **2026-07-20 — employment fix + R1b + R1c**: dossier STATUS chip corrected
+  from "Open to crew" to "Active duty" (Aaron is not open to work — Lead
+  Automation Analyst at HubSpot; role subtitle now reads "Lead Automation
+  Analyst · HubSpot"). **R1b done** — GitHub chip added to the profile
+  popup's Other Builds row (`github.com/aselkridge/aarons-portfolio`).
+  **R1c done** — planet-dot cursor replaced by Aaron's real sourced scanner
+  art (idle + a bigger/brighter lit state over anything clickable), picked
+  via a live hover-comparison mockup: Bebop 2 idle / Bebop 1 lit (warm),
+  source render idle / newest Drive upload lit (cool). Pure CSS swap on
+  `:root` custom properties, no JS touched. **R1a started, blocked** — tried
+  creating the `aarons-3d-portfolio` repo directly via the GitHub API and it
+  403'd (this session's GitHub App has no repo-creation permission); Aaron
+  needs to create it by hand and hand it back before the Walkman move can
+  continue.
+- **2026-07-20 later — R2a done**: real ship art in for both themes —
+  Swordfish II ("render 2") and Rocinante ("render 6") — chosen from 16
+  sourced candidates via a live spin-test review page (candidates drawn in a
+  fixed 3/4 hero-shot perspective visibly broke apart while spinning; true
+  top-down designs held their silhouette at every angle, which is what
+  decided it, not raw first impression). Touches: the flying cursor ship
+  (real `<img>` per theme, same rotate/translate math, untouched — Rocinante
+  needed a 90° rotate first, its source render was nose-left), the ship
+  picker (real renders, nose-right to match the existing launch direction),
+  the hangar-bay docked ship (`shipSVG()` reworked for `<img>`-based
+  markup), and the signoff slot (a flat red silhouette derived from the
+  Swordfish render — stays red in both themes, never tinted, per the
+  standing cross-theme-constants rule). Also closes issue #20 (cursor box
+  bumped 44→54×62). Verified headless across both themes, desktop + mobile,
+  zero console errors.
+- **2026-07-20 evening — bug round on the above**: Aaron reported the
+  scanner cursor (R1c) visually overlapping the flying ship, and that it
+  read too big generally. Root cause: the cursor is real (idle/lit swap
+  over `.brand`/`.console`, the two big `pointer-events:auto` zones inside
+  the full-viewport `.hud`), and the ship — which chases the mouse with a
+  lag/ease — frequently flies through those exact same corners, so a big
+  cursor image and the ship end up visually stacked. **Fix**: shrunk the
+  cursor a lot (idle 56px→26px, lit 70-76px→32-34px) rather than change the
+  interaction model — a custom cursor bitmap always paints above all page
+  content (OS-level, not something CSS z-index can touch), so shrinking is
+  the real lever, not layering. **Caveat**: headless screenshots cannot
+  render the OS-drawn custom cursor at all, so this fix is verified by CSS
+  value + hotspot alignment only — needs Aaron's real-browser confirmation
+  that the smaller size is enough, or whether it wants going further.
+  Also fixed in the same round: Rocinante now mirrors to face left and
+  launches off-screen left on the ship picker, opposite Swordfish's right
+  — matches the picker copy's own long-standing ◂/▸ arrow hints, which the
+  motion direction hadn't actually honored since Phase 4b shipped.
 
 ---
 
@@ -135,21 +189,21 @@ instruction — do not batch-fix these without his go-ahead on each.
 - **R1a. Separate the Walkman** (Aaron 2026-07-19: "its own separate thing").
   The Walkman currently IS the site root (`docs/index.html`); the game lives
   under `/docs/orbit/`. Plan: (1) move the Walkman to its own repo with its
-  own Pages URL (Aaron creates or okays the repo); (2) promote the orbit
-  game to the ROOT of this repo's site so the main URL opens the game
+  own Pages URL — repo name decided: `aarons-3d-portfolio`; (2) promote the
+  orbit game to the ROOT of this repo's site so the main URL opens the game
   directly (asset paths + og/meta + favicon updates); (3) remove the two
   cross-links (profile "OTHER BUILDS ↗ The Walkman" chip, mobile hint
   "Walkman ↗"); (4) optional redirect stub at the old orbit URL so shared
-  links keep working. DECISION NEEDED: new repo name + whether root
-  promotion happens same day.
-- **R1b. GitHub link in the profile window** — add "↗ GITHUB" to the
-  OTHER BUILDS row (and consider the dossier). NEEDED: which GitHub
-  profile/org URL to show.
-- **R1c. Scanner cursor v2** (replaces the planet-dot cursor): a futuristic
-  scanner/reticle cursor everywhere that isn't the ship, with a LIT/expanded
-  state whenever hovering anything clickable — buttons stop using the OS
-  pointer entirely. Two cursor sprites (idle + lit) per theme, hover wiring
-  via CSS on interactive selectors. Must stay legible on bright scenes.
+  links keep working. **BLOCKED 2026-07-20**: tried to create the repo
+  directly via the GitHub API, got a 403 — this session's GitHub App isn't
+  authorized to create repos, only to work in ones it's already been granted
+  access to. Aaron needs to create `aarons-3d-portfolio` by hand on
+  github.com (empty, public, no init needed) and say so — then this resumes.
+- ~~**R1b. GitHub link in the profile window**~~ **DONE 2026-07-20** — added
+  to the Other Builds row, links to `github.com/aselkridge/aarons-portfolio`.
+- ~~**R1c. Scanner cursor v2**~~ **DONE 2026-07-20** — idle + lit states, real
+  sourced art, both themes. Hotspots are eyeballed to each asset's lens
+  center, not pixel-measured — revisit if it ever feels off in real play.
 - **R1d. Micro-bug batch** — #19 log-count clip (re-verify post log-bar
   redesign), #11 banner timing, #2 projectile tunneling through planets
   (swept segment-circle test), #12a ₩20,000 threshold (Aaron decides value).
@@ -171,6 +225,22 @@ instruction — do not batch-fix these without his go-ahead on each.
   echoing the doorway — warm left / cool right); generate 1200×630,
   update og:image + twitter meta on the orbit page (and root once R1a
   promotes it).
+- **R1i. Return to the hangar doors from flight** (Aaron 2026-07-20: "a way
+  for players to return to the FIRST screen... from the orbit game
+  screen"). A visible HUD control (console row or nav row, styled to match
+  the existing chip family) that re-shows `#doorway`/`#shipsel` from
+  mid-flight — effectively re-running the front-door sequence on demand,
+  not just a page reload. Needs `gatesUp` re-armed and the running game
+  paused/hidden cleanly behind the doors while it's up, same guarantee the
+  boot sequence already relies on.
+- **R1j. Master audio mute toggle** (Aaron 2026-07-20: "toggle off all
+  audio at any time"). Today there's no single mute — the music player
+  only has its own play/pause, and `Sound` (`02-sound.js`) has no shared
+  gain/mute path; SFX and music are two separate systems. Needs one HUD
+  button that silences both at once (a shared muted flag `Sound`/`Music`
+  both check, or a master `GainNode` for SFX + muting the `<audio>`
+  element for music) and persists across the session so it doesn't reset
+  on its own mid-play.
 
 ### RCC — The Coldest Call (added 2026-07-20; runs as its own thread)
 Aaron's playable GTM-engineering game for AlphaForge. Spec: Aaron's build
@@ -186,29 +256,41 @@ window whose CTA routes to `coldest-call/`.
   (`openMissionBrief`), PLAYABLE card support in `10-content-viewer.js`,
   placeholder route at `docs/orbit/coldest-call/index.html`. Verified live
   both themes, desktop + 1349×789 + mobile; door only exists on AlphaForge.
-- **RCC-b. The game build** — the full 10–15 min run per the spec (stations
-  0–9, 24-citizen JSON, credit economy, column menu, the seam, rivals,
-  open scoring). Replaces the placeholder route. Type split is load-bearing:
-  Space Mono = tool voice, theme display face = human voice.
-- **RCC-c. Open decisions before RCC-b ships:** (1) astronaut walker — the
-  spec assumes a sprite system that does NOT exist; a walking character is
-  tier-C art (sourced sprite sheet or v1 without a walker) per the
-  medium-honesty rule; (2) rival names Natalie/Jordan/Adam — spec's own
-  flag: confirm they're not real cohortmates; Yash cameo is the friendly
-  slot and fine; (3) which theme skin v1 ships in (spec allows one skin
-  with hooks stubbed — site standard is both).
+- **RCC-b. The game build — SHIPPED LIVE 2026-07-20** (Aaron: "push the
+  game live. We are done"). The full run now lives at
+  `docs/orbit/coldest-call/index.html` (single self-contained page, all CSS
+  + JS inline; fonts relative to `docs/assets/fonts/`; art under
+  `coldest-call/assets/`: five character sprites Aaron picked from a
+  21-candidate live audition (pilot=Firefly26, engineer=21, offduty=17,
+  ronin=07, generic=12, crowd-tinted per person), two terrain strips
+  (bebop/expanse, world anchors read off the art's own landmarks), and the
+  orbit build's real ships (Swordfish II / Roci) parked at the landing site
+  with theme-colored ownership glows. Game loop: intro transmission →
+  suit select → walk the vertical strip through 4 stations → clay
+  workstation console takeover (live 24-row table, free-column trap) →
+  the seam (six human-written lines, three approaches) → send → debrief
+  (reward-card style, insights, honest zero-reply branch). Both themes via
+  in-game toggle or `?t=roci`/`#roci`; returns to `../#alphaforge`.
+  3-run Playwright suite in the session scratchpad passed on the shipped
+  build (exact credit math, silent branch, tutorial, free-column trap).
+  Sources/build pipeline (template.html, build.py for the inline-artifact
+  version, deploy.py for this site version, playtest.py) live in the build
+  session's scratchpad; the shipped page is the artifact of record.
+- **RCC-c. Open decisions — RESOLVED:** (1) walker = Aaron's sourced sprites
+  (tier-A ambient bob + rotate, per medium-honesty); (2) rival first names
+  kept per Aaron's direction (AlphaForge coach nods); (3) ships in BOTH
+  theme skins.
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are
 sourced, never hand-coded; I do shells, keying, compositing, animation tiers.
-- **R2a. NEW SHIPS** (Aaron 2026-07-19: replacing Swordfish/Rocinante with
-  new ships he'll upload). Touches: ship-picker slots (drop-in ready),
-  flying cursor sprite (currently inline SVG), hangar-bay ship, ship names/
-  copy on the picker + console toggle labels, and the signoff ship slot if
-  the warm ship changes. Also folds issue #20 (cursor ship a touch bigger).
-  NEEDED: two ship images (ideally transparent PNG, side profile).
-- **R2b. Signoff ship silhouette** → the red `[ SHIP ]` slot (superseded if
-  R2a's warm ship covers it).
+- ~~**R2a. NEW SHIPS**~~ **DONE 2026-07-20** — Swordfish II (render 2) and
+  Rocinante (render 6), picked from 16 candidates via a live spin-test
+  review (see SHIPPED above for the full rundown). Ship *names* didn't
+  change (still Swordfish II / Rocinante), just their art, so no copy
+  needed touching on the picker or console toggle labels.
+- ~~**R2b. Signoff ship silhouette**~~ **DONE 2026-07-20** — folded into R2a,
+  the red `[ SHIP ]` slot is now a real flat-red Swordfish II silhouette.
 - **R2c. Scene art** (old Phase 3): real layered backgrounds per station —
   scenes are deliberately figure-free right now. Per scene: declare
   animation tier (A ambient / B lights / C character) BEFORE sourcing,
@@ -239,19 +321,28 @@ showcasing myself" — the site is only done when the words are his)
   for calling content DONE.
 
 ### R4 — Ground Control + mobile (old 4c/4f/4g)
-- **R4a. Ground Control terminal + the full T14 console restyle** — the
-  calm career console (identity rail, CAREER/ABOUT/FACTS/QUOTES tabs)
-  unlocks the doorway's locked door; content comes ready-made from R3b.
-  The NAV·COM console gets its full T14 rebuild in the same pass (big
-  bounty hierarchy, true segmented SHIP/WPN toggles, bordered data footer,
-  reward-card header language) so GC and the console ship to one matched
-  standard — the console is the most wired-up component on the page
-  (hangar bay, minimize/chip, immersive toggle), so it gets its own full
-  regression run here, not a rider on another batch.
+- **R4a. Ground Control terminal + the full T14 console restyle +
+  readability scan** — the calm career console (identity rail,
+  CAREER/ABOUT/FACTS/QUOTES tabs) unlocks the doorway's locked door;
+  content comes ready-made from R3b. The NAV·COM console gets its full
+  T14 rebuild in the same pass (big bounty hierarchy, true segmented
+  SHIP/WPN toggles, bordered data footer, reward-card header language) so
+  GC and the console ship to one matched standard — the console is the
+  most wired-up component on the page (hangar bay, minimize/chip,
+  immersive toggle), so it gets its own full regression run here, not a
+  rider on another batch. Aaron 2026-07-20: some text/UI is "just too
+  small still" — a readability pass (font sizes, contrast, tap/click
+  targets) across every floating window and HUD panel rides along in this
+  same pass, since he ties it directly to the T14 rebuild; anything
+  trivially fixable sooner can still fold into R1d instead of waiting.
 - **R4b. Secret paths** — hidden Pong in GC corner, Ronin's GC entry,
   dual unlock (Pong win OR bounty threshold from R1d's decision).
-- **R4c. Mobile, the calm experience** — mobile-primary path via GC's
-  tap-menu model + the real touch fixes (issue #21). No average patches.
+- **R4c. Mobile — full review and rework** — mobile-primary path via GC's
+  tap-menu model + the real touch fixes (issue #21), PLUS Aaron's
+  2026-07-20 ask for a complete mobile pass end to end (doorway/picker,
+  stations, HUD/console, dossier, all modals) so nothing on a phone is
+  left half-checked — "flawless" is the bar, not just the touch-control
+  bug. No average patches.
 
 ### R5 — In-site tutorial (old Phase 5)
 Guided first-flight for visitors; the flight-manual modal's "run the

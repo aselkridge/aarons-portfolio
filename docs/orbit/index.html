@@ -33,22 +33,32 @@ canvas{display:block}
 #fx{position:fixed;inset:0;z-index:4;pointer-events:none}
 .system{position:fixed;inset:0;z-index:2;transition:opacity .5s ease}
 .system.warp{opacity:0;pointer-events:none}
-/* ── cursors ──
+/* ── cursors (R1c — scanner unit, real sourced art) ──
    In open space the SHIP is the cursor (cursor:none). Over any interface
-   surface the cursor is the theme planet dot — the same recurring motif as
-   the wordmark tittle (teal on warm / orange on cool) — instead of the OS
-   arrow/I-beam (the I-beam over dossier text was the "glitch"). Real
-   controls keep the system pointer so clickable stays unmistakable.
+   surface the cursor is Aaron's handheld scanner prop, idle by default;
+   it swaps to a bigger, brighter "lit" render over anything actually
+   clickable so the affordance reads without relying on color alone. Real
+   controls keep the OS pointer type (auto/pointer) so clickable stays
+   unmistakable even with the custom bitmap.
    cursor is inherited, so setting it on the containers covers their text. */
 :root{
-  --cur-teal:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAiUlEQVR42mNgGHGAkZACDg6eS+hiP3580SPZQGwGEWMwIyHDdHce1UWXv+xufRmXoUykGoYuju4TRlwGwjS52SEcsOvQJawuRXYlE7GGYePD1CG7konayYa+BqKHGTofG2AhpIAYQ3C6EBZbyOkMHyAYy7gSLynyTPiyEy5N+HIKffIyJaXN4AcAxltPuRe/nHsAAAAASUVORK5CYII=") 10 10;
-  --cur-orange:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAiklEQVR42mNgGHGAkZACDg6eS+hiP3580SPZQGwGEWMwIyHDXswz0EWXl0i6cBmXoUykGoYuju4TRlwGwjTxu7nB5T7u2oXVpciuZCLWMGx8mDpkVzJRO9nQ10D0MEPnYwMshBQQYwhOF8JiCzmd4QMEYxlX4iVFnglfdsKlCV9OoU9epqS0GfwAAAw5T7oGr4yVAAAAAElFTkSuQmCC") 10 10}
+  --cur-sword-idle:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAWCAYAAADwza0nAAADg0lEQVR4nHWT3WsjZRTGn/POZDLJTJJJ03w07W5qq8v6AavLtuBViouX3hQigl7sVa+992Lpv6B44wcoCooFET9AcC8sgoiisGLbbbu1303TZPI1k0wyM+/7emFTC7ue2/P84JzznIfwmIoaqdvZbP7NeDz2fBj4v7i9zidnJyf3APTPJUSX9AwAm7w6+/54LnsnnclA0yIIggCdbg9ez9l0u51v6lX77cGgdTgCFQA8kbBeuX7jha8tKynsMxuOYERSSm3okJXPU0SPYW9ra213e32eAUClUgEAJMZzd4yYLjb3amI7+RQ7zjxDx6U5dnB9gaqnTaEy+OP5/LPjucklOh9RZIFC6cbN7X7EMPdnXpQq4ySqRwBTwObLCI+rmP7zO1G4UqTdhztHrFwuMwC48mRxMWHqZiM+ETLTIHmyB/RDSMeD+PkelMIEbNUi8JCYwmJsYWFBAIAXT70qojEZCiIMPQAM0vUBLwQUgti6D6mbou+6cB33K7Z8fp2mPWSSFOiejbDjQRKBMlHA0kARFSIShSEHLOj3RKdR/4Bh+UcGAMOB+17dblExGkBpVSGSBZCZBDOSEGYO7OSAT0SGUhl4f3ie8xsDVjkAKubHv2jW6w98zpXZ4FiYjR0wPwAb+jD318TT1Aj1mMo6w/pnAAQDIHH3Lq2vr/uaru1ogwFUzuU0czDj7mDG25XTRsBCzqMb6w/vP9jxPh59DgMgABSv3ZzbvJWyzL1aXR5wQQldk5wL6nbam4Ne7912s/YRAAcAXdiRnZhazCQs8yhuhJGrUzRTzAhrLA1/0P/99PDvW+1m7Z0RBEBe2JFKW28YpgEecEqpQ7w+2xaqolLPcb8H4JZKJX0EAQBbXl4WhmE8l0hac0SQHFAKnRY2jqNUa7YhefAXANrfnw9G0CgRsDLZ15JWmgkheFRlOFTH+EYwpnid5reNRu3zSqXCgBV+OXoMgJZMpSuapiHknDEp4ZkmWoGPfrv1IQCsrKxcjt+/YDyZfimu69dCfyBJUZgEhCql0rEbVds+++Fcxx8Bc7nCkhqLCd8PhOQcBCGCwIfrdL8E0CuXy+rl3S7AMAxfVhWVqUYcUgoheEiddhvdZvtTAFhdXX0EAgDmuu5bh1vbp5mTmkL9ARNQlLZtrzlO81dA0uPG/K8MI3c7N7lUyk/9lJ964iCbLSyed5T/Q/4BEKSpNElrXRQAAAAASUVORK5CYII=") 4 0;
+  --cur-sword-lit:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAcCAYAAABsxO8nAAAFFklEQVR4nH2U22scZRjGn/f7ZvYwMzu7m93NxsREG6PQagVNRTBKFRURsRQ00AuLoKgX3nrhhSKCiHglHv4AD0WweiEqiFIhhdZ4xAMUWpuk1qbbNju7O7szO7Mz38GLbNqQRt/r5/t97/OeCFcHA6AAoFSpP2pZznOZTGZnmsR/+G3/wyBofQMg2KQnAJq2gzjl2lypXHqjaDt3l0bryJgGRCoQhH2EPf904Pe+aDXXPo3j3vENGG2BaMdxdtbGJn+anJ62siZXYAQ5iAiM6SRVFA8EGdxA1A/QvNA4Noh6881m8yK7wtnLAOiMVXi+Pj5uZa3cIAgC1vAkOyOuo5V4knk9k0QUKyVTMXbthJicvmHOzDnvAlDGFZ8LAoCdt539+YKtm6uXzAvVe9G7fR6yOAEmFIxkFebSIhtb/pLZUagdtyBct7h/UK/fuQHiAORo3nmwNlIZj7qhXJ2+nydPvgjmCSAYQGsTsnojsOcWNL4bAz/2HtVqBqvUasz3/ZcYAMwDGoAetQsHy0Vbt0VB93cdgOik0LkYNMJAJQmWHQBpgMFdD2GtOgsRx5R1HORyuTkGgB0G5FQV17g7Sg9JMApK13NZGIdcGUCeIZDWACeIDoMMJcjmSHbcjCiSgFZI06TNhkWGNMr7yKraWmuR5ovEpjKgEqCJoEOAugqGocANgMcaEibASIW9LgK/9/HlroVJLtP2U+SyGWQjD6QGMEcZ2CigHIIum0CBg1cIcDVy7WVtMs1bXiv2ff8DBiwoAOCUfNPx1pKBAh/pLGv8+it0sQijrsFtDW5LIEohhA35z1kU/v5ZmZxrs9M5CiSnNtaBe553UkrxSeNcg8pFJus/vI/oq98wOO9AGwVowwJ3CsBSA86hdzCajcBEn0S/e2hjTzbar8YmJ2c5yy665QpVx8eYF2bQLO1Gf8dtYBMuzLMrKP95BHU0ZNayEDZODn5YOjmJLlobIML6CBSmpm864xbcEcRCF0Zc4rkMEmECmsPkqTYypJIk5WsX19D2vNe8tdWXgXm+MZAMgLKLldmibZXt2+fUhbvuZ9H3R5E78TuMtANFGkEqKYpiHofBSj8K3/Zbl95af3tYDbs2DwDaylsH3dE6WZ1LqnJ2GebD+xG88ibk7ju1CgO0PK8R9vxnxerKrUMIDWusaZOt4o4bd52empmpkhKaxQllDEIwMQMDUBd/Oab+WlrZK66cDg5Abj4dHAC55cojI7VqlTOSIKLAKmJPvY1njCNqcO5v1u0Fp4cQY/j5Zcg6aH5er98h96DjFjWUArRGXkTIhn0stms6ShJIkfY3W8GWYDh8WAK5qYJbvM/MZAhaM8U4rDSBWNI4E7nU63hJEsevDwFbr+plaxipuo+Vq9UsaSXAGHEi9C0bC+PTMpRg/U7721Zr7TPgFbbV0mYQOW7pgJXPIU1T0nrdGtMKPJNBt9tD2A0+WNe+yraDAAAz8vk7ctnsLESqldKcaKjVWispeKflXep2m18Pa7NtNgDAyqXK06XqKPeDSEFrKKUh0xSGaci4HyHsBp8D6AJ7je2KvBEGA9vHOBNZyyXGGUQcQw5igHMWBgF6fu+jdenCf0IAgCmtF8//c85gQciZVNrM55RVHpEEQqu5diqOO8exzdxclVExCZ9spMkL5Sh6fNYt7DxhmBQ7NuQgQRxFHwIQ67YWxP+BrszEzEx2NkoeWE3lE4LYPQT8mMTdp3zf94eK/7X2LwPvfwGrsBarAAAAAElFTkSuQmCC") 5 0;
+  --cur-roci-idle:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAWCAYAAAAb+hYkAAADfUlEQVR4nG2UXWhbZRjH/8/7np7kJOck6Ufazq5fgtWu2sI2R0VqCjo2J27gDAiiiDj1QrxWvMhyJSJeiCBeKV7oTS1MRC8ER6eyiyFT6pwdzVq7pk1O89WkSU5yznnf15u2q8P/9fO7+P8enodwN5RKpSidTvNTzz73oh4wLhSrtck7rdbvmml8EekUl/78+vsKAE57RCqVYul0Wl54/c050oPP//zLVUT8JnpjFjaFjjLRen197WIxu/o5AUAymeRzc3PizLET5yIPjl1avJ0Rm8vLNNllsIvnx+XNbBvfLnvsWtYGpEoSAFJKYZaIn5iZXb7ZEx1eunFD2bkaCxsBPNSpgXHA17tE2RNsaSO/xJIAIyI1HQ084ZjmSKVaVrnsFhuYeBhPvf0W6mOP4uqmA7tW4zGNE4QYZluJBAHAbz1Dh4uRCCp2Tlp9Azj62ssgM4wzb7yCgfuH4EioLclAjG2wPRFrVvfoX2s5lS80wTs0xKJRLF7/A6vVGqyeXnjttqzV64p7boYAaAB8Ixo/rxvRb0IBLrdrVXbk5ElMPH0Kub9vYXF+Hr1WWK5t5JjR2nl1TzlLAfiwe/DXcNh8LCZaYr3pcG5FEWSE4ZHDolGu4p+VlZUpXR1nu8opDciZ6aO34z1xcDA10RXFEfJxyApj2y7yXL7IFdQ718rlGgEgACoxNRWLj09l7I1i9618VsFxKCR9lNqe7/iixIT/8bv1wgdpACyRSHAAsAZHZmuO150t5USnTuS268I1IwokfxqJh8fceuH9NCABSLawsCCS0zD6+0PpcqUK6bWo5bYQDAYBqSimOT9mMpkagMCeaUZEqn/y2IxmhCftnC31jg7mtV1FmsHhNxsPGO5XuxW8fQgABc3BFzbyLeW36xIKkEIK0jRlwL18ebVh787Jg5AqbIfG72TzpHFJntuCJAYdgoZN9wcASCSwfw0AwJKnT8crDX20UipA0xjzQaoj0sMN1Ww8OY55ALhyBeIgpK0UymdNZva13ZbUSTJNN4XrS75pFz96b26nAIAD/4WYI+klO2+rgHDQajYV0w1W2y5Vqzs7n+7tEPeENV2RcEmjjki36hsc9fWQBU/4XwKwgQQ/KGD/LwTM6Hf3GdYzVuchKpCCU99Bo1467lWL13dFiXshEIDZofjjj8S7PguGIjYPdn5Cd83+b/4FMKGRiX4le8MAAAAASUVORK5CYII=") 4 0;
+  --cur-roci-lit:url("data:image/png;base64,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") 6 0
+}
 @media (hover:hover){
   body{cursor:none}
   body.t-sword .hud,body.t-sword .panel,body.t-sword .rewardmodal,body.t-sword .contactwrap,
-  body.t-sword .hint,body.t-sword .gate{cursor:var(--cur-teal),default}
+  body.t-sword .hint,body.t-sword .gate{cursor:var(--cur-sword-idle),default}
   body.t-roci .hud,body.t-roci .panel,body.t-roci .rewardmodal,body.t-roci .contactwrap,
-  body.t-roci .hint,body.t-roci .gate{cursor:var(--cur-orange),default}
+  body.t-roci .hint,body.t-roci .gate{cursor:var(--cur-roci-idle),default}
+  /* real clickable controls swap to the bigger/brighter lit render — the
+     scanner "lights up" over anything you can actually click */
+  body.t-sword :is(.hud,.panel,.rewardmodal,.contactwrap,.hint,.gate) :is(button,a,input,[role="button"],.chip)
+    {cursor:var(--cur-sword-lit),pointer}
+  body.t-roci :is(.hud,.panel,.rewardmodal,.contactwrap,.hint,.gate) :is(button,a,input,[role="button"],.chip)
+    {cursor:var(--cur-roci-lit),pointer}
   /* game chrome is not a document — no text selection while strafing */
   .hud{user-select:none}
 }
@@ -193,8 +203,25 @@ body.t-roci .planet .tag{border:1px solid var(--pc);clip-path:polygon(0 0,calc(1
   100%{opacity:.55;transform:scale(1)}}
 .planet.materialize .pglow{animation:materializeglow 3.4s ease-out}
 
-/* ───────── ship cursor (touch flight keeps it on mobile) ───────── */
-.rocket{position:fixed;z-index:8;width:44px;height:44px;margin:-22px 0 0 -22px;pointer-events:none;will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+/* ───────── ship cursor (touch flight keeps it on mobile) ─────────
+   Real sourced renders (R2a) replaced the inline-SVG placeholder ships.
+   Each theme's <img> sits in its own always-present group (kept as plain
+   divs, still id="ship-sword"/"ship-roci" so applyTheme()'s existing
+   show/hide + the hangar-bay shipSVG() reuse both keep working
+   untouched) with object-fit:contain so a wide fighter (Swordfish) and a
+   slim dagger-shaped hull (Rocinante) both scale to the same true length
+   without distortion — the leftover transparent margin on a narrower
+   hull is correct, not a bug. Box bumped 44→54×62 per issue #20 ("cursor
+   ship a touch bigger"). */
+.rocket{position:fixed;z-index:8;width:54px;height:62px;margin:-31px 0 0 -27px;pointer-events:none;will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.rocket .shipgrp{position:absolute;inset:0}
+.rocket .ship-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+/* soft engine glow — themed per ship, sits behind the hull at the tail end;
+   the existing per-frame .flame opacity flicker (09-main.js) still drives it */
+.rocket .flame{position:absolute;left:50%;bottom:6%;width:34%;height:22%;transform:translateX(-50%);
+  border-radius:50%;filter:blur(3px);pointer-events:none}
+#ship-sword .flame{background:radial-gradient(circle,#ffd36a,#f0a63c 55%,transparent 75%)}
+#ship-roci .flame{background:radial-gradient(circle,#e2f6ff,#4fb8e8 55%,transparent 75%)}
 
 /* FIRE button — touch devices only */
 #fireb{display:none;position:fixed;left:18px;bottom:88px;z-index:12;width:74px;height:74px;border-radius:50%;
@@ -497,10 +524,12 @@ body.t-roci .log-item.unseen .ld{text-shadow:0 0 16px rgba(79,184,232,.55)}
 /* contrail: fades out toward the text, solid at the ship end */
 .sg-trail{width:clamp(28px,6vw,84px);height:1px;flex:none;
   background:linear-gradient(90deg,rgba(224,64,47,0),rgba(224,64,47,.8))}
-/* labeled placeholder for the sourced Swordfish II silhouette — RED in both
-   themes; swaps to the real art the moment Aaron supplies it */
-.sg-ship{flex:none;border:1px dashed rgba(224,64,47,.6);border-radius:3px;padding:3px 7px;
-  font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:#e0402f;text-shadow:none;text-transform:uppercase}
+/* Swordfish II silhouette (R2a) — a flat red derivative of the real chosen
+   render, nose-right to match the contrail direction. RED in both themes,
+   never theme-swaps — the one deliberate cross-theme constant alongside
+   the A mark and Space Mono. */
+.sg-ship{flex:none;width:clamp(30px,4.4vw,40px);height:auto;object-fit:contain;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
 .sign:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
 @media (max-width:720px){ .sign{font-size:1.7rem} }
 
@@ -693,7 +722,9 @@ body.t-sword .bay-floor{background:repeating-linear-gradient(45deg,#f0a63c 0 9px
 body.t-roci .bay-floor{background:repeating-linear-gradient(45deg,rgba(79,184,232,.55) 0 9px,rgba(6,14,24,.9) 9px 18px);box-shadow:0 -2px 0 rgba(79,184,232,.6)}
 .bay-ship{position:absolute;left:50%;bottom:-46px;width:40px;height:46px;transform:translateX(-50%);z-index:2;
   transition:bottom .5s cubic-bezier(.5,0,.5,1),opacity .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
-.bay-ship svg{width:100%;height:100%;display:block}
+.bay-ship .shipgrp{position:absolute;inset:0}
+.bay-ship .ship-img{width:100%;height:100%;object-fit:contain;display:block}
+.bay-ship .flame{display:none}
 .console.ship-in .bay-ship{bottom:34%}
 /* launch: hold full opacity for most of the climb, fade only near the top —
    a fade that finishes early is indistinguishable from an empty bay */
@@ -1329,18 +1360,18 @@ body.t-roci .rm-pick.hero{border-color:#4fb8e8;background:linear-gradient(180deg
 .gt-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:#9a917f;text-transform:uppercase}
 .gate-foot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;
   letter-spacing:.14em;color:#847c6e;text-transform:uppercase;text-align:center;pointer-events:none;max-width:92vw;line-height:1.6}
-.gs-slot{width:min(300px,64vw);height:min(150px,28vw);border:1px dashed;border-radius:8px;position:relative;
+.gs-slot{width:min(300px,64vw);height:min(190px,34vw);border-radius:8px;position:relative;
   display:flex;align-items:center;justify-content:center;margin-top:22px}
-#pick-sword .gs-slot{border-color:#6b4e1a;background:rgba(240,166,60,.04)}
-#pick-roci .gs-slot{border-color:#2b5a7a;background:rgba(79,184,232,.04)}
-.gs-ship{width:min(150px,32vw);height:44px;transition:transform .8s cubic-bezier(.6,-.08,.9,.6),opacity .7s ease .15s}
-#pick-sword .gs-ship{background:rgba(240,166,60,.5);clip-path:polygon(0 50%,55% 20%,100% 42%,100% 58%,55% 80%);
-  box-shadow:0 0 26px rgba(240,166,60,.4)}
-#pick-roci .gs-ship{height:52px;background:rgba(79,184,232,.5);clip-path:polygon(0 42%,78% 12%,100% 44%,100% 56%,78% 88%,0 58%);
-  box-shadow:0 0 26px rgba(79,184,232,.4)}
-.gs-note{position:absolute;bottom:8px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:#8a7c64;text-transform:uppercase}
-#pick-roci .gs-note{color:#6f8496}
-.gate-half.chosen .gs-ship{transform:translateX(96vw);opacity:0}
+#pick-sword .gs-slot{background:radial-gradient(ellipse at center,rgba(240,166,60,.10),transparent 70%)}
+#pick-roci .gs-slot{background:radial-gradient(ellipse at center,rgba(79,184,232,.10),transparent 70%)}
+.gs-ship{max-width:min(210px,42vw);max-height:100%;object-fit:contain;display:block;
+  transition:transform .8s cubic-bezier(.6,-.08,.9,.6),opacity .7s ease .15s}
+#pick-sword .gs-ship{filter:drop-shadow(0 0 26px rgba(240,166,60,.4))}
+#pick-roci .gs-ship{filter:drop-shadow(0 0 26px rgba(79,184,232,.4))}
+/* Bebop launches off to the right, Expanse to the left — mirrors the
+   ships' own facing (R1e/latest ask, 2026-07-20) */
+#pick-sword.gate-half.chosen .gs-ship{transform:translateX(96vw);opacity:0}
+#pick-roci.gate-half.chosen .gs-ship{transform:translateX(-96vw);opacity:0}
 .gate-flash{position:absolute;inset:0;background:#eef4ff;opacity:0;pointer-events:none}
 #shipsel.launching .gate-flash{animation:gflash 1s ease .5s both}
 @keyframes gflash{0%{opacity:0}45%{opacity:.92}100%{opacity:0}}
@@ -1486,23 +1517,16 @@ body.t-roci .bnr .bk{color:#9affea}
 
 <canvas id="fx"></canvas>
 
-<svg class="rocket" id="rocket" viewBox="0 0 40 44" aria-hidden="true">
-  <g id="ship-sword">
-    <path d="M13 13 L7.5 4 L12.5 13 Z" fill="#b83227"/><path d="M27 13 L32.5 4 L27.5 13 Z" fill="#b83227"/>
-    <path d="M20 5 C24.2 12 25 20 23 28 L17 28 C15 20 15.8 12 20 5 Z" fill="#e0402f" stroke="#2a0f0a" stroke-width="1"/>
-    <path d="M20 6 L20 28" stroke="#a52a1f" stroke-width=".7"/>
-    <ellipse cx="20" cy="15" rx="2.5" ry="3.3" fill="#ffd36a" stroke="#2a0f0a" stroke-width=".8"/>
-    <path d="M17 26 L12.5 31 L18 28 Z" fill="#b83227"/><path d="M23 26 L27.5 31 L22 28 Z" fill="#b83227"/>
-    <path class="flame" d="M17.6 28 L20 40 L22.4 28 Z" fill="#f0a63c"/><path class="flame" d="M18.6 28 L20 35 L21.4 28 Z" fill="#fff1c0"/>
-  </g>
-  <g id="ship-roci" style="display:none">
-    <path d="M13 18 L5.5 27 L14 24 Z" fill="#6f7a89"/><path d="M27 18 L34.5 27 L26 24 Z" fill="#6f7a89"/>
-    <path d="M20 3 L27 20 L24 29 L16 29 L13 20 Z" fill="#9aa4b2" stroke="#0a0e14" stroke-width="1"/>
-    <path d="M20 3 L20 29" stroke="#5b6472" stroke-width=".8"/>
-    <path d="M18 9.5 L22 9.5 L21 15 L19 15 Z" fill="#4fb8e8"/>
-    <path class="flame" d="M16 29 L20 42 L24 29 Z" fill="#4fb8e8" opacity=".92"/><path class="flame" d="M17.6 29 L20 37 L22.4 29 Z" fill="#e2f6ff"/>
-  </g>
-</svg>
+<div class="rocket" id="rocket" aria-hidden="true">
+  <div class="shipgrp" id="ship-sword">
+    <img class="ship-img" src="assets/ships/swordfish2.png" alt="">
+    <i class="flame"></i>
+  </div>
+  <div class="shipgrp" id="ship-roci" style="display:none">
+    <img class="ship-img" src="assets/ships/rocinante6.png" alt="">
+    <i class="flame"></i>
+  </div>
+</div>
 
 <div class="tgtbox" id="tgtbox"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i><span class="lab" id="tgtlab">TGT</span></div>
 <div class="titlecard" id="titlecard"><div class="s" id="tc-s">SESSION</div><div class="n" id="tc-n">STATION</div></div>
@@ -1542,12 +1566,12 @@ body.t-roci .bnr .bk{color:#9affea}
         <div class="dz-bd">
           <button class="dz-id" id="dz-id" type="button" aria-haspopup="dialog" aria-controls="contactwrap">
             <span class="dz-ava"><img src="assets/aaron.jpg" alt="" onerror="this.parentElement.classList.add('noimg')"><i>AS</i></span>
-            <span class="dz-nm"><b>Aaron Selkridge</b><span>Lead Automation Analyst · GTM Engineer</span><em>▸ opens transmission</em></span>
+            <span class="dz-nm"><b>Aaron Selkridge</b><span>Lead Automation Analyst · HubSpot</span><em>▸ opens transmission</em></span>
           </button>
           <p class="dz-line">Bronx-born, aerospace by degree — an engineer and artist who builds technology that serves people.</p>
           <div class="dz-chips">
             <div><i>SECTORS</i><b>GTM · AI</b></div>
-            <div><i>STATUS</i><b class="ok">Open to crew</b></div>
+            <div><i>STATUS</i><b class="ok">Active duty</b></div>
           </div>
           <div class="dz-cta">
             <a class="pri" href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
@@ -1615,7 +1639,7 @@ body.t-roci .bnr .bk{color:#9affea}
       <button class="sign" id="sign" type="button" aria-haspopup="dialog" aria-controls="contactwrap">
         <span class="sg-t">See you, space cowboy…</span>
         <span class="sg-trail" aria-hidden="true"></span>
-        <span class="sg-ship" aria-hidden="true" title="Swordfish II silhouette — asset incoming">[ ship ]</span>
+        <img class="sg-ship" src="assets/ships/swordfish2_red.png" alt="" aria-hidden="true">
       </button>
     </div>
     <div class="player" id="player">
@@ -1696,8 +1720,9 @@ body.t-roci .bnr .bk{color:#9affea}
      Doorway: diagonal split — LAUNCH (live) vs GROUND CONTROL (present but
      locked/under-construction until 4c is built, per Aaron). Then the ship
      picker: a SECOND diagonal split, Swordfish vs Rocinante; the clicked
-     ship launches off-screen and we warp into that system. Ship art =
-     image slots (CSS silhouettes stand in until Aaron sources renders).
+     ship launches off-screen and we warp into that system. Ship art (R2a):
+     real sourced renders — assets/ships/*_picker.png, nose-right to match
+     the launch-off-screen direction.
      Deep links (#station) skip both gates — see 08-ui.js. -->
 <div class="gate" id="doorway" aria-label="Choose your approach">
   <div class="gate-stars"></div>
@@ -1732,14 +1757,14 @@ body.t-roci .bnr .bk{color:#9affea}
     <div class="gh-k warm">◆ WARM SYSTEM</div>
     <div class="gh-t">COWBOY<br>BEBOP</div>
     <div class="gh-sub">SHIP · SWORDFISH II</div>
-    <div class="gs-slot"><div class="gs-ship"></div><div class="gs-note">[ Swordfish II · render drops in ]</div></div>
+    <div class="gs-slot"><img class="gs-ship" src="assets/ships/swordfish2_picker.png" alt="Swordfish II"></div>
     <div class="gh-f warm">▸ CLICK TO LAUNCH</div>
   </div>
   <div class="gate-half gr" id="pick-roci" role="button" tabindex="0">
     <div class="gh-k cold">COOL SYSTEM ◆</div>
     <div class="gh-t chak">THE<br>EXPANSE</div>
     <div class="gh-sub">SHIP · ROCINANTE</div>
-    <div class="gs-slot"><div class="gs-ship"></div><div class="gs-note">[ Rocinante · render drops in ]</div></div>
+    <div class="gs-slot"><img class="gs-ship" src="assets/ships/rocinante6_picker_left.png" alt="Rocinante"></div>
     <div class="gh-f cold">LAUNCH TO WARP ◂</div>
   </div>
   <div class="gate-seam"></div>
@@ -1832,7 +1857,7 @@ body.t-roci .bnr .bk{color:#9affea}
       </div>
       <div class="contact-more">
         <div class="contact-more-label">◆ Other builds</div>
-        <div class="contact-more-list"><a class="cc-chip" href="../">↗ The Walkman</a><span class="cc-chip dim">more soon</span></div>
+        <div class="contact-more-list"><a class="cc-chip" href="../">↗ The Walkman</a><a class="cc-chip" href="https://github.com/aselkridge/aarons-portfolio" target="_blank" rel="noopener">↗ GitHub</a><span class="cc-chip dim">more soon</span></div>
       </div>
     </div>
   </div>
@@ -1849,9 +1874,9 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/04-world.js?v=16"></script>
 <script src="js/05-combat.js?v=17"></script>
 <script src="js/06-flight.js?v=13"></script>
-<script src="js/10-content-viewer.js?v=4"></script>
-<script src="js/07-environments.js?v=20"></script>
-<script src="js/08-ui.js?v=26"></script>
+<script src="js/10-content-viewer.js?v=5"></script>
+<script src="js/07-environments.js?v=21"></script>
+<script src="js/08-ui.js?v=28"></script>
 <script src="js/09-main.js?v=13"></script>
 </body>
 </html>
