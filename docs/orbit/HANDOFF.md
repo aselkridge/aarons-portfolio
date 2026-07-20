@@ -5,12 +5,13 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-20 (code paused-round resumed for four small live fixes:
-employment-status correction, R1b GitHub link, R1c real scanner cursor — see
-SHIPPED below. R1a blocked on Aaron: the GitHub App this session runs under
-can't create repos — `aarons-3d-portfolio` needs to be created by Aaron by
-hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged below;
-still paused except for the items Aaron explicitly greenlit this round.)
+Last updated: 2026-07-20 later (R2a shipped — real ship art, Swordfish II 2 +
+Rocinante 6, chosen off a live spin-test review; also closes issue #20. Earlier
+today: employment-status correction, R1b GitHub link, R1c real scanner cursor
+— see SHIPPED below. R1a still blocked on Aaron: the GitHub App this session
+runs under can't create repos — `aarons-3d-portfolio` needs to be created by
+Aaron by hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged
+below; still paused except for the items Aaron explicitly greenlit.)
 
 Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
 master audio mute, readability→R4a, mobile rework→R4c, picker exit
@@ -91,7 +92,7 @@ instruction — do not batch-fix these without his go-ahead on each.
 | ~~18~~ | ~~Ship-swap hangar: doors open on the *outbound* leg but the bay looks empty — no visible "ship flies out" moment (docking/inbound leg works fine)~~ **FIXED 2026-07-18** | Root cause (confirmed with live measured computed styles, not source-reading): on the outbound leg, `bay-open` (550ms door reveal) and `ship-out` (500ms exit, but only **300ms opacity fade**) fired on the same tick with no stagger — measured mid-run, the ship's opacity had already hit ~0 by the time the doors were only ~56% open, so the bay always looked empty; the inbound leg works precisely because it staggers (doors get a 260ms head start on the ship). Additionally, `ship-in` was removed the instant the ship SVG swapped, so the new ship never sat visibly parked. **Fix (mirrors the working inbound stagger, in reverse):** the new ship now stays parked (`ship-in` kept) when the theme flips behind closed doors; doors open first at 2300ms revealing the parked ship; `ship-out` fires at 2850ms — 550ms later, once the doors are essentially fully open; the exit's opacity fade now holds full opacity for most of the climb (0.3s delay) and fades only near the top; sequence-end cleanup moved 3150→3700ms to fit. **Verified** by re-running the same 140ms-interval computed-style sampling that diagnosed the bug: doors ≥87% open with the ship parked at full opacity, then the ship visibly climbing at full opacity with doors wide open across multiple samples — the exact condition that never once occurred pre-fix — and the sequence still ends clean (all classes removed, `state==='free'`). | `08-ui.js` (`shipSwap`), `index.html` (`.ship-out` transition) |
 | ~~10~~ | ~~Popups vanish too fast; no way to see what you've done~~ **FIXED 2026-07-18 (as the "Mission Log")** | Toasts self-remove after ~5.2s, banners after ~3.6s, and no history existed anywhere — this needed a new data structure, not a timer tweak. **Built:** `Progress.logEvent()` (`03-progress.js`) records every popup — achievements, transmissions/pilot facts, major-event banners — into `Progress.d.log` in `localStorage` (capped at 200 entries), hooked into `toast()` and `banner()` at the source so nothing that pops can escape being logged. New "◈ LOG" button in the header nav row (next to the "?" button) opens a scrollable Mission Log panel — same glass-panel styling family as the hint popover — listing everything newest-first with kind/title/description/timestamp; closes on outside-click or Escape; shows a friendly empty state on a fresh profile. Unlike the secret planet (session-only by design), the log deliberately **persists across sessions** — it's the "go back and see what you've done" record. **Verified**: fresh profile shows the empty state; generated real achievement/banner/fact events, **hard-reloaded the page**, and confirmed all three appear in the panel newest-first with correct kind labels (persistence proven, not assumed); Escape closes it; screenshotted the open panel. | `03-progress.js` (`logEvent`, hooks), `08-ui.js` (panel behavior), `index.html` (markup/CSS) |
 | 19 | Log panel: the (badge/count) number is cut off in the Expanse (Rocinante) theme | Reported by Aaron with a screenshot 2026-07-18 — the numeric value in the ◈ LOG panel is clipped in the Expanse theme specifically (likely a theme-specific `clip-path`/padding/overflow on the badge or tab-count chip). NOT yet diagnosed against the live code — diagnose the exact element before touching it. Small, self-contained fix (fold into a quick-wins batch). | `08-ui.js` / `index.html` (log panel + `.tab-new` / badge CSS — TBC) |
-| 20 | Ships feel a little small (FYI, not urgent) | Aaron's note: the flying ship cursor could stand to be a touch bigger overall for presence. Separate from the *hangar-bay* ship-too-small point already captured in issue #5 (that one is the docked ship inside the console). Both are size passes; batch with Phase 3 (visual fidelity) since ship art/scale is part of that. | `index.html` (`.rocket` sizing) for the cursor ship; `07-environments.js` for the bay ship |
+| ~~20~~ | ~~Ships feel a little small~~ **FIXED 2026-07-20** | Landed as part of R2a's real-ship-art pass — `.rocket`'s box went 44×44 → 54×62 alongside the SVG→`<img>` swap, since both changes touched the exact same CSS rule. The hangar-bay docked ship (the other half of this note) stayed at its existing 40×46 — Aaron's note was specifically about the flying cursor's presence, not the bay. | `index.html` (`.rocket` sizing) |
 | 21 | Mobile touch controls fight the device (LOW priority) | Reported by Aaron 2026-07-18: on a phone the page pans/zooms during play, and a *fire* touch and a *move* touch aren't distinguished — the game can't tell you're trying to do both, so multitouch flails. Two layers: (a) the true bug — the page isn't locking touch gestures (`touch-action:none` + preventDefault missing) and touch handling doesn't track fingers by pointer ID; (b) the bigger design question of whether precise dual-touch flight belongs on mobile at all. See the "MOBILE experience" cross-cutting item in §3 for the recommended direction (calmer tap-to-travel / assisted mobile mode, resolved alongside Phase 4 Ground Control). Do NOT ship an average patch here — Aaron cares about the mobile quality. | touch/pointer handling in `05-combat.js` / `06-flight.js` / `09-main.js`; `index.html` (`touch-action` CSS) |
 
 ---
@@ -136,6 +137,21 @@ instruction — do not batch-fix these without his go-ahead on each.
   403'd (this session's GitHub App has no repo-creation permission); Aaron
   needs to create it by hand and hand it back before the Walkman move can
   continue.
+- **2026-07-20 later — R2a done**: real ship art in for both themes —
+  Swordfish II ("render 2") and Rocinante ("render 6") — chosen from 16
+  sourced candidates via a live spin-test review page (candidates drawn in a
+  fixed 3/4 hero-shot perspective visibly broke apart while spinning; true
+  top-down designs held their silhouette at every angle, which is what
+  decided it, not raw first impression). Touches: the flying cursor ship
+  (real `<img>` per theme, same rotate/translate math, untouched — Rocinante
+  needed a 90° rotate first, its source render was nose-left), the ship
+  picker (real renders, nose-right to match the existing launch direction),
+  the hangar-bay docked ship (`shipSVG()` reworked for `<img>`-based
+  markup), and the signoff slot (a flat red silhouette derived from the
+  Swordfish render — stays red in both themes, never tinted, per the
+  standing cross-theme-constants rule). Also closes issue #20 (cursor box
+  bumped 44→54×62). Verified headless across both themes, desktop + mobile,
+  zero console errors.
 
 ---
 
@@ -206,14 +222,13 @@ instruction — do not batch-fix these without his go-ahead on each.
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are
 sourced, never hand-coded; I do shells, keying, compositing, animation tiers.
-- **R2a. NEW SHIPS** (Aaron 2026-07-19: replacing Swordfish/Rocinante with
-  new ships he'll upload). Touches: ship-picker slots (drop-in ready),
-  flying cursor sprite (currently inline SVG), hangar-bay ship, ship names/
-  copy on the picker + console toggle labels, and the signoff ship slot if
-  the warm ship changes. Also folds issue #20 (cursor ship a touch bigger).
-  NEEDED: two ship images (ideally transparent PNG, side profile).
-- **R2b. Signoff ship silhouette** → the red `[ SHIP ]` slot (superseded if
-  R2a's warm ship covers it).
+- ~~**R2a. NEW SHIPS**~~ **DONE 2026-07-20** — Swordfish II (render 2) and
+  Rocinante (render 6), picked from 16 candidates via a live spin-test
+  review (see SHIPPED above for the full rundown). Ship *names* didn't
+  change (still Swordfish II / Rocinante), just their art, so no copy
+  needed touching on the picker or console toggle labels.
+- ~~**R2b. Signoff ship silhouette**~~ **DONE 2026-07-20** — folded into R2a,
+  the red `[ SHIP ]` slot is now a real flat-red Swordfish II silhouette.
 - **R2c. Scene art** (old Phase 3): real layered backgrounds per station —
   scenes are deliberately figure-free right now. Per scene: declare
   animation tier (A ambient / B lights / C character) BEFORE sourcing,
