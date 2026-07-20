@@ -13,8 +13,15 @@
 <meta property="og:title" content="Aaronautics — Orbit">
 <meta property="og:description" content="Aaron Selkridge's flight-systems portfolio. Fly the system, clear asteroids, land on worlds.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://aselkridge.github.io/aarons-portfolio/docs/orbit/index.html">
 <meta property="og:image" content="https://aselkridge.github.io/aarons-portfolio/docs/assets/brand/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aaronautics — Aaron Selkridge's flight-systems portfolio">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aaronautics — Orbit">
+<meta name="twitter:description" content="Aaron Selkridge's flight-systems portfolio. Fly the system, clear asteroids, land on worlds.">
+<meta name="twitter:image" content="https://aselkridge.github.io/aarons-portfolio/docs/assets/brand/og.png">
 <link rel="stylesheet" href="../assets/fonts/fonts.css?v=4">
 <style>
 :root{
@@ -1392,14 +1399,26 @@ body.t-roci .bnr{background:rgba(6,16,28,.92);color:#eaf7ff;border:1px solid #4f
 body.t-roci .bnr .bk{color:#9affea}
 @keyframes bnrpulse{0%,100%{box-shadow:0 0 26px rgba(79,184,232,.4)}50%{box-shadow:0 0 42px rgba(79,184,232,.7)}}
 
-/* ───────── boot ───────── */
-#boot{position:fixed;inset:0;z-index:40;background:#050609;display:grid;place-items:center;transition:opacity .7s ease,visibility .7s}
+/* ───────── boot (R1f — branded loader, a deliberate exception to the
+   mark-only-screens rule: wordmark + mark together as a brand moment) ───────── */
+#boot{position:fixed;inset:0;z-index:40;background:radial-gradient(130% 100% at 50% 42%,#120d09 0%,#050609 70%);
+  display:grid;place-items:center;transition:opacity .7s ease,visibility .7s}
 #boot.gone{opacity:0;visibility:hidden;pointer-events:none}
-#boot .b{font-family:var(--mono);font-size:clamp(11px,1.4vw,14px);letter-spacing:.34em;color:var(--accent);text-transform:uppercase;text-align:center;line-height:2.4}
-#boot .b b{color:var(--ink);font-weight:400}
-#boot .big{font-family:var(--anton);font-size:clamp(2.4rem,9vw,6rem);letter-spacing:.02em;color:transparent;-webkit-text-stroke:1.4px rgba(239,236,230,.55);display:block;margin:.1em 0}
-#boot .cur{display:inline-block;width:.6em;height:1.05em;background:var(--accent);vertical-align:-12%;animation:bl 1s steps(1) infinite}
-@keyframes bl{50%{opacity:0}}
+.boot-inner{display:flex;flex-direction:column;align-items:center;gap:22px}
+.boot-word{font-family:var(--display);font-size:clamp(1.8rem,5vw,3.2rem);text-transform:uppercase;
+  line-height:.8;letter-spacing:.01em}
+.boot-mark-wrap{position:relative;width:clamp(64px,10vw,96px);height:clamp(64px,10vw,96px)}
+.boot-mark-wrap img{width:100%;height:100%;object-fit:contain;position:relative;z-index:1;
+  filter:drop-shadow(0 2px 14px rgba(0,0,0,.6))}
+.boot-orbit{position:absolute;inset:-16px;border-radius:50%;border:1px dashed rgba(53,193,209,.22);
+  animation:bootspin 2.4s linear infinite}
+.boot-orbit .dot{position:absolute;top:-4px;left:50%;width:8px;height:8px;margin-left:-4px;border-radius:50%;
+  background:#35c1d1;box-shadow:0 0 8px #35c1d1,0 0 18px rgba(53,193,209,.7)}
+@keyframes bootspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.boot-status{font-family:var(--mono);font-size:clamp(10px,1.3vw,12px);letter-spacing:.28em;
+  color:var(--dim);text-transform:uppercase;text-align:center;min-height:1.4em;
+  transition:opacity .18s}
+.boot-status.swap{opacity:0}
 
 @media (max-width:720px){
   #ach{top:120px;width:min(260px,72vw)}
@@ -1671,7 +1690,16 @@ body.t-roci .bnr .bk{color:#9affea}
   <div class="gate-flash"></div>
 </div>
 
-<div id="boot"><div class="b">◈ Aaronautics<span class="big">NAV SYSTEMS</span><b>online</b> <span class="cur"></span></div></div>
+<div id="boot">
+  <div class="boot-inner">
+    <div class="boot-word"><span class="wm-a">Aaro</span><span class="wm-n">naut<span class="pi">ı<span class="tit"></span></span>cs</span></div>
+    <div class="boot-mark-wrap">
+      <span class="boot-orbit"><i class="dot"></i></span>
+      <img src="../assets/brand/mark-transparent.png" alt="Aaronautics">
+    </div>
+    <div class="boot-status" id="boot-status">ANALYZING SIGNAL…</div>
+  </div>
+</div>
 
 <div id="banner" aria-live="assertive"></div>
 <div id="ach" aria-live="polite"></div>
@@ -1775,6 +1803,6 @@ body.t-roci .bnr .bk{color:#9affea}
 <script src="js/10-content-viewer.js?v=3"></script>
 <script src="js/07-environments.js?v=19"></script>
 <script src="js/08-ui.js?v=27"></script>
-<script src="js/09-main.js?v=13"></script>
+<script src="js/09-main.js?v=14"></script>
 </body>
 </html>

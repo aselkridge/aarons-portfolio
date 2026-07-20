@@ -261,8 +261,20 @@ requestAnimationFrame(loop);
 /* ══════════ RESIZE / BOOT / DEEP LINK ══════════ */
 addEventListener('resize', function(){ metrics(); sizeCanvases(); sizeOrbits(); sunMetrics(); initStars(); if(envScene) sizeEnv(); });
 var boot=$('boot');
-setTimeout(function(){ boot.classList.add('gone'); },1900);
-boot.addEventListener('click', function(){ boot.classList.add('gone'); });
+/* R1f — cycling launch-prep words, LLM-loader style. Swaps text with a
+   quick fade rather than a hard cut so it reads as "still working," not
+   a glitch. Interval is cleared the moment boot is dismissed (click or
+   timeout) so it can never keep ticking behind the scenes. */
+var BOOT_WORDS=['ANALYZING SIGNAL…','CHECKING FUEL…','PLOTTING TRAJECTORY…','CALIBRATING NAV·COM…','IGNITION…'];
+var bootStatus=$('boot-status'), bootWordI=0;
+var bootWordTimer=setInterval(function(){
+  bootWordI=(bootWordI+1)%BOOT_WORDS.length;
+  bootStatus.classList.add('swap');
+  setTimeout(function(){ bootStatus.textContent=BOOT_WORDS[bootWordI]; bootStatus.classList.remove('swap'); },180);
+},520);
+function dismissBoot(){ boot.classList.add('gone'); clearInterval(bootWordTimer); }
+setTimeout(dismissBoot,2700);
+boot.addEventListener('click', dismissBoot);
 addEventListener('load', function(){
   Music.init();
   var hsh=location.hash.slice(1), s=ALL.filter(function(x){return x.id===hsh;})[0];

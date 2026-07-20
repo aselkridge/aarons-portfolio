@@ -2,28 +2,41 @@
 <style>
 @font-face{font-family:'Anton';src:url('../fonts/anton-400.woff2') format('woff2')}
 @font-face{font-family:'Space Mono';src:url('../fonts/space-mono-400.woff2') format('woff2')}
-body{margin:0;width:1200px;height:630px;overflow:hidden;position:relative;
- background:radial-gradient(130% 120% at 50% 20%,#1a1310 0%,#0e0a07 50%,#080605 100%);
+*{box-sizing:border-box}
+body{margin:0;width:1200px;height:630px;overflow:hidden;position:relative;background:#07060a;
  font-family:'Anton',sans-serif;color:#efece6}
 .star{position:absolute;background:#ffe9cf;border-radius:50%}
-.sun{position:absolute;right:-130px;top:-130px;width:420px;height:420px;border-radius:50%;
- background:radial-gradient(circle at 40% 40%,#ffe9b0,#ffb44a 45%,#e06a28 100%);
- box-shadow:0 0 120px rgba(255,150,60,.55)}
-.orbit{position:absolute;left:50%;top:58%;width:1500px;height:420px;border:2px solid rgba(239,236,230,.14);
- border-radius:50%;transform:translate(-50%,-50%) rotate(-8deg)}
-.p{position:absolute;border-radius:50%}
-h1{position:absolute;left:80px;top:200px;margin:0;font-size:150px;letter-spacing:.01em;line-height:.85;text-transform:uppercase}
-h1 em{font-style:normal;color:#ff7a3c}
-.sub{position:absolute;left:84px;top:400px;font-family:'Space Mono',monospace;font-size:26px;
- letter-spacing:.34em;color:#8b93a6;text-transform:uppercase}
-.name{position:absolute;left:84px;bottom:56px;font-family:'Space Mono',monospace;font-size:22px;
- letter-spacing:.2em;color:#efece6;text-transform:uppercase}
+/* diagonal split — same 58%/42% seam as the doorway (index.html .gate-half) */
+.half{position:absolute;inset:0}
+.half.warm{clip-path:polygon(0 0,58% 0,42% 100%,0 100%);
+ background:radial-gradient(80% 90% at 25% 55%,rgba(240,166,60,.22),transparent 70%)}
+.half.cool{clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%);
+ background:radial-gradient(80% 90% at 78% 50%,rgba(79,184,232,.22),transparent 70%)}
+.seam{position:absolute;top:-8%;left:calc(50% + 8px);width:2px;height:116%;
+ transform:rotate(9.6deg);background:linear-gradient(180deg,rgba(240,166,60,.55),rgba(79,184,232,.55));
+ box-shadow:0 0 18px rgba(200,180,150,.25)}
+
+.lockup{position:absolute;left:50%;top:246px;transform:translateX(-50%);
+ display:flex;align-items:flex-end;gap:18px;white-space:nowrap}
+.lockup img{height:78px;width:78px;object-fit:contain;filter:drop-shadow(0 4px 20px rgba(0,0,0,.6));flex:none}
+.wordmark{font-size:72px;text-transform:uppercase;line-height:.8;letter-spacing:.01em;margin-bottom:2px;white-space:nowrap}
+.wm-a{color:#d8cfbe}
+.wm-n{color:#f0a63c}
+.pi{position:relative;display:inline-block}
+.pi .dot{position:absolute;left:50%;top:-.3em;transform:translateX(-50%);width:.17em;height:.17em;
+ border-radius:50%;background:#35c1d1;box-shadow:0 0 10px #35c1d1}
+
+.sub{position:absolute;left:50%;top:372px;transform:translateX(-50%);text-align:center;
+ font-family:'Space Mono',monospace;font-size:22px;letter-spacing:.4em;color:#9a95a6;text-transform:uppercase}
+.name{position:absolute;left:50%;bottom:52px;transform:translateX(-50%);text-align:center;
+ font-family:'Space Mono',monospace;font-size:18px;letter-spacing:.24em;color:#efece6;text-transform:uppercase;opacity:.85}
 </style>
-<div class="sun"></div><div class="orbit"></div>
-<div class="p" style="left:170px;top:130px;width:34px;height:34px;background:radial-gradient(circle at 35% 30%,#c9e9ff,#74d0ff 60%,#1c4a66)"></div>
-<div class="p" style="left:980px;top:470px;width:52px;height:52px;background:radial-gradient(circle at 35% 30%,#d9ffc9,#7cff9b 60%,#1c6634)"></div>
-<h1>Aaro<em>nautics</em></h1>
+<div class="half warm"></div><div class="half cool"></div><div class="seam"></div>
+<div class="lockup">
+  <img src="mark-transparent.png" alt="">
+  <div class="wordmark"><span class="wm-a">Aaro</span><span class="wm-n">naut<span class="pi">ı<span class="dot"></span></span>cs</span></div>
+</div>
 <div class="sub">Flight Systems · Portfolio</div>
-<div class="name">◈ Aaron Selkridge</div>
-<script>for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';
-const z=Math.random();s.style.cssText+=`left:${Math.random()*1200}px;top:${Math.random()*630}px;width:${1+z*2}px;height:${1+z*2}px;opacity:${.3+z*.6}`;document.body.appendChild(s);}</script>
+<div class="name">◆ Aaron Selkridge</div>
+<script>for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';
+const z=Math.random();s.style.cssText+=`left:${Math.random()*1200}px;top:${Math.random()*630}px;width:${1+z*2}px;height:${1+z*2}px;opacity:${.25+z*.5}`;document.body.appendChild(s);}</script>
