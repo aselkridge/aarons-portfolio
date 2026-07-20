@@ -5,7 +5,7 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-19 late (R1 grew four items: picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
+Last updated: 2026-07-19 late (R1 grew two more items: return-to-hangar from flight, master audio mute; readability scan folded into R4a, full mobile rework folded into R4c. Just before that: R1 grew four items — picker exit directions, branded boot loader, manual auto-open, social share card; T14 folded into R4a; backlog dissolved — everything now lives in a phase. Earlier: roadmap re-consolidated into "THE ROAD TO DONE" R1–R6 — see §3 — folding in Aaron's five new asks: Walkman separation, GitHub link, new ships, scanner cursor, and the dedicated content phase. Code changes PAUSED by Aaron pending his go.) Prior shipment note: 2026-07-19 second shipment (the v3 design brief — "Design Notes
 2.zip", a strict superset/supersede of the first brief — landed and its README
 governs where they disagree. Shipped in one batch, on-branch, awaiting Aaron's
 screenshot sign-off before going live: Phase 2 Stage 5 [all four remaining
@@ -166,6 +166,22 @@ instruction — do not batch-fix these without his go-ahead on each.
   echoing the doorway — warm left / cool right); generate 1200×630,
   update og:image + twitter meta on the orbit page (and root once R1a
   promotes it).
+- **R1i. Return to the hangar doors from flight** (Aaron 2026-07-20: "a way
+  for players to return to the FIRST screen... from the orbit game
+  screen"). A visible HUD control (console row or nav row, styled to match
+  the existing chip family) that re-shows `#doorway`/`#shipsel` from
+  mid-flight — effectively re-running the front-door sequence on demand,
+  not just a page reload. Needs `gatesUp` re-armed and the running game
+  paused/hidden cleanly behind the doors while it's up, same guarantee the
+  boot sequence already relies on.
+- **R1j. Master audio mute toggle** (Aaron 2026-07-20: "toggle off all
+  audio at any time"). Today there's no single mute — the music player
+  only has its own play/pause, and `Sound` (`02-sound.js`) has no shared
+  gain/mute path; SFX and music are two separate systems. Needs one HUD
+  button that silences both at once (a shared muted flag `Sound`/`Music`
+  both check, or a master `GainNode` for SFX + muting the `<audio>`
+  element for music) and persists across the session so it doesn't reset
+  on its own mid-play.
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are
@@ -208,19 +224,28 @@ showcasing myself" — the site is only done when the words are his)
   for calling content DONE.
 
 ### R4 — Ground Control + mobile (old 4c/4f/4g)
-- **R4a. Ground Control terminal + the full T14 console restyle** — the
-  calm career console (identity rail, CAREER/ABOUT/FACTS/QUOTES tabs)
-  unlocks the doorway's locked door; content comes ready-made from R3b.
-  The NAV·COM console gets its full T14 rebuild in the same pass (big
-  bounty hierarchy, true segmented SHIP/WPN toggles, bordered data footer,
-  reward-card header language) so GC and the console ship to one matched
-  standard — the console is the most wired-up component on the page
-  (hangar bay, minimize/chip, immersive toggle), so it gets its own full
-  regression run here, not a rider on another batch.
+- **R4a. Ground Control terminal + the full T14 console restyle +
+  readability scan** — the calm career console (identity rail,
+  CAREER/ABOUT/FACTS/QUOTES tabs) unlocks the doorway's locked door;
+  content comes ready-made from R3b. The NAV·COM console gets its full
+  T14 rebuild in the same pass (big bounty hierarchy, true segmented
+  SHIP/WPN toggles, bordered data footer, reward-card header language) so
+  GC and the console ship to one matched standard — the console is the
+  most wired-up component on the page (hangar bay, minimize/chip,
+  immersive toggle), so it gets its own full regression run here, not a
+  rider on another batch. Aaron 2026-07-20: some text/UI is "just too
+  small still" — a readability pass (font sizes, contrast, tap/click
+  targets) across every floating window and HUD panel rides along in this
+  same pass, since he ties it directly to the T14 rebuild; anything
+  trivially fixable sooner can still fold into R1d instead of waiting.
 - **R4b. Secret paths** — hidden Pong in GC corner, Ronin's GC entry,
   dual unlock (Pong win OR bounty threshold from R1d's decision).
-- **R4c. Mobile, the calm experience** — mobile-primary path via GC's
-  tap-menu model + the real touch fixes (issue #21). No average patches.
+- **R4c. Mobile — full review and rework** — mobile-primary path via GC's
+  tap-menu model + the real touch fixes (issue #21), PLUS Aaron's
+  2026-07-20 ask for a complete mobile pass end to end (doorway/picker,
+  stations, HUD/console, dossier, all modals) so nothing on a phone is
+  left half-checked — "flawless" is the bar, not just the touch-control
+  bug. No average patches.
 
 ### R5 — In-site tutorial (old Phase 5)
 Guided first-flight for visitors; the flight-manual modal's "run the
