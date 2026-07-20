@@ -241,6 +241,21 @@ but readable. (2) The notebook grows a LOG page holding the run's full
 transcript, scene by scene, re-readable at any point, even stations later.
 Forward flow unchanged; the BACK travel button keeps its current job.
 
+**P2.9 — "Notice the price tag, nothing." Player: "WHAT price tag?"** `RAW,
+BRAINSTORMING` The astronaut's free-survey line references a price tag,
+but nothing on screen wears one; the player searched the table for a
+literal tag, found nothing, and lost the thread ("what money? where?").
+*Root cause:* the economy lives in words and in the credit meter, but not
+ON the objects. Narration gestures at UI that does not exist. This is a
+class of bug, not a single line.
+*Candidate fixes (Aaron iterating):* (A) literal price tags on everything
+buyable or free (0 CR in green, 15 CR in amber) so money is always
+visible; (B) a pointing system: any line that references something on
+screen makes that something glow while the words type; (C) rewrite lines
+to only reference what exists; (D) an itemized mini receipt on the meter.
+Claude recommends A+B as one rule: nothing is referenced unless it is
+visible, and when referenced, it lights up. Not mocked yet.
+
 ### Ideas (vision backlog, not queued with fixes)
 
 **I-1 — The Side Job (Aaron, 2026-07-20).** At the moment credit pressure
