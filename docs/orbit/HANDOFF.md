@@ -26,10 +26,11 @@ paused except for the items Aaron explicitly greenlit.)
 overlap (an invisible dead-zone bug, not a sizing issue — see the dedicated
 entry below); also root-caused why the scanner still doesn't feel like a
 pointer even shrunk/angled (the source art's shape has no true tip at any
-crop) and proposed pivoting to a small vector glyph instead — awaiting
-Aaron's go/no-go. Also merged in "The Coldest Call" (built by a separate
-session directly on the live branch while this work was in flight) —
-clean merge, nothing lost either side.
+crop), proposed pivoting to a small vector glyph, and — **Aaron said go** —
+built and shipped it (R1c v3, see entry below). Merged in "The Coldest
+Call" (built by a separate session directly on the live branch, in three
+separate rounds while this work was in flight — social share card, then a
+share-card content fix) — all clean merges, nothing lost either side.
 
 Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
 master audio mute, readability→R4a, mobile rework→R4c, picker exit
@@ -241,7 +242,7 @@ instruction — do not batch-fix these without his go-ahead on each.
   scanner over empty space; confirmed real controls (dossier, help-btn,
   nav links) still hit correctly. This was a real, fixable bug — separate
   from the cursor-shape complaint below.
-- **2026-07-20 night — cursor SHAPE finding, not yet fixed**: Aaron said
+- **2026-07-20 night — cursor SHAPE finding → R1c v3 shipped**: Aaron said
   the scanner still doesn't work like a pointer even smaller/angled — the
   hotspot reads like it's "the handle," and he'd rather scrap the whole
   thing than keep a bad experience. Tested this concretely instead of
@@ -251,20 +252,30 @@ instruction — do not batch-fix these without his go-ahead on each.
   source art is an octagonal gadget housing — that shape has no single
   vertex to taper to, at any rotation or crop.** This is a geometry
   mismatch, not a sizing problem, and isn't fixable by more cropping.
-  Proposed to Aaron: stop trying to force the illustration into the
-  pointer role, and instead build a small clean vector/CSS pointer glyph
-  (genuine tapered tip, true hotspot-at-tip) tinted with the scanner's
-  teal/orange palette for "character" — squarely CSS/SVG territory, not
-  organic illustration, so this is actually the right medium for a cursor
-  glyph in the first place. Awaiting Aaron's go/no-go before building it.
-- **2026-07-20 night — merged in parallel work**: pushing this round's fix
-  hit a diverged `claude/website-build-nevi30` — a separate session had
-  shipped **The Coldest Call** (a full playable mini-game replacing the
-  AlphaForge mission-door placeholder) directly to the live branch in the
-  meantime. Merged cleanly (auto-merge, no conflicts — different sections
-  of `index.html`), verified the merged result still boots clean and the
-  dead-zone fix above still holds, then pushed. Nothing from either side
-  was lost.
+  Proposed a pivot: stop forcing the illustration into the pointer role,
+  build a small vector/CSS pointer glyph instead — Aaron said go. **Built
+  and shipped**: a clean SVG arrow (genuine single-vertex tip, hotspot
+  exactly at that vertex — not eyeballed), idle ~18px / lit ~23px, keeping
+  the site's own accent-dot motif for "character" (teal dot in Bebop/warm,
+  orange in Expanse/cool — same inverse mapping as the wordmark tittle).
+  This retires the illustrated-scanner cursor entirely; `assets/ships/`
+  and the scanner review artifact are now just historical context, not
+  live assets for this piece. Verified all four SVG data URIs decode with
+  correct per-theme/state fill colors and zero console errors through the
+  full picker→flight→theme-flip flow; built a live hover-test artifact
+  (screenshots still can't show a real OS cursor) so Aaron could confirm
+  the actual tip/hotspot feel in his own browser before it shipped.
+- **2026-07-20 night — merged in parallel work, four separate rounds**:
+  pushing this session's fixes repeatedly hit a moving target — a
+  separate session was shipping **The Coldest Call** (a full playable
+  mini-game replacing the AlphaForge mission-door placeholder) directly
+  to both `claude/website-build-nevi30` and `claude/session-jrd7sj` while
+  this work was in flight: the initial game, a docs pass (GAMES.md +
+  README refresh), a social share card + OG/Twitter meta for it, and a
+  share-card content fix. Merged clean every time (auto-merge, zero
+  conflicts — different files/sections each round), re-verified the dead-
+  zone fix and cursor still held after each merge, before pushing on.
+  Nothing from either side was lost across any of the four rounds.
 
 ---
 
@@ -291,9 +302,12 @@ instruction — do not batch-fix these without his go-ahead on each.
   github.com (empty, public, no init needed) and say so — then this resumes.
 - ~~**R1b. GitHub link in the profile window**~~ **DONE 2026-07-20** — added
   to the Other Builds row, links to `github.com/aselkridge/aarons-portfolio`.
-- ~~**R1c. Scanner cursor v2**~~ **DONE 2026-07-20** — idle + lit states, real
-  sourced art, both themes. Hotspots are eyeballed to each asset's lens
-  center, not pixel-measured — revisit if it ever feels off in real play.
+- ~~**R1c. Scanner cursor**~~ **DONE 2026-07-20, superseded twice, final**
+  — v1 (illustrated scanner) → v2 (tilted + shrunk) → **v3: a clean vector
+  arrow glyph**, the version that actually shipped. The illustrated art
+  never had a true tip at any size/angle (it's a rounded gadget, not a
+  tapered shape) — v3 sidesteps that by drawing the pointer instead of
+  cropping it. See SHIPPED above for the full story.
 - **R1d. Micro-bug batch** — #19 log-count clip (re-verify post log-bar
   redesign), #11 banner timing, #2 projectile tunneling through planets
   (swept segment-circle test), #12a ₩20,000 threshold (Aaron decides value).
