@@ -5,13 +5,15 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-20 later (R2a shipped — real ship art, Swordfish II 2 +
-Rocinante 6, chosen off a live spin-test review; also closes issue #20. Earlier
-today: employment-status correction, R1b GitHub link, R1c real scanner cursor
-— see SHIPPED below. R1a still blocked on Aaron: the GitHub App this session
-runs under can't create repos — `aarons-3d-portfolio` needs to be created by
-Aaron by hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged
-below; still paused except for the items Aaron explicitly greenlit.)
+Last updated: 2026-07-20 evening (post-R2a bug round: scanner cursor shrunk a
+lot — it was overlapping the flying ship near the dossier/console corners;
+Rocinante mirrored to face left + launches left, opposite Swordfish's right,
+matching the picker copy's own ◂/▸ hints. Earlier today: R2a ship art, R1c
+scanner cursor, R1b GitHub link, employment-status correction — see SHIPPED
+below. R1a still blocked on Aaron: the GitHub App this session runs under
+can't create repos — `aarons-3d-portfolio` needs to be created by Aaron by
+hand, then handed back. Full remaining roadmap — R1–R6 — is unchanged below;
+still paused except for the items Aaron explicitly greenlit.)
 
 Prior: 2026-07-19 late, R1 grew six items across two rounds (return-to-hangar,
 master audio mute, readability→R4a, mobile rework→R4c, picker exit
@@ -152,6 +154,24 @@ instruction — do not batch-fix these without his go-ahead on each.
   standing cross-theme-constants rule). Also closes issue #20 (cursor box
   bumped 44→54×62). Verified headless across both themes, desktop + mobile,
   zero console errors.
+- **2026-07-20 evening — bug round on the above**: Aaron reported the
+  scanner cursor (R1c) visually overlapping the flying ship, and that it
+  read too big generally. Root cause: the cursor is real (idle/lit swap
+  over `.brand`/`.console`, the two big `pointer-events:auto` zones inside
+  the full-viewport `.hud`), and the ship — which chases the mouse with a
+  lag/ease — frequently flies through those exact same corners, so a big
+  cursor image and the ship end up visually stacked. **Fix**: shrunk the
+  cursor a lot (idle 56px→26px, lit 70-76px→32-34px) rather than change the
+  interaction model — a custom cursor bitmap always paints above all page
+  content (OS-level, not something CSS z-index can touch), so shrinking is
+  the real lever, not layering. **Caveat**: headless screenshots cannot
+  render the OS-drawn custom cursor at all, so this fix is verified by CSS
+  value + hotspot alignment only — needs Aaron's real-browser confirmation
+  that the smaller size is enough, or whether it wants going further.
+  Also fixed in the same round: Rocinante now mirrors to face left and
+  launches off-screen left on the ship picker, opposite Swordfish's right
+  — matches the picker copy's own long-standing ◂/▸ arrow hints, which the
+  motion direction hadn't actually honored since Phase 4b shipped.
 
 ---
 
