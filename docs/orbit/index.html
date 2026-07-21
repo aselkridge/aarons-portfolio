@@ -731,13 +731,11 @@ body.t-roci .c-data{color:#9cc8e4}
 .console.baying .c-row,.console.baying .c-data,.console.baying .c-links{visibility:hidden}
 .bay::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 2px,transparent 2px 24px)}
-body.t-sword .bay{background:radial-gradient(120% 95% at 50% 18%,#2e2216 0%,#140b04 78%)}
-body.t-roci .bay{background:radial-gradient(120% 95% at 50% 18%,#122232 0%,#060e18 78%)}
-.bay-label{position:absolute;top:9px;left:13px;z-index:5;font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase}
+body.t-sword .bay{background:url('assets/hangar/bay-warm.jpg') center 30%/cover no-repeat}
+body.t-roci .bay{background:url('assets/hangar/bay-cool.jpg') center 30%/cover no-repeat}
+.bay-label{position:absolute;top:9px;left:13px;z-index:5;font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  text-shadow:0 1px 3px rgba(0,0,0,.85)}
 body.t-sword .bay-label{color:#f0a63c}body.t-roci .bay-label{color:#bfe8ff}
-.bay-floor{position:absolute;left:0;right:0;bottom:0;height:22%;z-index:1}
-body.t-sword .bay-floor{background:repeating-linear-gradient(45deg,#f0a63c 0 9px,#1c1206 9px 18px);opacity:.55;box-shadow:0 -2px 0 rgba(240,166,60,.5)}
-body.t-roci .bay-floor{background:repeating-linear-gradient(45deg,rgba(79,184,232,.55) 0 9px,rgba(6,14,24,.9) 9px 18px);box-shadow:0 -2px 0 rgba(79,184,232,.6)}
 .bay-ship{position:absolute;left:50%;bottom:-46px;width:40px;height:46px;transform:translateX(-50%);z-index:2;
   transition:bottom .5s cubic-bezier(.5,0,.5,1),opacity .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
 .bay-ship .shipgrp{position:absolute;inset:0}
@@ -749,12 +747,14 @@ body.t-roci .bay-floor{background:repeating-linear-gradient(45deg,rgba(79,184,23
 .console.ship-out .bay-ship{bottom:112%;opacity:0;
   transition:bottom .55s cubic-bezier(.6,.05,.7,.6),opacity .25s ease .3s}
 .bay-door{position:absolute;top:0;bottom:0;width:51%;z-index:3;transition:transform .55s cubic-bezier(.7,0,.3,1);
-  background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.3) 0 11px,rgba(255,255,255,.04) 11px 13px)}
+  background-size:cover;background-repeat:no-repeat;background-position:center}
 .bay-door.l{left:0}.bay-door.r{right:0}
-body.t-sword .bay-door{background-color:#2c2419;border-top:4px solid #57452f;border-bottom:4px solid #57452f}
-body.t-sword .bay-door.l{border-right:2px solid #f0a63c}body.t-sword .bay-door.r{border-left:2px solid #f0a63c}
-body.t-roci .bay-door{background-color:#152030;border-top:3px solid rgba(79,184,232,.4);border-bottom:3px solid rgba(79,184,232,.4)}
-body.t-roci .bay-door.l{border-right:1px solid #4fb8e8}body.t-roci .bay-door.r{border-left:1px solid #4fb8e8}
+body.t-sword .bay-door{border-top:4px solid #57452f;border-bottom:4px solid #57452f}
+body.t-sword .bay-door.l{background-image:url('assets/hangar/door-warm-l.jpg');border-right:2px solid #f0a63c}
+body.t-sword .bay-door.r{background-image:url('assets/hangar/door-warm-r.jpg');border-left:2px solid #f0a63c}
+body.t-roci .bay-door{border-top:3px solid rgba(79,184,232,.4);border-bottom:3px solid rgba(79,184,232,.4)}
+body.t-roci .bay-door.l{background-image:url('assets/hangar/door-cool-l.jpg');border-right:1px solid #4fb8e8}
+body.t-roci .bay-door.r{background-image:url('assets/hangar/door-cool-r.jpg');border-left:1px solid #4fb8e8}
 .console.bay-open .bay-door.l{transform:translateX(-101%)}
 .console.bay-open .bay-door.r{transform:translateX(101%)}
 
@@ -1658,7 +1658,6 @@ body.t-roci .bnr .bk{color:#9affea}
         <!-- ship-exchange bay (opens inside the console) -->
         <div class="bay" id="bay">
           <div class="bay-label">◈ HANGAR BAY</div>
-          <div class="bay-floor"></div>
           <div class="bay-ship" id="bay-ship"></div>
           <div class="bay-door l"></div><div class="bay-door r"></div>
         </div>

@@ -5,7 +5,20 @@
 > which file owns which visible piece of the page. If you are a new session
 > (or Aaron editing by hand), start here before touching code.
 
-Last updated: 2026-07-21 (R1 batch shipped — R1d micro-bugs [issue #2 swept
+Last updated: 2026-07-21 later (Hangar bay real art shipped — R2 continues.
+Aaron sourced 4 folders of AI-generated pixel-art hangar renders — warm/cool
+bay interiors + warm/cool blast doors, ~4-6 candidates each. Reviewed all 18
+live via an Artifact mockup [full gallery + a real-scale, real-timing
+interactive dock/launch demo]; Aaron picked the `gpt-image` render in all
+four categories and said keep the ship art exactly as-is [option A from the
+medium-honesty callout — ship art stays clean vector, no redraw]. Shipped:
+`.bay`/`.bay-door` now use the real art [`docs/orbit/assets/hangar/`] in
+place of the old flat gradient/color placeholders; the old flat `.bay-floor`
+stripe overlay was removed since the new art paints its own floor. Verified
+live in both themes, desktop + mobile, full dock→launch cycle, zero console
+errors.)
+
+Prior: 2026-07-21 (R1 batch shipped — R1d micro-bugs [issue #2 swept
 projectile collision, issue #11 banner timing, issue #19 re-verified already
 fixed, issue #12a left as-is per standing instruction], R1g flight-manual
 auto-open on first entry, R1i return-to-hangar-doors control, R1j master
@@ -294,6 +307,14 @@ instruction — do not batch-fix these without his go-ahead on each.
   no conflicts, no shared files). Verified headless: zero console errors,
   both themes, desktop + mobile, full return-to-hangar→re-pick cycle
   confirmed working end-to-end.
+- **2026-07-21 later — R2e hangar art done**: real bay interior + blast
+  door art in for both themes, replacing the flat gradient/color
+  placeholders. See the R2e roadmap entry above for the full picture —
+  candidate review process, the medium-honesty callout, Aaron's picks and
+  his call to leave the ship art untouched. Assets in
+  `docs/orbit/assets/hangar/`; `.bay-floor` removed (redundant against the
+  new art's own painted floor). Verified live, both themes, desktop +
+  mobile, full dock→launch cycle, zero console errors.
 
 ---
 
@@ -418,6 +439,23 @@ sourced, never hand-coded; I do shells, keying, compositing, animation tiers.
   needed touching on the picker or console toggle labels.
 - ~~**R2b. Signoff ship silhouette**~~ **DONE 2026-07-20** — folded into R2a,
   the red `[ SHIP ]` slot is now a real flat-red Swordfish II silhouette.
+- ~~**R2e. Hangar bay + blast door art**~~ **DONE 2026-07-21** — real 16-bit
+  pixel-art bay interiors and blast doors for both themes, replacing the
+  flat gradient/color placeholders `.bay`/`.bay-door` used before. Aaron
+  sourced 4 candidates for warm bay, 4 for cool bay, 6 for warm doors, 4 for
+  cool doors; all 18 reviewed via a live Artifact mockup (full gallery +
+  a real-scale, real-timing interactive dock/launch demo) and Aaron picked
+  the `gpt-image` render in every category. Medium-honesty note surfaced in
+  that review — the ship art is clean vector, this new art is textured
+  pixel art, genuinely two different mediums sitting side by side — Aaron's
+  call: leave the ships exactly as they are, no redraw. Assets live in
+  `docs/orbit/assets/hangar/` (`bay-warm.jpg`, `bay-cool.jpg`,
+  `door-{warm,cool}-{l,r}.jpg` — doors pre-split into halves so each
+  `.bay-door.l/.r` gets its own half with a true centerline). The old flat
+  `.bay-floor` stripe overlay was removed — the new art paints its own
+  floor, so it would've doubled up. **Verified**: live dock→launch cycle in
+  both themes, desktop + mobile, zero console errors; bay/door background
+  images confirmed resolving to the real asset URLs via computed style.
 - **R2c. Scene art** (old Phase 3): real layered backgrounds per station —
   scenes are deliberately figure-free right now. Per scene: declare
   animation tier (A ambient / B lights / C character) BEFORE sourcing,
