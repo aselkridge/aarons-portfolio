@@ -9,7 +9,7 @@
 > Related docs: [`GAMES.md`](GAMES.md) (what the game is),
 > [`orbit/HANDOFF.md`](orbit/HANDOFF.md) (live known issues / roadmap).
 
-**Status legend:** `RAW` noted, not yet interpreted · `PROPOSED` change
+**Status legend:** `RAW` noted, not yet interpreted · `APPROVED 2026-07-20` change
 designed, mockup awaiting Aaron's approval · `APPROVED` build greenlit ·
 `SHIPPED` live · `WONTFIX` deliberate, with reasoning.
 
@@ -29,7 +29,7 @@ That's the exact audience the game is for, so these are high-value fixes.
 
 ### Findings
 
-**P1.1 — The table felt overwhelming on first sight.** `PROPOSED`
+**P1.1 — The table felt overwhelming on first sight.** `APPROVED 2026-07-20`
 Player had never seen a data table used this way; the 24-row console read as
 "too much" with no cue for how to feel about that.
 *Interpretation:* not a bug — an unclaimed teaching beat. Feeling swamped by
@@ -41,7 +41,7 @@ job as making a big list small. Plus a new insight, THE WALL, so the lesson
 lands in the notebook for every player.
 
 **P1.2 — Rival results were interesting but under-explained AND
-under-highlighted.** `PROPOSED`
+under-highlighted.** `APPROVED 2026-07-20`
 Player enjoyed seeing rivals do poorly but couldn't tell WHY each one
 failed, and asked for the comparison to be highlighted more overall.
 *Change:* the debrief pauses on MEANWHILE, ON THE FAR SIDE — the rival
@@ -51,7 +51,7 @@ gets a hover / tap reveal that diagnoses the strategy in one breath
 notes with no person inside; Adam: perfect table, zero sends), each tied
 back to the matching insight.
 
-**P1.3 — Hard to know which citizen info mattered for the flyer.** `PROPOSED`
+**P1.3 — Hard to know which citizen info mattered for the flyer.** `APPROVED 2026-07-20`
 Reading names/rows, the player couldn't tell what to carry forward into the
 writing step.
 *Change:* make the data-to-words thread visible at the seam: every filled
@@ -59,7 +59,7 @@ blank in the line templates gets a colored chip traced to the column it came
 from (hover shows source + what it cost). The words literally light up with
 where they came from.
 
-**P1.4 — Column picking: unclear what to pick or why.** `PROPOSED`
+**P1.4 — Column picking: unclear what to pick or why.** `APPROVED 2026-07-20`
 *Interpretation:* deciding what's worth knowing IS the craft being taught,
 so we don't hand over answers — we hand over the question.
 *Change:* a tieback banner above the column menu ("a column earns its place
@@ -70,19 +70,19 @@ locking columns, and right before the send — so guidance travels with the
 player instead of ending at the start.
 
 **P1.5 — The free-column hover hint was loved; wants hints on the rest.**
-`PROPOSED` *Change:* every column gets a hover hint written as a heuristic,
+`APPROVED 2026-07-20` *Change:* every column gets a hover hint written as a heuristic,
 not an answer — what the column is FOR and one honest caution (e.g. mood:
 "changes by the hour; by the time you knock, it already happened"). The
 trap columns keep their existing reveal.
 
-**P1.6 — The ending didn't feel like an ending.** `PROPOSED`
+**P1.6 — The ending didn't feel like an ending.** `APPROVED 2026-07-20`
 The in-person goodbye + debrief buttons weren't enough signal that the game
 was complete.
 *Change:* a full celebration finale after the goodbye — fireworks over the
 town, the crowd out with the first scoops, a big RUN COMPLETE moment, then
 clear buttons (see your debrief / run it again / back to AlphaForge).
 
-**P1.7 — Credit tracking lagged the action.** `PROPOSED`
+**P1.7 — Credit tracking lagged the action.** `APPROVED 2026-07-20`
 Credits visibly changed later than the choice that spent them.
 *Change:* the credit meter reacts the instant a column is picked or dropped —
 rolling number animation, a spend flash on paid picks, a distinct FREE flash
@@ -90,12 +90,12 @@ rolling number animation, a spend flash on paid picks, a distinct FREE flash
 ("this run: 30 · leaves you 25") before committing.
 
 **P1.8 — Column choices didn't visibly connect to the flyer writing.**
-`PROPOSED` Same thread as P1.3, seen from the picking side.
+`APPROVED 2026-07-20` Same thread as P1.3, seen from the picking side.
 *Change:* covered by the P1.3 seam treatment + the P1.4 banner language, so
 the promise ("this will become words at the door") is made at pick time and
 kept at write time.
 
-**P1.9 — Didn't realize more than one group could be kept.** `PROPOSED`
+**P1.9 — Didn't realize more than one group could be kept.** `APPROVED 2026-07-20`
 Player kept only The Traditionalists, believing the choice was one-of-three.
 The multi-select exists mechanically but nothing announces it.
 *Change:* the gate states the rule in plain words ("keep one group, keep
@@ -103,7 +103,7 @@ two, keep all three"), cards become visible keep-toggles with checkbox
 marks, and a live count ("KEEPING 14 OF 24") shows the list growing as
 groups are added. (House note: we never say "segments" in game voice.)
 
-**P1.10 — Group names appear from nowhere.** `PROPOSED`
+**P1.10 — Group names appear from nowhere.** `APPROVED 2026-07-20`
 The Curious / The Traditionalists / The Quiet Ones are never explained.
 *Interpretation:* keep it simple — no new grouping mechanic. The groups
 were always the astronaut's read of his neighbors; the fix is him saying
@@ -113,7 +113,7 @@ radio... I wrote three names in my log"), each name defined in a breath,
 closed with "those are my notes, not rules." Shares a treatment with P1.9.
 
 **P1.11 — Transmission device needs beauty + a crystal-clear split from
-in-person speech.** `PROPOSED` (Raised by Aaron on reviewing the same
+in-person speech.** `APPROVED 2026-07-20` (Raised by Aaron on reviewing the same
 session.)
 *Change:* radio lines arrive inside a drawn wrist unit (metal bezel,
 channel line, blinking signal bars, waveform, scanline shimmer over
@@ -122,7 +122,7 @@ with no device chrome; narration stays bare. Three voices, three
 unmistakable looks.
 
 **P1.12 — The player never knew the plan, so the table came from nowhere.**
-`PROPOSED` (Best insight of the session, per Aaron.) The player knew the
+`APPROVED 2026-07-20` (Best insight of the session, per Aaron.) The player knew the
 goal (get the neighbors to try ice cream) but had no idea the method would
 involve building a table, so the console read as a non sequitur. The bridge
 only formed by accident: they recognized "claygent" because they already
@@ -168,7 +168,7 @@ gap (P1.12's LEARN / CHOOSE / SAY HELLO plan + tracker) and the wall beat
 (P1.1), now independently reproduced by a second player on the old build.
 Strong evidence those two treatments are the right priority.
 
-**P2.2 — The select screen has no sequence.** `PROPOSED`
+**P2.2 — The select screen has no sequence.** `APPROVED 2026-07-20`
 Player saw the name field first ("pick a name... what name? MY name?"),
 typed their own name, nothing visibly happened, and only later discovered
 the suit cards were clickable and required. After picking a suit: "okay,
@@ -182,7 +182,7 @@ step lit and the finished steps checked; the name field explains itself
 ("what should the astronaut call you? any name works"); the drop button,
 when not ready, says why in plain words instead of sitting dim.
 
-**P2.3 — Nothing ever says what to do next, anywhere.** `PROPOSED`
+**P2.3 — Nothing ever says what to do next, anywhere.** `APPROVED 2026-07-20`
 Player asked for the next thing to be bouncing / highlighted, and for a
 reminder to appear if nothing happens for a while, all tied back to the
 overarching goal.
@@ -212,7 +212,7 @@ one plain sentence: a P.S. is the little note under a letter, the one part
 written for one person. The P1.3 colored source chips light inside that
 preview, so meaning, placement, and data-source read in one glance.
 
-**P2.6 — Hard to keep track of who is talking.** `PROPOSED`
+**P2.6 — Hard to keep track of who is talking.** `APPROVED 2026-07-20`
 Rival cutscenes, popups, and transmissions identify speakers with small
 text only; the player lost track of who was speaking.
 *Change:* every voice gets a face. Rival and Yash lines get the speaker's
@@ -221,7 +221,7 @@ the astronaut's wrist-unit screen carries his name on the channel line
 (extends P1.11); narration stays faceless on purpose, since it is nobody
 speaking.
 
-**P2.7 — "They don't know what they're learning."** `PROPOSED`
+**P2.7 — "They don't know what they're learning."** `APPROVED 2026-07-20`
 A player handed the game cold (no LinkedIn post, no context) has no idea
 the run teaches anything, or what. Aaron flags the bigger question too:
 how the site page frames it, and what the game is ultimately for.
@@ -232,7 +232,7 @@ everyone, but by choosing a few people and saying something true"), and
 frames the notebook from minute one as the thing you fill and keep. The
 site-page framing question stays open with Aaron.
 
-**P2.8 — Mid-conversation, there is no way back.** `PROPOSED`
+**P2.8 — Mid-conversation, there is no way back.** `APPROVED 2026-07-20`
 A missed line cannot be reread; dialogue only moves forward. On a learning
 platform a missed line is a missed lesson.
 *Change:* words never disappear, two ways. (1) The conversation window
@@ -241,8 +241,7 @@ but readable. (2) The notebook grows a LOG page holding the run's full
 transcript, scene by scene, re-readable at any point, even stations later.
 Forward flow unchanged; the BACK travel button keeps its current job.
 
-**P2.9 — "Notice the price tag, nothing." Player: "WHAT price tag?"** `RAW,
-BRAINSTORMING` The astronaut's free-survey line references a price tag,
+**P2.9 — "Notice the price tag, nothing." Player: "WHAT price tag?"** `APPROVED 2026-07-20, direction A+B` The astronaut's free-survey line references a price tag,
 but nothing on screen wears one; the player searched the table for a
 literal tag, found nothing, and lost the thread ("what money? where?").
 *Root cause:* the economy lives in words and in the credit meter, but not
@@ -256,7 +255,7 @@ to only reference what exists; (D) an itemized mini receipt on the meter.
 Claude recommends A+B as one rule: nothing is referenced unless it is
 visible, and when referenced, it lights up. Not mocked yet.
 
-**P2.10 — Players can't tell a good result from a bad one.** `PROPOSED`
+**P2.10 — Players can't tell a good result from a bad one.** `APPROVED 2026-07-20`
 A player with four replies from nine sent said "I don't think I did very
 good." (Positive note, same session: the quiet-ones + public-statements
 null moment LANDED — "oh, because they're quiet" — the designed lesson
@@ -273,7 +272,7 @@ working, for the record: insights recap headlines the debrief, the silent
 run gets WHY NOBODY WROTE BACK, and RUN IT AGAIN exists.
 
 **P2.11 — "A knock on the door" and "make the cut" read as riddles.**
-`PROPOSED` Player at the full-table moment: "what does a knock on the door
+`APPROVED 2026-07-20` Player at the full-table moment: "what does a knock on the door
 mean? I must have missed that." And on the gate button: "make the cut, in
 a good way or bad way? Did somebody get cut?" The run's biggest decision
 is carried by two sales-floor idioms.
@@ -291,7 +290,7 @@ the notebook's definitions for the slang itself: a knock on the door,
 making the cut, the gate, a cold call (the game's own title, decoded),
 segments. Mocked as section 16.
 
-**P2.12 — The columns don't feel connected to ice cream.** `PROPOSED`
+**P2.12 — The columns don't feel connected to ice cream.** `APPROVED 2026-07-20`
 (Raised by Aaron reviewing the sessions.) The data reads as generic
 research; the mission doesn't shine through it. "Do they like cold
 things", "seems to like desserts" would connect instantly. Some columns
@@ -369,6 +368,14 @@ removed.*
 
 ### Session decisions
 
+- **2026-07-20, Aaron: "YES YES YES to EVERYTHING."** All treatments
+  (sections 01-17), Scoop Catch v2, the Delivery Dash (I-2), suit impacts
+  A+B (I-3), the Volunteer (F-2), and the sweet tooth column (with balance
+  pass) are APPROVED for build. P2.9 approved on direction A+B (price tags
+  everywhere + the pointing rule). Build order: art-independent treatments
+  first, art-dependent pieces as assets land. Still open: F-1 Google Form
+  (Aaron creates + sends link), site-page framing (P2.7's outer question),
+  and the art requests list.
 - P2.2 + P2.3 mocked as one treatment (section 10) on the Playtest 001
   mockup page; awaiting Aaron's approval alongside the P1 set.
 - P2.4 / P2.5 / P2.6 folded into mockup sections 02, 04, and 08 as
