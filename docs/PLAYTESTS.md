@@ -320,6 +320,34 @@ credits left, suit), so every Sheet row arrives with its play data.
 Five suggested questions live in mockup section 15. Blocked on: Aaron
 creating the form and sending the link + field IDs.
 
+**F-2 — The Volunteer, a fifth suit pick (Aaron, 2026-07-20).** The
+generic crowd suit becomes pickable at the start as THE VOLUNTEER: dressed
+like the town, read as one of their own. Zero new art, small build.
+
+**I-2 — The Delivery Dash, second side job (Aaron, 2026-07-20).**
+Auto-running side scroller: sprint the cold crate from the crash site to
+Gunmy's Store, spacebar-only jumps, platforms with a fast risky high road
+and a safe slow low road, STILL enemies that restart you with the clock
+(the melt meter) still ticking, goo/gravel slowdowns, sprinkles on risky
+lines, one COLD SNAP powerup, Jordan's pace as a beatable ghost (+3),
+pay = scoops that survive the melt, best run pays, capped. Spec on mockup
+page section 18; playable demo on Aaron's go.
+
+**I-3 — Suits with consequences (Aaron, 2026-07-20; brainstorm).**
+Rule: flavor everywhere, powers only where credits are capped, so the main
+run's lesson stays fair. (A) Banter skin: per-suit rival greetings,
+wrist-unit asides, debrief sign-offs. (B) Side-job perks: Pilot floaty
+jump in the Dash, Engineer wider catch tray, Ronin one enemy-forgiveness
+per run, Off-Duty opens each shift with a scoop shower, Volunteer +1
+credit per job (the town tips its own). (C, someday) suit-flavored citizen
+reactions. Claude recommends A+B. Section 19.
+
+**A-1 — Art request: the astronaut himself (open).** No sprite exists for
+the astronaut; he appears only as a drawn portrait chip. Two images to
+source in the same style as the 21-sprite batch (prompts on mockup page
+section 19): full body weathered suit with antenna backpack, and a wave
+pose holding a cone for the finale.
+
 **I-1 — The Side Job (Aaron, 2026-07-20).** At the moment credit pressure
 first lands, offer optional work: the sprite walks off the main path to
 one of two mini games (left/right), earns a small capped credit amount,
@@ -330,8 +358,14 @@ shifts too" makes it the sharpest lesson in the game (budget is grindable
 by everyone; judgment is not). Guardrails so it can't break the economy:
 one shift per job, fixed small payout (~+15), offered once (right after
 claygent prices land), fully optional, under a minute, mints a THE GRIND
-field note. Playable 30-second proof (Scoop Catch) lives on the mockup
+field note. Playable proof (Scoop Catch) lives on the mockup
 page, section 12.*
+*V2 (Aaron's notes, 2026-07-20, applied to the playable): 45 seconds,
+tutorial card, arcade frame with big score + best, catch pop feedback,
+rare moon rocks at minus 2, two labeled fast-falling powerups (snowflake
+slow-time, sundae scoop-shower), roughly a third fewer standard scoops,
+replay any time with only the best shift paying, unlabeled sparkles
+removed.*
 
 ### Session decisions
 
