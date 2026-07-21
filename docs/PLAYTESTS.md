@@ -272,6 +272,25 @@ many you can reach now. Mocked as section 14. Already built and confirmed
 working, for the record: insights recap headlines the debrief, the silent
 run gets WHY NOBODY WROTE BACK, and RUN IT AGAIN exists.
 
+**P2.11 — "A knock on the door" and "make the cut" read as riddles.**
+`PROPOSED` Player at the full-table moment: "what does a knock on the door
+mean? I must have missed that." And on the gate button: "make the cut, in
+a good way or bad way? Did somebody get cut?" The run's biggest decision
+is carried by two sales-floor idioms.
+*Interpretation:* one rule, two homes. Anything the player must ACT on
+gets literal words; the trade's slang moves to a decoder shelf where the
+curious can still learn it, each entry tagged as sales-floor talk. Aaron's
+principle: simple and straightforward everywhere, but never shutting
+players off from learning the real vocabulary.
+*Change:* (a) path rewrites: "who actually gets a knock on the door?"
+becomes "out of all these neighbors, who should we actually go visit?";
+MAKE THE CUT becomes KEEP MY LIST with "everyone else steps out of the
+run, kindly and for free" beneath it; full idiom sweep of every
+player-facing action line at build time. (b) THE DECODER: a new shelf in
+the notebook's definitions for the slang itself: a knock on the door,
+making the cut, the gate, a cold call (the game's own title, decoded),
+segments. Mocked as section 16.
+
 ### Ideas (vision backlog, not queued with fixes)
 
 **F-1 — The Feedback Door (Aaron, 2026-07-20).** In-game feedback capture
