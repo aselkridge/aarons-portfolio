@@ -5,7 +5,7 @@ website. Not a normal web page: a *place you operate*. Pick a ship, fly a
 top-down solar system where the sun is the mission statement, land on planets
 to open the portfolio's sections, earn bounty, and find the secret planet.
 
-**Live:** https://aselkridge.github.io/aarons-portfolio/orbit/
+**Live:** https://aselkridge.github.io/aarons-portfolio/docs/orbit/
 
 > **What are the games and how do they play?** Read [`docs/GAMES.md`](docs/GAMES.md).
 > **Building on this project?** Read [`docs/DESIGN-BRIEF.md`](docs/DESIGN-BRIEF.md) first,
@@ -22,7 +22,7 @@ Two playable experiences (both explained in [`docs/GAMES.md`](docs/GAMES.md)):
   game about go-to-market engineering: help a stranded astronaut introduce
   ice cream to a moon, on a budget of 100 credits. Reached through the
   AlphaForge station's mission door, or directly at
-  https://aselkridge.github.io/aarons-portfolio/orbit/coldest-call/
+  https://aselkridge.github.io/aarons-portfolio/docs/orbit/coldest-call/
 
 ## Structure
 

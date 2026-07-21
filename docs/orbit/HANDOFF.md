@@ -428,6 +428,25 @@ window whose CTA routes to `coldest-call/`.
   (tier-A ambient bob + rotate, per medium-honesty); (2) rival first names
   kept per Aaron's direction (AlphaForge coach nods); (3) ships in BOTH
   theme skins.
+- **RCC-d. The big playtest build — SHIPPED LIVE 2026-07-21** (Aaron: "form
+  done, please push everuything live"). Two external playtests (see
+  `docs/PLAYTESTS.md`, findings P1.1–P1.12 and P2.1–P2.12) produced 16
+  approved treatments, ALL now live: the plan tracker (LEARN / CHOOSE /
+  SAY HELLO), wrist-unit radio vs in-person portrait chips, THE LOG
+  notebook transcript, live credit ledger + receipt, the wall beat,
+  group-gate multi-select with live count, column use-hints + run
+  projection, P.S. explainer + letter seam preview, celebration finale
+  with fireworks + measuring stick + rival why-flips, THE DECODER jargon
+  shelf, ice-cream-flavored columns (incl. the sweetTooth semi), idle
+  nudges, select-screen sequencing, flexible back, quit door. Plus: two
+  capped side jobs off the main path (Scoop Catch v2 + The Delivery Dash
+  side-scroller, suit perks confined to them per I-3), a fifth suit (The
+  Volunteer), themed sky bands + ship parking on open ground, themed
+  end-screen sign-off paintings (E-1), and the Feedback Door — the debrief
+  opens Aaron's Google Form with the run's numbers prefilled
+  (entry.600648468). 36 art assets under `coldest-call/assets/`. 4-run
+  Playwright suite green on the shipped build (exact credit math, silent
+  branch, tutorial, side-job smoke). `NOTICE.md` + © lines added repo-wide.
 
 ### R2 — The Art Drop (gated on assets; interleaves with any phase)
 Medium-honesty rule applies throughout (CLAUDE.md): illustrated things are
