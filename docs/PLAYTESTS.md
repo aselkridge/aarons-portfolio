@@ -359,7 +359,19 @@ per run, Off-Duty opens each shift with a scoop shower, Volunteer +1
 credit per job (the town tips its own). (C, someday) suit-flavored citizen
 reactions. Claude recommends A+B. Section 19.
 
-**A-1 — Art request: the astronaut himself (open).** No sprite exists for
+**ART DECISIONS — 2026-07-21, Aaron's picks locked:**
+Astronaut = Pair A (weathered veteran, full1 + wave2). Dash runners = all
+six, suit-matched; pilot slot uses run5 only (run4 unused spare). Course =
+five distinct district strips chained (station strip was a duplicate,
+used once) ending at the batch-1 shop street; sky-gpt far layer. Gunmy =
+shop3 (alien in his own doorway with OPEN sign; sets town canon as alien,
+accepted). Props: crate1, crab2, goat2, goo3, mcrate4, rock5, cone1,
+sundae2. Main-game skies (top space band of The Coldest Call): both
+approved CROPPED TO SKY ONLY (bebop's baked-in train/desert/caption cut;
+caption panel reserved for a possible end-screen easter egg). Full-course
+demo delivered and approved flow: crash site districts to Gunmy's door.
+
+**A-1 — Art request: the astronaut himself (RESOLVED: Pair A).** No sprite exists for
 the astronaut; he appears only as a drawn portrait chip. Two images to
 source in the same style as the 21-sprite batch (prompts on mockup page
 section 19): full body weathered suit with antenna backpack, and a wave
