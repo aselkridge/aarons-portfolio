@@ -16,7 +16,7 @@ rather than a page you scroll. Two games live in it:
 2. **The Coldest Call** — a self-contained teaching game about go-to-market
    (GTM) engineering, reached from inside Orbit.
 
-Live at: `https://aselkridge.github.io/aarons-portfolio/orbit/`
+Live at: `https://aselkridge.github.io/aarons-portfolio/docs/orbit/`
 (the game routes directly at `…/orbit/coldest-call/`).
 
 ---

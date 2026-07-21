@@ -641,6 +641,10 @@ body.at-clay #sp.on{transform:none}
   animation:conew 1.1s ease-in-out infinite alternate}
 @keyframes conew{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
 .fcz.ast{width:64px;height:64px}
+/* the feedback door (F-1) */
+.fbdoor{border:1px solid rgba(116,208,255,.45);border-radius:12px;padding:16px 18px;background:rgba(116,208,255,.06);margin-top:18px}
+.fbdoor b{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--pc);display:block;margin-bottom:7px}
+.fbdoor p{font-family:var(--os);font-weight:300;font-size:13.5px;line-height:1.6;color:#e6e2da;margin-bottom:12px}
 /* themed sign-off panel (E-1) */
 .egg{margin-top:22px;border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
 .egg img{width:100%;display:block}
@@ -2021,6 +2025,7 @@ function showEnd(){
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn" id="b-again">▸ RUN IT AGAIN</button>'+
     '<a class="btn ghost" href="../#alphaforge" style="text-decoration:none">◂ RETURN TO ALPHAFORGE</a></div>'+
     '<div class="sp-note" style="margin-top:8px">Run it again. Different groups, different questions, different line. See how many neighbors you can reach with what you know now.</div>'+
+    fbDoor(n,replies)+
     eggPanel()+
     '<div class="copyline" style="margin-top:16px">© 2026 AARON SELKRIDGE · THE COLDEST CALL · MADE FOR AARONAUTICS</div>';
   $('end-body').innerHTML=html;
@@ -2029,6 +2034,18 @@ function showEnd(){
   Array.prototype.forEach.call(document.querySelectorAll('#end .rcard'),function(c){
     c.addEventListener('click',function(){c.classList.toggle('flip')});
   });
+}
+/* F-1: the feedback door. Sixty seconds, lands on Aaron's desk, run data rides along. */
+var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScuSCB8mtjBeWtOiv0bPzZJse0BPqRJ-oIp30uKCbJMbcL76Q/viewform';
+function fbDoor(n,replies){
+  var theme=document.body.classList.contains('t-roci')?'expanse':'bebop';
+  var run='sent='+n+' replies='+replies+' credits='+S.credits+' suit='+(S.spr?S.spr.id:'?')+
+    ' theme='+theme+' version='+(S.version||'?')+' line='+(S.seamKind||'?')+
+    ' jobs='+Object.keys(S.jobsDone).join('+');
+  var href=FORM_URL+'?usp=pp_url&entry.600648468='+encodeURIComponent(run);
+  return '<div class="fbdoor"><b>◈ TELL THE CREW ABOUT YOUR RUN</b>'+
+    '<p>Sixty seconds, mostly taps. Your field report lands on the builder&#39;s desk and shapes the next run.</p>'+
+    '<a class="btn" href="'+href+'" target="_blank" rel="noopener" style="text-decoration:none">▸ LEAVE YOUR FIELD REPORT</a></div>';
 }
 /* E-1: the themed sign-off panel, after everything else has said its piece */
 function eggPanel(){
