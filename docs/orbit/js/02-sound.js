@@ -51,7 +51,12 @@ var Sound=(function(){
       var o=ctx.createOscillator(),g2=ctx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(60,t);o.frequency.exponentialRampToValueAtTime(520,t+0.85);
       var f2=ctx.createBiquadFilter();f2.type='lowpass';f2.frequency.value=700;o.connect(f2);f2.connect(g2);g2.connect(ctx.destination);
       g2.gain.setValueAtTime(0.001,t);g2.gain.linearRampToValueAtTime(0.07,t+0.7);g2.gain.linearRampToValueAtTime(0.001,t+0.95);o.start(t);o.stop(t+1); },
-    toggle:function(){ on=!on; if(humG) humG.gain.value=on?0.04:0; return on; }
+    toggle:function(){ on=!on; if(humG) humG.gain.value=on?0.04:0; return on; },
+    // explicit setter for the master mute (R1j) — keeps that one boolean as
+    // the single source of truth instead of two toggles that can drift out
+    // of sync with each other
+    setOn:function(v){ on=v; if(humG) humG.gain.value=on?0.04:0; },
+    isOn:function(){ return on; }
   };
 })();
 
@@ -83,7 +88,12 @@ var Music=(function(){
       f('.pl-next', function(){ wanted=true; step(1); });
       f('.pl-prev', function(){ wanted=true; step(-1); }); },
     autostart:function(){ if(playing||wanted) return; wanted=true; play(); },
-    onTheme:function(){ load(); if(playing) play(); }
+    onTheme:function(){ load(); if(playing) play(); },
+    // R1j master mute — native element mute, not pause: playback position
+    // and the playing/wanted state are untouched, so un-muting just
+    // resumes exactly where the track was, no re-triggering play()
+    // (which autoplay policies could otherwise block outside a user gesture)
+    setMuted:function(v){ audio.muted=v; }
   };
 })();
 

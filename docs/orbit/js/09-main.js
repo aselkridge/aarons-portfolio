@@ -181,11 +181,16 @@ function loop(t){
     }
     /* projectiles */
     for(i=projectiles.length-1;i>=0;i--){ var P=projectiles[i];
+      var prevPx=P.x, prevPy=P.y;
       P.x+=P.vx*dt; P.y+=P.vy*dt; P.life-=dt;
       var dead = P.life<=0||P.x<-40||P.x>W+40||P.y<-40||P.y>H+40;
-      /* planet shields */
+      /* planet shields — swept segment test (issue #2): checks the whole
+         path this shot traveled THIS frame against the circle, not just
+         where it happens to land, so a fast shot can't tunnel through a
+         planet by jumping from clearly-outside to clearly-outside in one
+         frame with the hit circle in between. */
       if(!dead) for(k=0;k<STATIONS.length;k++){ var S=STATIONS[k];
-        if(Math.hypot(P.x-(S.x+plx),P.y-(S.y+ply))<S.r+9){
+        if(segHitCircle(prevPx,prevPy,P.x,P.y,S.x+plx,S.y+ply,S.r+9)){
           S.el.classList.remove('shielded'); void S.el.offsetWidth; S.el.classList.add('shielded');
           burst(P.x,P.y,'#9be2ff',6,90); Sound.shieldHit(); dead=true;
           $('target').textContent=S.name.toUpperCase()+' · SHIELDED'; break; } }
@@ -194,14 +199,14 @@ function loop(t){
          min(W,H)*0.052 guess that had nothing to do with how big the sun
          actually draws on screen. Reaction is a dedicated sizzle (the sun
          scorches/evaporates a shot), not the generic spark burst. */
-      if(!dead&&Math.hypot(P.x-(SUN_STATION.x+plx),P.y-(SUN_STATION.y+ply))<SUN_STATION.r+9){
+      if(!dead&&segHitCircle(prevPx,prevPy,P.x,P.y,SUN_STATION.x+plx,SUN_STATION.y+ply,SUN_STATION.r+9)){
         sunBurst(P.x,P.y);
         SUN_STATION.el.classList.remove('sizzling'); void SUN_STATION.el.offsetWidth; SUN_STATION.el.classList.add('sizzling');
         Sound.sizzle(); dead=true;
         $('target').textContent=SUN_STATION.name.toUpperCase()+' · SCORCHED';
       }
       /* the saucer */
-      if(!dead&&saucer&&Math.hypot(P.x-saucer.x,P.y-(saucer.y+Math.sin(gameT*2.2+saucer.ph)*14))<27){
+      if(!dead&&saucer&&segHitCircle(prevPx,prevPy,P.x,P.y,saucer.x,saucer.y+Math.sin(gameT*2.2+saucer.ph)*14,27)){
         burst(saucer.x,saucer.y,'#9be2ff',30,300); burst(saucer.x,saucer.y,'#ffd36a',16,200);
         bounty+=1500; $('bounty').textContent='₩ '+bounty.toLocaleString();
         floats.push({x:saucer.x,y:saucer.y,txt:'+₩1,500',life:1});
@@ -211,7 +216,7 @@ function loop(t){
         factDrop(); checkBounty();
         saucer=null; nextSaucerAt=gameT+40+Math.random()*50; dead=true; }
       /* asteroids */
-      if(!dead) for(k=asteroids.length-1;k>=0;k--){ if(Math.hypot(P.x-asteroids[k].x,P.y-asteroids[k].y)<asteroids[k].r){
+      if(!dead) for(k=asteroids.length-1;k>=0;k--){ if(segHitCircle(prevPx,prevPy,P.x,P.y,asteroids[k].x,asteroids[k].y,asteroids[k].r)){
           killAsteroid(k); dead=true; break; } }
       if(dead){ projectiles.splice(i,1); continue; }
       var ang2=Math.atan2(P.vy,P.vx);

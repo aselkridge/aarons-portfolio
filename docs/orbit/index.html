@@ -277,6 +277,10 @@ body.t-roci .player .chip{color:#bfe8ff;background:rgba(8,20,32,.6);border:1px s
 body.t-sword #chip-bounty{color:#f0a63c}
 body.t-roci #chip-bounty{color:#9affea}
 .chip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:12px;padding:2px 4px}
+/* R1j — one shared master mute; both copies (credit line + minimized chip,
+   so it's reachable whether the player is expanded or collapsed) update
+   together since they share this class */
+.audio-mute-btn.muted{opacity:.45}
 /* themed collapse/expand effect */
 @keyframes crtzap{0%{transform:scaleY(1);filter:brightness(1)}55%{transform:scaleY(.05);filter:brightness(2.6)}100%{transform:scaleY(1);filter:brightness(1)}}
 @keyframes holofold{0%{transform:perspective(700px) rotateX(0)}55%{transform:perspective(700px) rotateX(66deg);opacity:.35;filter:brightness(1.7)}100%{transform:none;opacity:1}}
@@ -659,8 +663,9 @@ body.t-roci .rewardmodal.cat-random .rm-text{color:#dff4ff}
 .c-row .lab{font-family:var(--mono);font-size:9px;letter-spacing:.24em;align-self:center;width:34px;flex:none}
 .c-row button{flex:1;border:0;cursor:pointer;font-family:var(--os);font-weight:600;font-size:11.5px;letter-spacing:.14em;
   text-transform:uppercase;padding:7px 4px 6px;transition:.15s;position:relative;background:transparent}
-/* the immersive toggle rides in the COM row as a compact square */
-#imm-btn{flex:0 0 40px;font-size:13px;letter-spacing:0}
+/* the immersive toggle + return-to-hangar both ride in the COM row as
+   compact squares, matching size/treatment */
+#imm-btn,#hangar-btn{flex:0 0 40px;font-size:13px;letter-spacing:0}
 /* pinned career exits — résumé/LinkedIn ride in the console (brief §4.1) */
 .c-links{display:flex;gap:6px;padding:2px 10px 8px}
 .c-links a,.c-links .c-resume{flex:1;text-align:center;font-family:var(--mono);font-weight:700;font-size:9.5px;
@@ -1639,7 +1644,8 @@ body.t-roci .bnr .bk{color:#9affea}
              career exits (brief's governing rule: guarantee the exit) -->
         <div class="c-row"><span class="lab">COM</span>
           <button id="b-hail">◆ Hail pilot</button>
-          <button id="imm-btn" aria-label="Immersive view — hide the interface, just fly" title="Immersive view">◉</button></div>
+          <button id="imm-btn" aria-label="Immersive view — hide the interface, just fly" title="Immersive view">◉</button>
+          <button id="hangar-btn" aria-label="Return to the hangar doors" title="Return to the hangar doors">⌂</button></div>
         <div class="c-links">
           <a href="https://www.linkedin.com/in/aaron-selkridge/" target="_blank" rel="noopener">in · LinkedIn</a>
           <span class="c-resume" title="Résumé PDF incoming — drops straight in once Aaron supplies it">▤ Résumé · soon</span>
@@ -1673,7 +1679,7 @@ body.t-roci .bnr .bk{color:#9affea}
       </button>
     </div>
     <div class="player" id="player">
-      <div class="chip" id="p-chip"><span class="mini-reel"></span><span class="pl-title">—</span><button class="pl-play" aria-label="Play/pause">►</button></div>
+      <div class="chip" id="p-chip"><span class="mini-reel"></span><span class="pl-title">—</span><button class="pl-play" aria-label="Play/pause">►</button><button class="audio-mute-btn icon" aria-label="Mute all audio" title="Mute all audio">♪</button></div>
       <div class="pl-skin cassette" id="skin-cassette" style="position:relative">
         <button class="mz" aria-label="Minimize player"><svg viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="cs-top"><b>A-Walk</b><span>STEREO · SIDE A</span></div>
@@ -1697,7 +1703,7 @@ body.t-roci .bnr .bk{color:#9affea}
           <button class="pl-next" aria-label="Next">►►</button>
         </div>
       </div>
-      <div class="pl-credit" id="pl-credit">music: Kevin MacLeod · CC BY 4.0 · <button id="snd" style="all:unset;cursor:pointer;color:var(--accent)">sfx on</button></div>
+      <div class="pl-credit" id="pl-credit">music: Kevin MacLeod · CC BY 4.0 · <button class="audio-mute-btn label" style="all:unset;cursor:pointer;color:var(--accent)" aria-label="Mute all audio">audio on</button></div>
     </div>
   </div>
 </div>
@@ -1908,14 +1914,14 @@ body.t-roci .bnr .bk{color:#9affea}
 <!-- Orbit engine, split into labeled files (each owns one visible system) — load order matters. -->
 <!-- See docs/orbit/HANDOFF.md for what lives where. -->
 <script src="js/01-config.js?v=13"></script>
-<script src="js/02-sound.js?v=11"></script>
-<script src="js/03-progress.js?v=17"></script>
+<script src="js/02-sound.js?v=12"></script>
+<script src="js/03-progress.js?v=18"></script>
 <script src="js/04-world.js?v=16"></script>
-<script src="js/05-combat.js?v=17"></script>
+<script src="js/05-combat.js?v=18"></script>
 <script src="js/06-flight.js?v=13"></script>
 <script src="js/10-content-viewer.js?v=5"></script>
 <script src="js/07-environments.js?v=21"></script>
-<script src="js/08-ui.js?v=28"></script>
-<script src="js/09-main.js?v=15"></script>
+<script src="js/08-ui.js?v=29"></script>
+<script src="js/09-main.js?v=16"></script>
 </body>
 </html>

@@ -52,7 +52,31 @@ function shipSwap(toId){
 }
 $('b-sword').addEventListener('click', function(){ shipSwap('sword'); });
 $('b-roci').addEventListener('click', function(){ shipSwap('roci'); });
-$('snd').addEventListener('click', function(){ var on=Sound.toggle(); this.textContent=on?'sfx on':'sfx off'; });
+/* R1j — one master mute for SFX + music together (there was previously no
+   such thing: the old #snd link only ever silenced synth SFX, and music
+   had no mute at all, just play/pause). Two button instances share the
+   .audio-mute-btn class — the credit-line label (hidden when the player
+   is minimized) and an icon copy inside the minimized chip (so the
+   control is reachable "at any time" regardless of player state) — kept
+   in sync from one boolean, not two independently-toggled flags. */
+var audioMuted=false;
+function applyAudioMute(){
+  Sound.setOn(!audioMuted);
+  Music.setMuted(audioMuted);
+  var btns=document.querySelectorAll('.audio-mute-btn');
+  for(var i=0;i<btns.length;i++){
+    var b=btns[i];
+    b.classList.toggle('muted',audioMuted);
+    b.setAttribute('aria-pressed',String(audioMuted));
+    if(b.classList.contains('label')) b.textContent = audioMuted?'audio off':'audio on';
+  }
+}
+(function(){
+  var btns=document.querySelectorAll('.audio-mute-btn');
+  for(var i=0;i<btns.length;i++) btns[i].addEventListener('click', function(e){
+    e.stopPropagation(); audioMuted=!audioMuted; applyAudioMute();
+  });
+})();
 
 
 /* ══════════ MINIMIZABLE PANELS + TOUCH UI ══════════ */
@@ -126,6 +150,16 @@ function setHelp(on){
 }
 helpBtn.addEventListener('click', function(e){ e.stopPropagation(); setLog(false); setHelp(!helpPop.classList.contains('on')); });
 helpPop.addEventListener('pointerdown', function(e){ if(!e.target.closest('.hint-card')) setHelp(false); });
+/* R1g — pops once on first entry into the system (normal picker flow or a
+   deep link that skips the gates), so new visitors see it without having
+   to find the "?" themselves; a plain in-memory flag (not localStorage) so
+   it's "once per visit," not "once ever" — same session-only spirit as the
+   rest of the front-door state (gatesUp, the reward log, bounty). */
+var helpAutoShown=false;
+function autoOpenHelpOnce(){
+  if(helpAutoShown) return; helpAutoShown=true;
+  setTimeout(function(){ setHelp(true); },500);
+}
 
 /* ══════════ REWARDS LOG ══════════ */
 /* The log is the reward collection, nothing else — categorized facts/quotes
@@ -352,7 +386,7 @@ $('dz-mz').addEventListener('click', function(e){ e.stopPropagation(); toggleMin
    (under construction) until 4c is built — per Aaron. Deep links
    (#station) skip both gates so a shared link still lands directly. */
 var doorway=$('doorway'), shipsel=$('shipsel'), gatePicked=false;
-if(location.hash.length>1){ doorway.classList.add('gone'); gatesUp=false; }
+if(location.hash.length>1){ doorway.classList.add('gone'); gatesUp=false; autoOpenHelpOnce(); }
 /* the seam must track the clip-path split exactly (58% → 42%, a 16% drop);
    a fixed rotation only matches one aspect ratio, so compute it live. On
    phones the halves stack (see the ≤640px CSS) and the seam lies down. */
@@ -378,10 +412,28 @@ function pickShip(id,el){
   Sound.warp();
   setTimeout(function(){ applyTheme(id); },560);          // swap behind the flash peak
   setTimeout(function(){ shipsel.classList.remove('show'); shipsel.classList.add('gone');
-    gatesUp=false; },1080);                               // NOW the game may react to the mouse
+    gatesUp=false; autoOpenHelpOnce(); },1080);            // NOW the game may react to the mouse
 }
 $('pick-sword').addEventListener('click', function(){ pickShip('sword',this); });
 $('pick-roci').addEventListener('click', function(){ pickShip('roci',this); });
+
+/* R1i — bail back to the very first screen from mid-flight. Re-arms the
+   same gatesUp guard the boot sequence relies on (no stray fire/lock-on
+   the instant the doors are back up) and re-opens exactly the state a
+   fresh visitor sees — LAUNCH takes you back into flight as normal,
+   nothing about ship/bounty/progress is reset, this is a navigational
+   overlay, not a restart. */
+function returnToHangar(){
+  gatesUp=true; gatePicked=false;
+  setHelp(false); setContact(false); setLog(false);
+  if(!isPicking()) closeRewardModal();
+  if(document.body.classList.contains('imm-flight')) exitImmersive();
+  closeStation();
+  shipsel.classList.remove('show'); shipsel.classList.add('gone');
+  doorway.classList.remove('gone');
+  Sound.blip(500);
+}
+$('hangar-btn').addEventListener('click', returnToHangar);
 
 addEventListener('keydown', function(e){ if(e.key==='Escape'){ setHelp(false); setContact(false); setLog(false); if(!isPicking()) closeRewardModal(); } });
 

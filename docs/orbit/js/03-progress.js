@@ -55,8 +55,11 @@ function banner(kicker,title,desc){
   host.appendChild(el);
   requestAnimationFrame(function(){ el.classList.add('show'); });
   clearTimeout(bannerTimer);
+  // issue #11: 3.6s wasn't reliably enough time to notice + react on a
+  // small/narrow window or when the event is off in a map corner; matches
+  // the toast stack's own 5.2s now instead of running its own shorter clock
   bannerTimer=setTimeout(function(){ el.classList.remove('show');
-    setTimeout(function(){ if(el.parentNode) el.remove(); },500); },3600);
+    setTimeout(function(){ if(el.parentNode) el.remove(); },500); },5200);
   Sound.blip(themeId==='sword'?659:880);
 }
 /* ══════════ REWARDS ══════════ */

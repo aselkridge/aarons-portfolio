@@ -60,6 +60,19 @@ function setWeapon(w){ weapon=w;
 $('w-cannon').addEventListener('click',function(){ setWeapon('cannon'); });
 $('w-pdc').addEventListener('click',function(){ setWeapon('pdc'); });
 
+// Swept segment-circle hit test (issue #2: a fast bullet's *endpoint* each
+// frame can land on either side of a hit circle without ever landing
+// inside it — a point-in-circle check on the current position alone lets
+// it silently tunnel through). Finds the closest point on the segment from
+// the shot's previous frame position to its current one, and tests THAT
+// against the circle, so a shot can't skip past a target between frames.
+function segHitCircle(x1,y1,x2,y2,cx,cy,r){
+  var dx=x2-x1, dy=y2-y1, len2=dx*dx+dy*dy;
+  var t = len2>0 ? ((cx-x1)*dx+(cy-y1)*dy)/len2 : 0;
+  t = t<0?0:(t>1?1:t);
+  var px=x1+t*dx, py=y1+t*dy, ddx=cx-px, ddy=cy-py;
+  return (ddx*ddx+ddy*ddy) < r*r;
+}
 function noseDir(){ return { x:Math.sin(ra), y:-Math.cos(ra) }; }
 // Bullets always fire along noseDir() — the exact same value that rotates the
 // ship sprite (ra) — so the shot can never disagree with where the ship is
