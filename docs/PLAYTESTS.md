@@ -241,7 +241,13 @@ but readable. (2) The notebook grows a LOG page holding the run's full
 transcript, scene by scene, re-readable at any point, even stations later.
 Forward flow unchanged; the BACK travel button keeps its current job.
 
-**P2.9 — "Notice the price tag, nothing." Player: "WHAT price tag?"** `APPROVED 2026-07-20, direction A+B` The astronaut's free-survey line references a price tag,
+**P2.9 — "Notice the price tag, nothing." Player: "WHAT price tag?"**
+`APPROVED 2026-07-20, direction A+B+D`
+Aaron's ruling on the candidates: A (price tags on everything) and B (the
+pointing rule) approved, PLUS D (the itemized mini receipt on the meter).
+C (rewriting lines down to match the screen) is REJECTED as a step
+backwards, now a standing principle: the language never steps down to
+match the screen; the screen steps up to meet the language. The astronaut's free-survey line references a price tag,
 but nothing on screen wears one; the player searched the table for a
 literal tag, found nothing, and lost the thread ("what money? where?").
 *Root cause:* the economy lives in words and in the credit meter, but not
@@ -318,6 +324,18 @@ run's numbers pre-filled via the form's URL parameters (sent, replies,
 credits left, suit), so every Sheet row arrives with its play data.
 Five suggested questions live in mockup section 15. Blocked on: Aaron
 creating the form and sending the link + field IDs.
+
+**F-3 — Ship parking spot (Aaron, 2026-07-20).** Keep the Swordfish's
+clean vector style as is, but move the parked ships' anchor so they sit on
+open ground in both themes instead of appearing to rest on a building.
+Layout-only fix, queued with the build.
+
+**F-4 — Outer framing copy (Aaron: all three).** The game is positioned
+everywhere it appears outside itself (AlphaForge briefing window, deck
+card, share description, suggested LinkedIn blurb) as all three at once:
+proof of Aaron's GTM craft, a free ten-minute lesson, and a signal to
+people who might hire or build with him. Claude mocks the copy; Aaron
+approves before it ships.
 
 **F-2 — The Volunteer, a fifth suit pick (Aaron, 2026-07-20).** The
 generic crowd suit becomes pickable at the start as THE VOLUNTEER: dressed
