@@ -291,6 +291,24 @@ the notebook's definitions for the slang itself: a knock on the door,
 making the cut, the gate, a cold call (the game's own title, decoded),
 segments. Mocked as section 16.
 
+**P2.12 — The columns don't feel connected to ice cream.** `PROPOSED`
+(Raised by Aaron reviewing the sessions.) The data reads as generic
+research; the mission doesn't shine through it. "Do they like cold
+things", "seems to like desserts" would connect instantly. Some columns
+may stay blatantly silly on purpose (the mood one).
+*Interpretation:* a content rule, THE ICE CREAM TEST: every column must
+answer "what does this have to do with ice cream?" in one breath, or wear
+its silliness openly. Mechanics, prices, and the fragile-data trap stay
+untouched.
+*Change:* re-skin the menu and every citizen's answers: family size hints
+as "more spoons at the table", distance as "ice cream travels badly,
+closer doors get colder scoops", secret wish becomes "what dessert they
+dream of", public statements becomes "what they say about off-world
+food"; mood stays as the honest silly one. ONE new column proposed, SWEET
+TOOTH (do they already love sweet things), which is a real mechanical
+addition and needs a small scoring balance pass + playtest-suite update
+before shipping. Mocked as section 17.
+
 ### Ideas (vision backlog, not queued with fixes)
 
 **F-1 — The Feedback Door (Aaron, 2026-07-20).** In-game feedback capture
