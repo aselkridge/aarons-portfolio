@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://aselkridge.github.io/aarons-portfolio/docs/orbit/coldest-call/assets/share-card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Pixel-art astronauts and a red ship on a moon base. The tagline: help a stranded astronaut introduce ice cream to a moon">
+<meta property="og:image:alt" content="The four playable suits over a moon base. The tagline: help a stranded astronaut introduce ice cream to a moon">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Coldest Call · a playable outreach run">
 <meta name="twitter:description" content="Help a stranded astronaut introduce ice cream to a moon. 100 credits, 24 doors, one shot at the first hello. 10-15 minutes, free, in your browser.">
@@ -623,6 +623,7 @@ body.at-clay #sp.on{transform:none}
 
 <button class="mock-toggle" id="mock-toggle">⇄ VIEW IN EXPANSE</button>
 <button class="mock-toggle" id="sndtog" style="right:172px">♪ SOUND ON</button>
+<button class="mock-toggle" id="quitbtn" style="bottom:56px">✕ LEAVE THE MOON</button>
 
 <script>
 (function(){
@@ -1696,6 +1697,16 @@ function setTheme(cool){
 }
 tog.addEventListener('click',function(){setTheme(!document.body.classList.contains('t-roci'))});
 $('sndtog').addEventListener('click',function(){ this.textContent=Snd.toggle()?'♪ SOUND ON':'♪ SOUND OFF' });
+/* always a way out: two clicks so a stray tap never eats a run */
+var qb=$('quitbtn'),qArm=false,qTimer=null;
+qb.addEventListener('click',function(){
+  if(!qArm){
+    qArm=true; qb.textContent='LEAVE FOR REAL? CLICK AGAIN';
+    qb.style.color='#ff5a46'; qb.style.borderColor='rgba(255,90,70,.7)';
+    qTimer=setTimeout(function(){ qArm=false; qb.textContent='✕ LEAVE THE MOON';
+      qb.style.color=''; qb.style.borderColor=''; },3500);
+  } else { clearTimeout(qTimer); location.href='../#alphaforge'; }
+});
 setTheme(/[?#&]t?=?roci/.test(location.search+location.hash));
 applyNpcArt();
 /* window resized mid-run: re-anchor the whole world to the art */
