@@ -1153,7 +1153,8 @@ function vcountUp(){ $('vcount').textContent='('+(S.vocab.length+S.ins.length+S.
 function vtoastShow(msg,ins){
   Snd.blip(880,.1,.05,'triangle');setTimeout(function(){Snd.blip(1100,.12,.05,'triangle')},110);
   var t=$('vtoast');t.textContent=msg;t.classList.toggle('ins',!!ins);t.classList.add('on');
-  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2600);
+  t.style.cursor='pointer';t.onclick=function(){clearTimeout(t._h);t.classList.remove('on')};
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},Math.max(4500,msg.length*75));
 }
 function unlock(k){
   if(S.vocab.indexOf(k)>=0) return;
