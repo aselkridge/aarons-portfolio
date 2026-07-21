@@ -256,7 +256,32 @@ to only reference what exists; (D) an itemized mini receipt on the meter.
 Claude recommends A+B as one rule: nothing is referenced unless it is
 visible, and when referenced, it lights up. Not mocked yet.
 
+**P2.10 — Players can't tell a good result from a bad one.** `PROPOSED`
+A player with four replies from nine sent said "I don't think I did very
+good." (Positive note, same session: the quiet-ones + public-statements
+null moment LANDED — "oh, because they're quiet" — the designed lesson
+firing exactly as intended, INSIGHTS 'zero' already covers it.)
+*Interpretation:* the game scores runs but never calibrates them. Without
+a ruler, real wins read as losses, and zero reads as pure defeat.
+*Change:* THE MEASURING STICK opens the debrief results: a scale in plain
+words (the wide world: 1 in 25 · a good day: 1 in 10 · a warm referral:
+1 in 3) with the player's run glowing on it. Zero runs get their own
+honest ruler (zero still bought you knowledge nobody learns free). RUN IT
+AGAIN grows a challenge voice: different groups, columns, line, see how
+many you can reach now. Mocked as section 14. Already built and confirmed
+working, for the record: insights recap headlines the debrief, the silent
+run gets WHY NOBODY WROTE BACK, and RUN IT AGAIN exists.
+
 ### Ideas (vision backlog, not queued with fixes)
+
+**F-1 — The Feedback Door (Aaron, 2026-07-20).** In-game feedback capture
+at the bottom of the debrief. Mechanism (works on the static site, no
+server): Aaron creates a Google Form (auto-linked to a Google Sheet);
+the game adds a styled door that opens the form in a new tab with the
+run's numbers pre-filled via the form's URL parameters (sent, replies,
+credits left, suit), so every Sheet row arrives with its play data.
+Five suggested questions live in mockup section 15. Blocked on: Aaron
+creating the form and sending the link + field IDs.
 
 **I-1 — The Side Job (Aaron, 2026-07-20).** At the moment credit pressure
 first lands, offer optional work: the sprite walks off the main path to
