@@ -337,6 +337,30 @@ proof of Aaron's GTM craft, a free ten-minute lesson, and a signal to
 people who might hire or build with him. Claude mocks the copy; Aaron
 approves before it ships.
 
+**I-2 SPEC LOCKED — 2026-07-21, the Delivery Dash v1 (Aaron's polish
+round applied).** Course: 10 shuffled district segments (5 strips x2, no
+immediate repeats) + shop street finish, ~70s par. Seams: road alignment
++ junction-post overlays cut from the strips + sky equalization. Arcade:
+scanlines/CRT vignette, READY GO countdown, district plates, synth SFX,
+letter grade by crate coldness. Score: crate of 20 scoops, melt meter IS
+the score, survivors bank as credits capped +15 (overflow = Gunmy's tip
+jar, flavor only). Ghost: Jordan as faint red pace-runner, HUD gap, +3
+for beating him. No elevated platforms in v1 (stacked-crate high road
+reserved for v2). One powerup: COLD SNAP (freezes melt 3s). Random cameo
+1-in-3: shop window flickers SEE YOU SPACE COWBOY (bebop) / GO SLOW, GO
+SMOOTH (expanse). HUD: melt+scoops, clock+ghost gap, sprinkles, district,
+suit-perk badge. Suit powers: Dash (Pilot float, Engineer insulated
+crate, Ronin one forgiveness, Off-Duty +3 sprinkles, Volunteer +1 tip);
+Catch (Pilot slow powerups, Engineer wide tray, Ronin one rock free,
+Off-Duty opening shower, Volunteer +1). Glue: job board fork, walk-off/
+walk-back, SHIFT BANKED return toast, THE GRIND field note on first job.
+
+**E-1 — End-screen sign-off panels, every theme (Aaron: "gold, fits my
+whole thing").** After the finale fireworks settle, a themed sign-off
+panel: bebop = Aaron's sourced SEE YOU SPACE COWBOY painting used whole;
+expanse = composed galaxy crop with "GO SLOW. GO SMOOTH. GO SWEET."
+(Claude's proposed line, Aaron may veto).
+
 **F-2 — The Volunteer, a fifth suit pick (Aaron, 2026-07-20).** The
 generic crowd suit becomes pickable at the start as THE VOLUNTEER: dressed
 like the town, read as one of their own. Zero new art, small build.
