@@ -510,6 +510,9 @@ body.at-clay #sp.on{transform:none}
 #sprsel .spr-grid{grid-template-columns:repeat(2,1fr)}
 #sprsel .g-title{font-size:clamp(18px,2.6vw,24px)!important}
 #sprsel .name-row{justify-content:flex-start}
+#pname.needy{border-color:var(--accent);animation:needyp 1.1s ease-in-out infinite alternate}
+@keyframes needyp{from{box-shadow:0 0 0 1px var(--accent),0 0 10px -6px var(--accent)}
+  to{box-shadow:0 0 0 2px var(--accent),0 0 22px -2px var(--accent)}}
 @media (max-width:720px){#sprsel .scr-in{left:50%;transform:translateX(-50%);top:14px;padding-bottom:150px}}
 .copyline{margin-top:14px;font-family:var(--mono);font-size:7.5px;letter-spacing:.22em;color:rgba(139,147,166,.6);text-transform:uppercase}
 /* mock chrome */
@@ -651,10 +654,12 @@ body.at-clay #sp.on{transform:none}
 .egg .eggtx{position:absolute;left:0;right:0;bottom:12%;text-align:center;font-family:var(--display);font-size:clamp(14px,2.6vw,22px);
   letter-spacing:.14em;color:#e9f2fa;text-shadow:0 0 18px rgba(116,208,255,.6),0 2px 8px rgba(0,0,0,.8);text-transform:uppercase;font-style:italic}
 /* ══ the JOBS: the board + both mini games ══ */
-#jobsign{position:fixed;left:14px;bottom:56px;z-index:31;font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;
-  color:#0b0910;text-transform:uppercase;background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:6px;
-  padding:6px 10px;cursor:pointer;display:none;box-shadow:0 3px 0 rgba(0,0,0,.5),0 0 16px -4px var(--accent);white-space:nowrap;
-  animation:nbob 1s ease-in-out infinite alternate}
+#jobsign{position:fixed;left:14px;bottom:56px;z-index:31;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  color:#0b0910;text-transform:uppercase;background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:8px;
+  padding:9px 13px;cursor:pointer;display:none;box-shadow:0 3px 0 rgba(0,0,0,.5),0 0 16px -4px var(--accent);white-space:nowrap;
+  animation:nbob 1s ease-in-out infinite alternate,jring 1.8s ease-out infinite;line-height:1.5;text-align:left}
+#jobsign small{display:block;font-size:7px;letter-spacing:.2em;opacity:.75}
+@keyframes jring{0%{outline:2px solid var(--accent);outline-offset:0px}70%{outline:2px solid transparent;outline-offset:9px}100%{outline:2px solid transparent;outline-offset:9px}}
 #jobsign.on{display:block}
 #jobs{position:fixed;inset:0;z-index:46;display:none;place-items:center;background:rgba(5,4,8,.88);padding:14px}
 #jobs.on{display:grid}
@@ -691,7 +696,7 @@ body.at-clay #sp.on{transform:none}
 @media (prefers-reduced-motion:reduce){
   #walker.walking .tok{animation:none}
   #world,#walker{transition:none}
-  .stick .dot,#nudge,.rcard,.fcz,.fcz .fcone,#jobsign{animation:none!important}
+  .stick .dot,#nudge,.rcard,.fcz,.fcz .fcone,#jobsign,#pname.needy{animation:none!important}
 }
 </style>
 
@@ -1099,7 +1104,7 @@ var STN_LABELS=['01 LANDING SITE','02 THE OVERLOOK','03 THE CLAY CAMP','04 THE M
   var ship=document.createElement('div');ship.className='shipprop';ship.id='prop-ship';
   ship.style.left='calc(50% - 150px)';ship.style.bottom=(STX[0]-24)+'px';
   ship.innerHTML='<b>YOUR SHIP</b><i></i>';host.appendChild(ship);
-  var js=document.createElement('button');js.id='jobsign';js.textContent='◈ THE JOB BOARD · SHIFT WORK';
+  var js=document.createElement('button');js.id='jobsign';js.innerHTML='◈ THE JOB BOARD · SHIFT WORK<small>EARN CREDITS · TAP TO CLOCK IN</small>';
   document.body.appendChild(js);
   var clay=document.createElement('div');clay.className='clayslab';clay.id='prop-clay';
   clay.style.left='calc(50% + 84px)';clay.style.bottom=(STX[2]+6)+'px';host.appendChild(clay);
@@ -1467,7 +1472,7 @@ function clayStep(key){
     ],'THE METER IS NOW LIVE, TOP RIGHT. IT DOES NOT REFILL.',
     function(){
       reveal('<div class="tool"><span class="tl">THE CLAY · POWERED UP · EVERY PRICE, ON ITS TAG</span>YOUR BUDGET: <b style="color:var(--accent)">100 CREDITS</b><br>ASK A QUESTION <span class="tagp">1 CR / PERSON</span><br>HIRE A CLAYGENT WRITER (optional, later) <span class="tagp">1 CR / PERSON</span><br>SEND A MESSAGE <span class="tagp">2 CR EACH</span><br>CUTTING THE LIST <span class="tag0">0 CR</span> · WHAT THE SURVEY TOLD US <span class="tag0">0 CR, FOREVER</span></div>');
-      insight('wall');setActions([{t:'HANDS ON THE CLAY ▸',fn:function(){$('credhud').classList.add('on');unlock('credits');point('#credhud');$('jobsign').classList.add('on');clayStep('order')}}]);
+      insight('wall');setActions([{t:'HANDS ON THE CLAY ▸',fn:function(){$('credhud').classList.add('on');unlock('credits');point('#credhud');$('jobsign').classList.add('on');point('#jobsign');vtoastShow('◈ THE JOB BOARD IS OPEN · BOTTOM LEFT · SHIFT WORK PAYS CREDITS',true);nudge('#jobsign','jobs','SHORT ON CREDITS?','The job board by the camp is open, bottom left. Shifts pay real credits, and your rivals are working them too.');clayStep('order')}}]);
     });
   } else if(key==='order'){
     convo(clayEye(key),[
@@ -2123,6 +2128,7 @@ $('b-back').addEventListener('click',function(){
       s.className='srstep'+(i<st?' done':i===st?' now':'');
     });
     $('b-drop').style.opacity=st===2?'1':'.45';
+    $('pname').classList.toggle('needy',st===1);
     if(st===2)$('dropwhy').textContent='';
     if(st===0) nudge('#sprgrid','sel0','FIRST THINGS FIRST','Next: pick a suit. Click one of the cards.');
     else if(st===1) nudge('#pname','sel1','ALMOST THERE','Next: type any name you like. It is just what the astronaut will call you.');
@@ -2353,12 +2359,13 @@ function dashStart(){
     obs.forEach(function(o){
       if(o.dead)return;
       var d=o.x-pxw;
-      if(d>-24&&d<24){
+      var win=(o.t==='sprk'||o.t==='snap')?24:o.t==='goo'?20:14;
+      if(d>-win&&d<win){
         if(o.t==='sprk'&&py>-70){o.dead=true;sprk++;Snd.blip(1100,.06,.04,'triangle')}
         else if(o.t==='snap'&&!snapUsed){o.dead=true;snapUsed=true;snapT=3;Snd.sweep(600,1400,.4,.05)}
         else if(o.t==='goo'&&py>-14){slow=true}
-        else if(o.t==='mcrate'&&py>-40){ x=Math.max(0,x-30); }
-        else if((o.t==='crab'||o.t==='goat')&&py>-34){
+        else if(o.t==='mcrate'&&py>-36){ x=Math.max(0,x-30); }
+        else if((o.t==='crab'||o.t==='goat')&&py>-30){
           if(perk==='ronin'&&!forgiven){forgiven=true;o.dead=true}
           else{ x=0;ghost=Math.max(ghost,0);Snd.blip(140,.2,.07); }
         }
@@ -2382,17 +2389,17 @@ function dashStart(){
       ctx.fillStyle='#2a2434';ctx.fillRect(jx-2,H*0.45,4,H*0.55);ctx.fillStyle='#181420';}}
     obs.forEach(function(o){
       if(o.dead)return;
-      var sx=o.x-x+120-((o.t==='goo')?30:20);
+      var sx=o.x-x-((o.t==='goo')?30:18);
       if(sx<-80||sx>W+40)return;
-      if(o.t==='sprk'){ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(o.x-x+120,H-52,5,0,6.283);ctx.fill();
-        ctx.fillStyle='rgba(255,211,106,.3)';ctx.beginPath();ctx.arc(o.x-x+120,H-52,9,0,6.283);ctx.fill()}
-      else if(o.t==='snap'){ctx.font='22px serif';ctx.fillText('❄️',o.x-x+120-11,H-64)}
+      if(o.t==='sprk'){ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(o.x-x,H-52,5,0,6.283);ctx.fill();
+        ctx.fillStyle='rgba(255,211,106,.3)';ctx.beginPath();ctx.arc(o.x-x,H-52,9,0,6.283);ctx.fill()}
+      else if(o.t==='snap'){ctx.font='22px serif';ctx.fillText('❄️',o.x-x-11,H-64)}
       else{var im=IM[o.t];if(im&&im.complete){
         var sz=o.t==='goo'?{w:64,h:26}:o.t==='mcrate'?{w:40,h:40}:{w:36,h:36};
         ctx.drawImage(im,sx,H-32-(o.t==='goo'?4:sz.h-8),sz.w,sz.h)}}
     });
     /* jordan's ghost */
-    var gx=ghost-x+120;
+    var gx=ghost-x;
     if(gx>-30&&gx<W+30){ctx.globalAlpha=.4;ctx.fillStyle='#ff5a46';
       if(man&&man.complete)ctx.drawImage(man,gx-16,H-70,36,36);
       ctx.globalAlpha=1;ctx.fillStyle='#ff5a46';ctx.font='8px monospace';ctx.fillText('JORDAN',gx-14,H-74)}
@@ -2404,7 +2411,7 @@ function dashStart(){
     if(cameo&&Math.abs(pxw-cameoAt)<200){cameoShown=1;
       ctx.font='italic 11px monospace';ctx.fillStyle='rgba(154,255,234,.85)';
       var msg=document.body.classList.contains('t-roci')?'GO SLOW. GO SMOOTH.':'SEE YOU SPACE COWBOY…';
-      ctx.fillText(msg,cameoAt-x+40,H*0.35)}
+      ctx.fillText(msg,cameoAt-x-40,H*0.35)}
     /* HUD */
     var gap=Math.round((ghost-pxw)/speed/60*10)/10;
     $('jh1').textContent='MELT '+melt.toFixed(1)+' SCOOPS'+(snapT>0?' · FROZEN':'');
