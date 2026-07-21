@@ -9,9 +9,9 @@
 > Related docs: [`GAMES.md`](GAMES.md) (what the game is),
 > [`orbit/HANDOFF.md`](orbit/HANDOFF.md) (live known issues / roadmap).
 
-**Status legend:** `RAW` noted, not yet interpreted · `APPROVED 2026-07-20` change
-designed, mockup awaiting Aaron's approval · `APPROVED` build greenlit ·
-`SHIPPED` live · `WONTFIX` deliberate, with reasoning.
+**Status legend:** `RAW` noted, not yet interpreted · `PROPOSED` change
+designed, mockup awaiting Aaron's approval · `APPROVED <date>` build
+greenlit · `SHIPPED` live · `WONTFIX` deliberate, with reasoning.
 
 ---
 
