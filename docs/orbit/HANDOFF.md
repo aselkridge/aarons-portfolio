@@ -536,8 +536,23 @@ showcasing myself" — the site is only done when the words are his)
   keypresses break the combo. **A fully playable prototype was built and
   play-verified 2026-07-21** (Artifact, private — every mechanic tested
   headless: bounce, wrong-key, miss/lives, pause, powerup catch,
-  impossible-mode multiball). Iterating in the Artifact until Aaron's
-  happy; in-site GC integration happens with R4a/R4b proper.
+  impossible-mode multiball). **v2 (same day, Aaron's playtest feedback)**:
+  new CADET tier below Easy + wider gaps across all tiers, full CUSTOM
+  game builder (speed/ring/lives/keys/ramp/balls/powerups/hazards sliders,
+  persisted), much louder powerup telegraphing (inbound alerts, always-on
+  labels, catch flash + plain-English effect banners), and the corner
+  mechanic Aaron designed: CORNER RUSH (time slows on corner-bound balls;
+  fast answers earn a random blessing — time gift / powerup rain / shield).
+  **v3 (same day, "what's the mobile version?")**: TAP MODE — auto-detects
+  touch devices (manual ⌨/◉ toggle on the menu). Same game, prompts become
+  thumb-sized tap pads at the impact point; powerups tapped in their edge
+  window; ONE-KEY becomes TAP-ANY; difficulty gains a target-size axis
+  (custom builder swaps KEYS for TARGET SIZE on touch); on-screen ⏸ (no
+  Esc on phones); overlays go full-screen on small viewports. Verified
+  with real emulated-touch taps on a 390×844 viewport: bounce, wrong-tap,
+  corner-save-by-tap, custom launch — zero console errors, both modes.
+  Iterating in the Artifact until Aaron's happy; in-site GC integration
+  happens with R4a/R4b proper.
 - **R4c. Mobile — full review and rework** — mobile-primary path via GC's
   tap-menu model + the real touch fixes (issue #21), PLUS Aaron's
   2026-07-20 ask for a complete mobile pass end to end (doorway/picker,
