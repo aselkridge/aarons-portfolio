@@ -486,9 +486,13 @@ sourced, never hand-coded; I do shells, keying, compositing, animation tiers.
 
 ### R3 — THE CONTENT PHASE (new, Aaron 2026-07-19: "make sure I am truly
 showcasing myself" — the site is only done when the words are his)
-- **R3a. Content inventory** — I walk every surface and deliver a checklist
-  of REAL vs PLACEHOLDER (station tabs, artifacts, reward pools, dossier,
-  profile, gates copy, meta/og text).
+- ~~**R3a. Content inventory**~~ **DONE 2026-07-21** — every surface walked
+  and classified ✅ REAL / 🟡 CONFIRM / 🔴 PLACEHOLDER, with file pointers
+  and a 7-item "only Aaron can supply this" shortlist (résumé PDF, the 9
+  AlphaForge builds, real Oromugais, Life photos, Clay screenshots,
+  eating/fatherhood content, music decision). Lives at
+  **`docs/orbit/CONTENT-INVENTORY.md`** — that file is now the working
+  checklist for R3b/R3c; keep it updated as slots fill.
 - **R3b. Career truth** — résumé PDF (flips the three "· SOON" slots live),
   the 9 AlphaForge builds 001–009 into the blueprint cards, more real STAR
   stories into `data/facts.js`, Clay table screenshots into the gallery,
