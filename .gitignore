@@ -9,3 +9,6 @@ package-lock.json
 # large / generated assets (keep source out of git; optimize before committing)
 *.raw.glb
 scratchpad/
+
+# per-machine hook state (turn counter for the tracker nudge)
+.claude/.tracker-state.json
